@@ -93,9 +93,9 @@ jobs:
           #Set dockerhub project (replace "bartfastiel/java-capstone-project.de-example-app")
           #Set IP (replace "10.0.1.99" with "10.0.1.1"-"10.0.1.20")
           script: |
-            docker stop cgn-java-23-2-canan
-            docker rm cgn-java-23-2-canan
-            docker run --pull=always --name cgn-java-23-2-canan --network capstones --ip 10.0.5.5 --restart always --detach --env MONGO_DB_URI=${{ secrets.MONGO_DB_URI }} cananozyol/readandmeet:latest
+            sudo docker stop cgn-java-23-2-canan
+            sudo docker rm cgn-java-23-2-canan
+            sudo docker run --pull=always --name cgn-java-23-2-canan --network capstones --ip 10.0.5.5 --restart always --detach --env MONGO_DB_URI=${{ secrets.MONGO_DB_URI }} cananozyol/readandmeet:latest
             sleep 15s
             docker logs cgn-java-23-2-canan
 
