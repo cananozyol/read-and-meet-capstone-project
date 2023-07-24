@@ -63,6 +63,7 @@ jobs:
         with:
           name: app.jar
           path: backend/target
+
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
