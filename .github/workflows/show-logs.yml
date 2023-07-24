@@ -12,11 +12,11 @@ jobs:
         with:
           host: capstone-project.de
           #Set App Name ("alpha" - "tango")
-          username: bravo
+          username: cgn-java-23-2-canan
           password: ${{ secrets.SSH_PASSWORD }}
           #Set App Name ("alpha" - "tango")
           script: |
-            docker logs readandmeet
+            docker logs cgn-java-23-2-canan
       - name: Check the deployed service URL
         uses: jtalk/url-health-check-action@v3
         with:
