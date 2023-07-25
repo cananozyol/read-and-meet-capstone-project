@@ -2,14 +2,17 @@ package de.neuefische.readandmeet.backend.controller;
 
 import de.neuefische.readandmeet.backend.model.Meeting;
 import de.neuefische.readandmeet.backend.repository.MeetingRepo;
+import de.neuefische.readandmeet.backend.service.MeetingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 
 
 @SpringBootTest
@@ -21,6 +24,9 @@ class MeetingControllerTest {
 
     @Autowired
     private MeetingRepo meetingRepo;
+
+    @Autowired
+    private MeetingService meetingService;
 
 
     @Test
@@ -46,5 +52,36 @@ class MeetingControllerTest {
 
                 //THEN
                 .andExpect(MockMvcResultMatchers.content().json(expected)).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DirtiesContext
+    void expectUpdatedMeetingList_whenPOSTNewMeeting() throws Exception {
+        // GIVEN
+        String meetingWithoutId = """
+                   {
+                   "title": "book",
+                   "date": "2023-08-08",
+                   "location": "online"
+                   }
+                                """;
+
+        String expected = """
+                [
+                {
+                "title": "book",
+                "date": "2023-08-08",
+                "location": "online"
+                }
+                ]
+                """;
+
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings").content(meetingWithoutId).contentType(MediaType.APPLICATION_JSON))
+
+        //THEN
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(expected));
+
     }
 }
