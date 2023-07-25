@@ -2,7 +2,6 @@ package de.neuefische.readandmeet.backend.controller;
 
 import de.neuefische.readandmeet.backend.model.Meeting;
 import de.neuefische.readandmeet.backend.repository.MeetingRepo;
-import de.neuefische.readandmeet.backend.service.MeetingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,10 +23,6 @@ class MeetingControllerTest {
 
     @Autowired
     private MeetingRepo meetingRepo;
-
-    @Autowired
-    private MeetingService meetingService;
-
 
     @Test
     @DirtiesContext
