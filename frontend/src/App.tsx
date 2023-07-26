@@ -1,20 +1,24 @@
+import {Link, Route, Routes} from "react-router-dom";
 import Header from "./components/Header.tsx";
 import MeetingList from "./pages/MeetingList.tsx";
-import {Link, Route, Routes} from "react-router-dom";
 import AddPage from "./pages/AddPage.tsx";
+import DetailPage from "./pages/DetailPage.tsx";
 import {useFetch} from "./hooks/useFetch.ts";
 import {styled} from "styled-components";
 
 export default function App() {
-
-    const meetings = useFetch(state => state.meetings);
+    const meetings = useFetch((state) => state.meetings);
 
     return (
         <main>
-            <Header/>
+            <Header />
             <Routes>
-                <Route path="/" element={<MeetingList meetings={meetings}/>}/>
-                <Route path="/add" element={<AddPage/>}/>
+                <Route path="/" element={<MeetingList meetings={meetings} />} />
+                <Route path="/add" element={<AddPage />} />
+                <Route
+                    path="/:id"
+                    element={<DetailPage/>}
+                />
             </Routes>
 
             <StyledApp>
