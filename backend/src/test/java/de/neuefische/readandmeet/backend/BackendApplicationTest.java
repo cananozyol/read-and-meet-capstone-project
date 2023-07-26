@@ -10,5 +10,4 @@ class BackendApplicationTest {
     void contextLoads() {
         Assertions.assertTrue(true);
     }
-
 }
