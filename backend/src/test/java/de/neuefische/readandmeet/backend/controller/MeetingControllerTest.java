@@ -61,22 +61,16 @@ class MeetingControllerTest {
                    }
                                 """;
 
-        String expected = """
-                [
-                {
-                "title": "book",
-                "date": "2023-08-08",
-                "location": "online"
-                }
-                ]
-                """;
 
         //WHEN
         mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings").content(meetingWithoutId).contentType(MediaType.APPLICATION_JSON))
 
         //THEN
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(expected));
-
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("book"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].date").value("2023-08-08"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].location").value("online"));
     }
 }
