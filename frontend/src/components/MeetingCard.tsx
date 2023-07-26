@@ -2,7 +2,7 @@ import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import {Meeting} from "../models.ts";
+import {Meeting} from "../models/meeting.ts";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 
 type Props = {
