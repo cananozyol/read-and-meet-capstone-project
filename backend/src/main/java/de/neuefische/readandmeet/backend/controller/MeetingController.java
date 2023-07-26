@@ -27,4 +27,8 @@ public class MeetingController {
         this.meetingService.add(meetingWithoutId);
         return this.meetingService.list();
     }
+    @GetMapping("/{id}")
+    public Meeting getMeetingById(@PathVariable String id) {
+        return this.meetingService.getDetails(id);
+    }
 }
