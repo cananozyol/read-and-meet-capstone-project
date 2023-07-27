@@ -9,13 +9,18 @@ export default function DetailPage() {
 
     const navigate = useNavigate();
     const { id } = useParams();
-    const { meetings } = useFetch();
+    const { meetings} = useFetch();
     const meeting = meetings.find((m) => m.id === id);
-
+    const { deleteMeeting } = useFetch();
 
     if (!meeting) {
         return <>No Meeting</>;
     }
+
+    const handleDelete = () => {
+        deleteMeeting(id);
+        navigate("/"); // Redirect to the MeetingList page
+    };
 
     return (
         <Card sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -35,7 +40,7 @@ export default function DetailPage() {
             <CardContent style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
                 <StyledButton>
                     <button onClick={() => navigate(`/${id}/edit`)}> Edit </button>
-                    <button> Delete </button>
+                    <button onClick={handleDelete}> Delete </button>
                 </StyledButton>
             </CardContent>
         </Card>
