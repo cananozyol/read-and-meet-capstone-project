@@ -7,7 +7,9 @@ type State = {
     fetchMeetings: () => void;
     postMeeting: (requestBody: MeetingWithoutId) => void;
     getMeetingById: (id: string | undefined) => Meeting | undefined;
+    deleteMeeting: (id: string | undefined) => void;
 };
+
 
 export const useFetch = create<State>((set, get) => ({
     meetings: [],
@@ -45,4 +47,16 @@ export const useFetch = create<State>((set, get) => ({
         return meeting;
 
     },
+
+    deleteMeeting: (id: string | undefined) => {
+        if (!id) {
+            throw new Error("No id provided");
+        }
+        const { fetchMeetings } = get();
+        axios
+            .delete(`/api/meetings/${id}`)
+            .then(fetchMeetings)
+            .catch(console.error);
+    },
+
 }));

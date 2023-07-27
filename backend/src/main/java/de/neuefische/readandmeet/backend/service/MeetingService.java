@@ -33,4 +33,12 @@ public class MeetingService {
     public Meeting getDetails(String id) {
         return this.meetingRepo.findById(id).orElseThrow(() -> new NoSuchElementException(id));
     }
+
+    public void delete(String id) {
+        Meeting meeting = this.meetingRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Meeting with ID " + id + " not found"));
+        this.meetingRepo.delete(meeting);
+    }
+
+
 }

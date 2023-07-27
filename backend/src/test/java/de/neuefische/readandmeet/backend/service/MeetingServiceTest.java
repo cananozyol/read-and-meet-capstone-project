@@ -30,8 +30,8 @@ class MeetingServiceTest {
         List<Meeting> actual = meetingService.list();
 
         //THEN
-        assertEquals(expected, actual);
         verify(meetingRepo).findAll();
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -44,8 +44,8 @@ class MeetingServiceTest {
         String actual = uuIdService.getRandomId();
 
         //THEN
-        assertEquals(expected, actual);
         verify(uuIdService).getRandomId();
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -60,12 +60,12 @@ class MeetingServiceTest {
         Meeting actual = meetingService.add(meetingWithoutId);
 
         //THEN
-        assertEquals(expected, actual);
         verify(uuIdService).getRandomId();
         verify(meetingRepo).insert(expected);
+        assertEquals(expected, actual);
     }
     @Test
-    void expectMeeting_whenMeetingById() {
+    void expectMeeting_whenGETMeetingById() {
         //GIVEN
         Meeting expected = new Meeting("123", "book", LocalDate.now(), "online");
 
@@ -74,7 +74,26 @@ class MeetingServiceTest {
         Meeting actual = meetingService.getDetails("abc");
 
         //THEN
-        assertEquals(expected, actual);
         verify(meetingRepo).findById("abc");
+        assertEquals(expected, actual);
     }
+
+    @Test
+    void expectDeletingMethod_whenDeleteMethodIsCalled() {
+        // GIVEN
+        String id = "123";
+        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online");
+
+        // WHEN
+        when(meetingRepo.findById(id)).thenReturn(Optional.of(expected));
+        doNothing().when(meetingRepo).delete(expected);
+
+        meetingService.delete(id);
+
+        // THEN
+        verify(meetingRepo).findById(id);
+        verify(meetingRepo).delete(expected);
+    }
+
+
 }
