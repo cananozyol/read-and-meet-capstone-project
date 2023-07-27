@@ -79,17 +79,21 @@ class MeetingServiceTest {
     }
 
     @Test
-    void expectDeletingMethod_whenDeleteMethodIsCalled () {
+    void expectDeletingMethod_whenDeleteMethodIsCalled() {
         // GIVEN
         String id = "123";
         Meeting expected = new Meeting("123", "book", LocalDate.now(), "online");
 
-        //when
+        // WHEN
         when(meetingRepo.findById(id)).thenReturn(Optional.of(expected));
+        doNothing().when(meetingRepo).delete(expected);
+
         meetingService.delete(id);
 
-        //then
+        // THEN
         verify(meetingRepo).findById(id);
-        verify(meetingRepo).deleteById(id);
+        verify(meetingRepo).delete(expected);
     }
+
+
 }
