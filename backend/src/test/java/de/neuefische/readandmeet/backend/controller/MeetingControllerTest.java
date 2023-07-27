@@ -138,4 +138,41 @@ class MeetingControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(expected)).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    @DirtiesContext
+    void expectUpdatedMeeting_whenPUTById() throws Exception {
+        //GIVEN
+        String initialMeetingWithoutId = """
+                   {
+                   "title": "book",
+                   "date": "2023-08-08",
+                   "location": "online"
+                   }
+                                """;
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings").content(initialMeetingWithoutId).contentType(MediaType.APPLICATION_JSON));
+
+        String meetingWithoutIdToPUT = """
+                   {
+                   "title": "book",
+                   "date": "2023-09-09",
+                   "location": "home"
+                   }
+                                """;
+
+        String id = meetingService.list().get(0).getId();
+        String updatedMeeting = """
+                        {
+                            "id": "%s",
+                            "title": "book",
+                            "date": "2023-09-09",
+                            "location": "home"
+                         }
+                """.formatted(id);
+
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/meetings/" + id).content(meetingWithoutIdToPUT).contentType(MediaType.APPLICATION_JSON))
+
+                //THEN
+                .andExpect(MockMvcResultMatchers.content().json(updatedMeeting)).andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
