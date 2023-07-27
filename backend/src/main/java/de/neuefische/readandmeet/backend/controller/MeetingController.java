@@ -31,4 +31,9 @@ public class MeetingController {
     public Meeting getMeetingById(@PathVariable String id) {
         return this.meetingService.getDetails(id);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable String id) {
+        this.meetingService.delete(id);
+    }
 }
