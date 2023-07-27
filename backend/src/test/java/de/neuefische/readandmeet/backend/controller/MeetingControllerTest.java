@@ -109,4 +109,33 @@ class MeetingControllerTest {
         //THEN
                 .andExpect(MockMvcResultMatchers.content().json(expected)).andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    @DirtiesContext
+    void expectEmptyList_whenDELETEMeetingById () throws Exception {
+        //GIVEN
+        String meetingWithoutId = """
+                   {
+                   "title": "book",
+                   "date": "2023-08-08",
+                   "location": "online"
+                   }
+                                """;
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings").content(meetingWithoutId).contentType(MediaType.APPLICATION_JSON));
+
+        String id = meetingService.list().get(0).getId();
+
+        String expected = "[]";
+
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/meetings/" + id))
+
+        //THEN
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings"))
+                .andExpect(MockMvcResultMatchers.content().json(expected)).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
 }
