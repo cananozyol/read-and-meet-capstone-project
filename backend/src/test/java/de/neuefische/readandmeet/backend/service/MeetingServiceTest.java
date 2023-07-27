@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -62,5 +63,18 @@ class MeetingServiceTest {
         assertEquals(expected, actual);
         verify(uuIdService).getRandomId();
         verify(meetingRepo).insert(expected);
+    }
+    @Test
+    void expectMeeting_whenMeetingById() {
+        //GIVEN
+        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online");
+
+        //WHEN
+        when(meetingRepo.findById("abc")).thenReturn(Optional.of(expected));
+        Meeting actual = meetingService.getDetails("abc");
+
+        //THEN
+        assertEquals(expected, actual);
+        verify(meetingRepo).findById("abc");
     }
 }

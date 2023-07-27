@@ -64,15 +64,15 @@ export default function AddPage() {
                 onChange={handleChange}
                 style={{ marginBottom: "10px", width: "300px" }}
             />
-            <StyledAdd>
+            <StyledButton>
                 <button type={"submit"}>Add</button>
                 <button onClick={() => navigate('/')}>Cancel</button>
-            </StyledAdd>
+            </StyledButton>
         </form>
     );
 }
 
-const StyledAdd = styled.div`
+const StyledButton = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;

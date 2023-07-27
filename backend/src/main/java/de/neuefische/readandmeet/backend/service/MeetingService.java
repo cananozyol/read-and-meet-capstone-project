@@ -6,6 +6,7 @@ import de.neuefische.readandmeet.backend.repository.MeetingRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class MeetingService {
@@ -28,5 +29,8 @@ public class MeetingService {
         String id = uuIdService.getRandomId();
         Meeting meeting = new Meeting(id, m.getTitle(), m.getDate(), m.getLocation());
         return this.meetingRepo.insert(meeting);
+    }
+    public Meeting getDetails(String id) {
+        return this.meetingRepo.findById(id).orElseThrow(() -> new NoSuchElementException(id));
     }
 }

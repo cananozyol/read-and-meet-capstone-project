@@ -2,6 +2,7 @@ package de.neuefische.readandmeet.backend.controller;
 
 import de.neuefische.readandmeet.backend.model.Meeting;
 import de.neuefische.readandmeet.backend.repository.MeetingRepo;
+import de.neuefische.readandmeet.backend.service.MeetingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +24,9 @@ class MeetingControllerTest {
 
     @Autowired
     private MeetingRepo meetingRepo;
+
+    @Autowired
+    private MeetingService meetingService;
 
     @Test
     @DirtiesContext
@@ -72,5 +76,37 @@ class MeetingControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("book"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].date").value("2023-08-08"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].location").value("online"));
+    }
+
+    @Test
+    @DirtiesContext
+    void expectMeeting_whenGETById() throws Exception {
+        //GIVEN
+        String meetingWithoutId = """
+                   {
+                   "title": "book",
+                   "date": "2023-08-08",
+                   "location": "online"
+                   }
+                                """;
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings").content(meetingWithoutId).contentType(MediaType.APPLICATION_JSON));
+
+        String id = meetingService.list().get(0).getId();
+
+        String expected = """
+                        {
+                            "id": "%s",
+                            "title": "book",
+                            "date": "2023-08-08",
+                            "location": "online"
+                         }
+                """.formatted(id);
+
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/" + id))
+
+        //THEN
+                .andExpect(MockMvcResultMatchers.content().json(expected)).andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
