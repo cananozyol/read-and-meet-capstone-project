@@ -6,11 +6,9 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {styled} from "styled-components";
 
 export default function DetailPage() {
-
     const navigate = useNavigate();
     const { id } = useParams();
-    const { meetings} = useFetch();
-    const meeting = meetings.find((m) => m.id === id);
+    const meeting = useFetch((state) => state.getMeetingById(id));
     const { deleteMeeting } = useFetch();
 
     if (!meeting) {
@@ -19,7 +17,7 @@ export default function DetailPage() {
 
     const handleDelete = () => {
         deleteMeeting(id);
-        navigate("/"); // Redirect to the MeetingList page
+        navigate("/");
     };
 
     return (
@@ -39,8 +37,8 @@ export default function DetailPage() {
             </CardContent>
             <CardContent style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
                 <StyledButton>
-                    <button onClick={() => navigate(`/${id}/edit`)}> Edit </button>
-                    <button onClick={handleDelete}> Delete </button>
+                    <button onClick={() => navigate(`/${id}/edit`)}>Edit</button>
+                    <button onClick={handleDelete}>Delete</button>
                 </StyledButton>
             </CardContent>
         </Card>
