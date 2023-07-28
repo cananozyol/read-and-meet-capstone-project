@@ -96,4 +96,21 @@ class MeetingServiceTest {
     }
 
 
+    @Test
+    void expectEditedMeeting_whenEditingMeeting () {
+        //GIVEN
+        String id = "123";
+        MeetingWithoutId meetingWithoutId = new MeetingWithoutId("book", LocalDate.now(), "online");
+        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online");
+
+        //WHEN
+        when(meetingRepo.findById(id)).thenReturn(Optional.of(expected));
+        when(meetingRepo.save(expected)).thenReturn(expected);
+        Meeting actual = meetingService.editMeetingById(meetingWithoutId, id);
+
+        //THEN
+        verify(meetingRepo).findById(id);
+        verify(meetingRepo).save(expected);
+        assertEquals(expected, actual);
+    }
 }

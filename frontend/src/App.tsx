@@ -3,6 +3,7 @@ import Header from "./components/Header.tsx";
 import MeetingList from "./pages/MeetingList.tsx";
 import AddPage from "./pages/AddPage.tsx";
 import DetailPage from "./pages/DetailPage.tsx";
+import EditPage from "./pages/EditPage.tsx";
 import {useFetch} from "./hooks/useFetch.ts";
 import {styled} from "styled-components";
 
@@ -12,13 +13,12 @@ export default function App() {
     return (
         <main>
             <Header />
+
             <Routes>
                 <Route path="/" element={<MeetingList meetings={meetings} />} />
                 <Route path="/add" element={<AddPage />} />
-                <Route
-                    path="/:id"
-                    element={<DetailPage/>}
-                />
+                <Route path="/:id" element={<DetailPage />} />
+                <Route path="/:id/edit" element={<EditPage/>} />
             </Routes>
 
             <StyledApp>

@@ -40,5 +40,12 @@ public class MeetingService {
         this.meetingRepo.delete(meeting);
     }
 
+    public Meeting editMeetingById(MeetingWithoutId m, String id) {
+        Meeting meeting = this.meetingRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Meeting with ID " + id + " not found"));
 
+        Meeting editedMeeting = new Meeting(meeting.getId(), m.getTitle(), m.getDate(), m.getLocation());
+
+        return this.meetingRepo.save(editedMeeting);
+    }
 }

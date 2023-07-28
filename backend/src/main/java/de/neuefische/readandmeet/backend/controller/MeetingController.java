@@ -36,4 +36,10 @@ public class MeetingController {
     public void deleteById(@PathVariable String id) {
         this.meetingService.delete(id);
     }
+
+    @PutMapping("/{id}")
+    public Meeting updateMeetingById(@PathVariable String id, @RequestBody MeetingWithoutId meetingWithoutId) {
+        this.meetingService.editMeetingById(meetingWithoutId, id);
+        return meetingService.getDetails(id);
+    }
 }
