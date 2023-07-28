@@ -8,8 +8,8 @@ type State = {
     postMeeting: (requestBody: MeetingWithoutId) => void;
     getMeetingById: (id: string | undefined) => Meeting | undefined;
     deleteMeeting: (id: string | undefined) => void;
+    putMeeting: (requestBody: Meeting) => void;
 };
-
 
 export const useFetch = create<State>((set, get) => ({
     meetings: [],
@@ -24,10 +24,12 @@ export const useFetch = create<State>((set, get) => ({
     },
 
     postMeeting: (requestBody: MeetingWithoutId) => {
-        const { fetchMeetings } = get();
         axios
             .post("/api/meetings", requestBody)
-            .then(fetchMeetings)
+            .then((response) => response.data)
+            .then((newMeeting) => {
+                set((state) => ({ meetings: [...state.meetings, newMeeting] }));
+            })
             .catch(console.error);
     },
 
@@ -35,28 +37,37 @@ export const useFetch = create<State>((set, get) => ({
         if (!id) {
             throw new Error("No id provided");
         }
-        axios
-            .get(`/api/meetings/${id}`)
-            .then((response) => response.data)
-            .then((data) => {
-                set({ meetings: data });
-            })
-            .catch(console.error);
+
         const { meetings } = get();
         const meeting = meetings.find((meeting) => meeting.id === id);
         return meeting;
-
     },
 
     deleteMeeting: (id: string | undefined) => {
         if (!id) {
             throw new Error("No id provided");
         }
-        const { fetchMeetings } = get();
+
         axios
             .delete(`/api/meetings/${id}`)
-            .then(fetchMeetings)
+            .then(() => {
+                set((state) => ({ meetings: state.meetings.filter((meeting) => meeting.id !== id) }));
+            })
             .catch(console.error);
     },
 
+    putMeeting: (requestBody: Meeting) => {
+        const { id, ...meetingWithoutId } = requestBody; // Destructure the requestBody to get the id and the rest of the properties
+        axios
+            .put(`/api/meetings/${id}`, meetingWithoutId)
+            .then((response) => response.data)
+            .then((updatedMeeting) => {
+                set((state) => ({
+                    meetings: state.meetings.map((meeting) =>
+                        meeting.id === id ? { ...updatedMeeting, id } : meeting
+                    ),
+                }));
+            })
+            .catch(console.error);
+    },
 }));
