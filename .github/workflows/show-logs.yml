@@ -16,7 +16,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           #Set App Name ("alpha" - "tango")
           script: |
-            docker logs cgn-java-23-2-canan
+            sudo docker logs cgn-java-23-2-canan
       - name: Check the deployed service URL
         uses: jtalk/url-health-check-action@v3
         with:
