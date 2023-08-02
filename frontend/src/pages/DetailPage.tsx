@@ -1,9 +1,11 @@
-import {useNavigate, useParams} from "react-router-dom";
-import {Card, CardContent, Typography} from "@mui/material";
+import {Button, Card, CardContent, Typography} from "@mui/material";
 import {useFetch} from "../hooks/useFetch.ts";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {styled} from "styled-components";
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import {useNavigate, useParams} from "react-router-dom";
 
 export default function DetailPage() {
     const navigate = useNavigate();
@@ -17,7 +19,7 @@ export default function DetailPage() {
 
     const handleDelete = () => {
         deleteMeeting(id);
-        navigate("/");
+        navigate("/meetinglist");
     };
 
     return (
@@ -37,8 +39,34 @@ export default function DetailPage() {
             </CardContent>
             <CardContent style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
                 <StyledButton>
-                    <button onClick={() => navigate(`/${id}/edit`)}>Edit</button>
-                    <button onClick={handleDelete}>Delete</button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<BorderColorIcon style={{ color: 'white' }} />}
+                        onClick={() => navigate(`/${id}/editmeeting`)}
+                        sx={{
+                            backgroundColor: '#d1adee',
+                            color: 'black',
+                            borderRadius: '5px',
+                            width: '139px',
+                        }}
+                    >
+                        EDIT
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<DeleteForeverIcon style={{ color: 'white' }} />}
+                        onClick={handleDelete}
+                        sx={{
+                            backgroundColor: '#d1adee',
+                            color: 'black',
+                            borderRadius: '5px',
+                            width: '139px',
+                        }}
+                    >
+                        Delete
+                    </Button>
                 </StyledButton>
             </CardContent>
         </Card>
