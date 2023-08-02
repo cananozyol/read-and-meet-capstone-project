@@ -16,6 +16,7 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
+import {toast} from "react-toastify";
 
 export default function DetailPage() {
     const navigate = useNavigate();
@@ -31,6 +32,16 @@ export default function DetailPage() {
     const handleDelete = () => {
         deleteMeeting(id);
         navigate("/meetinglist");
+        toast("You have deleted your meeting!", {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            bodyClassName: "toast-body-grey",
+        });
     };
 
     const handleClickOpen = () => {

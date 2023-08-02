@@ -1,7 +1,7 @@
 import {useFetch} from "../hooks/useFetch.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import InputFormMeetings from "../components/InputFormMeetings.tsx";
-
+import {toast} from "react-toastify";
 
 export default function EditPage() {
     const { id } = useParams();
@@ -16,8 +16,11 @@ export default function EditPage() {
     function handleSubmit(formData: MeetingWithoutId) {
         putMeeting({ ...formData, id: id as string });
         navigate(`/${id}`);
+        toast("You have successfully edited your meeting!", {
+            position: "top-left",
+            autoClose: 3000,
+        });
     }
-
 
     return (
         <InputFormMeetings
