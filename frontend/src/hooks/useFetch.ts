@@ -57,7 +57,7 @@ export const useFetch = create<State>((set, get) => ({
     },
 
     putMeeting: (requestBody: Meeting) => {
-        const { id, ...meetingWithoutId } = requestBody; // Destructure the requestBody to get the id and the rest of the properties
+        const { id, ...meetingWithoutId } = requestBody;
         axios
             .put(`/api/meetings/${id}`, meetingWithoutId)
             .then((response) => response.data)
