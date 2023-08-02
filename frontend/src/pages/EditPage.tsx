@@ -1,8 +1,10 @@
 import {useState} from "react";
 import {useFetch} from "../hooks/useFetch.ts";
-import {TextField} from "@mui/material";
+import {Button, TextField} from "@mui/material";
 import {styled} from "styled-components";
 import {useNavigate, useParams} from "react-router-dom";
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function EditPage() {
     const navigate = useNavigate();
@@ -66,8 +68,34 @@ export default function EditPage() {
                 style={{ marginBottom: "10px", width: "300px" }}
             />
             <StyledButton>
-                <button type="submit">Save Changes</button>
-                <button onClick={handleCancel}>Cancel</button>
+                <Button
+                    onClick={handleCancel}
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<CloseIcon style={{ color: 'white' }} />}
+                    sx={{
+                        backgroundColor: '#d1adee',
+                        color: 'black',
+                        borderRadius: '5px',
+                        width: '139px',
+                    }}
+                >
+                    Cancel
+                </Button>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<CheckIcon style={{ color: 'white' }} />}
+                    sx={{
+                        backgroundColor: '#d1adee',
+                        color: 'black',
+                        borderRadius: '5px',
+                        width: '139px',
+                    }}
+                >
+                    Save
+                </Button>
             </StyledButton>
         </form>
     );
