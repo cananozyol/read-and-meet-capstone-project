@@ -8,6 +8,7 @@ import {useFetch} from "./hooks/useFetch.ts";
 import {styled} from "styled-components";
 import HomePage from "./pages/HomePage.tsx";
 import {Button} from "@mui/material";
+import {ToastContainer} from "react-toastify";
 
 export default function App() {
     const meetings = useFetch((state) => state.meetings);
@@ -15,7 +16,7 @@ export default function App() {
     return (
         <main>
             <Header />
-
+            <ToastContainer/>
             <Routes>
                 <Route path="/" element={<HomePage/>}/>
                 <Route path="/meetinglist" element={<MeetingList meetings={meetings} />} />
