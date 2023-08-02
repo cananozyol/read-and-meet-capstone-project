@@ -1,12 +1,13 @@
 import {useFetch} from "../hooks/useFetch.ts";
 import React, {useState} from "react";
-import {TextField} from "@mui/material";
+import {Button, TextField} from "@mui/material";
 import {MeetingWithoutId} from "../models/meeting.ts";
 import {useNavigate} from "react-router-dom";
 import {styled} from "styled-components";
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function AddPage() {
-
     const postMeeting = useFetch((state) => state.postMeeting);
 
     const [formData, setFormData] = useState<MeetingWithoutId>({
@@ -27,7 +28,7 @@ export default function AddPage() {
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         postMeeting(formData);
-        navigate("/");
+        navigate("/meetinglist");
     }
 
     return (
@@ -65,8 +66,34 @@ export default function AddPage() {
                 style={{ marginBottom: "10px", width: "300px" }}
             />
             <StyledButton>
-                <button type={"submit"}>Add</button>
-                <button onClick={() => navigate('/')}>Cancel</button>
+                <Button
+                    onClick={() => navigate('/meetinglist')}
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<CloseIcon style={{ color: 'white' }} />}
+                    sx={{
+                        backgroundColor: '#d1adee',
+                        color: 'black',
+                        borderRadius: '5px',
+                        width: '139px',
+                    }}
+                >
+                    Cancel
+                </Button>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<CheckIcon style={{ color: 'white' }} />}
+                    sx={{
+                        backgroundColor: '#d1adee',
+                        color: 'black',
+                        borderRadius: '5px',
+                        width: '139px',
+                    }}
+                >
+                    Save
+                </Button>
             </StyledButton>
         </form>
     );
@@ -79,3 +106,4 @@ const StyledButton = styled.div`
   gap: 1.1em;
   padding-top: 2em;
 `;
+
