@@ -1,6 +1,6 @@
 import {useFetch} from "../hooks/useFetch.ts";
 import React, {useState} from "react";
-import {Button, TextField} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField} from "@mui/material";
 import {MeetingWithoutId} from "../models/meeting.ts";
 import {useNavigate} from "react-router-dom";
 import {styled} from "styled-components";
@@ -9,19 +9,17 @@ import CloseIcon from '@mui/icons-material/Close';
 
 export default function AddPage() {
     const postMeeting = useFetch((state) => state.postMeeting);
-
     const [formData, setFormData] = useState<MeetingWithoutId>({
         title: "",
         date: "",
         location: "",
     });
-
+    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         const name = event.target.name;
         const value = event.target.value;
-
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
 
@@ -30,6 +28,19 @@ export default function AddPage() {
         postMeeting(formData);
         navigate("/meetinglist");
     }
+
+    const handleCancel = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleConfirmCancel = () => {
+        setOpen(false);
+        navigate("/meetinglist");
+    };
 
     return (
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -67,7 +78,7 @@ export default function AddPage() {
             />
             <StyledButton>
                 <Button
-                    onClick={() => navigate('/meetinglist')}
+                    onClick={handleCancel}
                     variant="contained"
                     color="secondary"
                     startIcon={<CloseIcon style={{ color: 'white' }} />}
@@ -95,6 +106,18 @@ export default function AddPage() {
                     Save
                 </Button>
             </StyledButton>
+
+            <Dialog open={open} onClose={handleClose} aria-describedby="alert-dialog-description">
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description" sx={{ color: 'black' }}>
+                        Are you sure you want to cancel adding a new meeting?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                    <Button onClick={handleClose} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>No</Button>
+                    <Button onClick={handleConfirmCancel} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>Yes</Button>
+                </DialogActions>
+            </Dialog>
         </form>
     );
 }
@@ -106,4 +129,3 @@ const StyledButton = styled.div`
   gap: 1.1em;
   padding-top: 2em;
 `;
-
