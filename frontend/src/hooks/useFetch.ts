@@ -24,12 +24,10 @@ export const useFetch = create<State>((set, get) => ({
     },
 
     postMeeting: (requestBody: MeetingWithoutId) => {
+        const { fetchMeetings } = get();
         axios
             .post("/api/meetings", requestBody)
-            .then((response) => response.data)
-            .then((newMeeting) => {
-                set((state) => ({ meetings: [...state.meetings, newMeeting] }));
-            })
+            .then(fetchMeetings)
             .catch(console.error);
     },
 
