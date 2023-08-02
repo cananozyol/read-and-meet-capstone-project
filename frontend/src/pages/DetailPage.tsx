@@ -1,4 +1,13 @@
-import {Button, Card, CardContent, Typography} from "@mui/material";
+import {
+    Button,
+    Card,
+    CardContent,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    Typography
+} from "@mui/material";
 import {useFetch} from "../hooks/useFetch.ts";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -6,12 +15,14 @@ import {styled} from "styled-components";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {useNavigate, useParams} from "react-router-dom";
+import {useState} from "react";
 
 export default function DetailPage() {
     const navigate = useNavigate();
     const { id } = useParams();
     const meeting = useFetch((state) => state.getMeetingById(id));
     const { deleteMeeting } = useFetch();
+    const [open, setOpen] = useState(false);
 
     if (!meeting) {
         return <>No Meeting</>;
@@ -21,6 +32,14 @@ export default function DetailPage() {
         deleteMeeting(id);
         navigate("/meetinglist");
     };
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
 
     return (
         <Card sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -57,7 +76,7 @@ export default function DetailPage() {
                         variant="contained"
                         color="secondary"
                         startIcon={<DeleteForeverIcon style={{ color: 'white' }} />}
-                        onClick={handleDelete}
+                        onClick={handleClickOpen}
                         sx={{
                             backgroundColor: '#d1adee',
                             color: 'black',
@@ -68,6 +87,23 @@ export default function DetailPage() {
                         Delete
                     </Button>
                 </StyledButton>
+                <Dialog
+                    open={open}
+                    keepMounted
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description" sx={{ color: 'black' }}>
+                            Are you sure you want to delete your meeting?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                        <Button onClick={handleClose} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>No</Button>
+                        <Button onClick={() => { handleDelete(); }} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>Yes</Button>
+                    </DialogActions>
+
+                </Dialog>
             </CardContent>
         </Card>
     );
