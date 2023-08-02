@@ -6,6 +6,8 @@ import DetailPage from "./pages/DetailPage.tsx";
 import EditPage from "./pages/EditPage.tsx";
 import {useFetch} from "./hooks/useFetch.ts";
 import {styled} from "styled-components";
+import HomePage from "./pages/HomePage.tsx";
+import {Button} from "@mui/material";
 
 export default function App() {
     const meetings = useFetch((state) => state.meetings);
@@ -15,18 +17,41 @@ export default function App() {
             <Header />
 
             <Routes>
-                <Route path="/" element={<MeetingList meetings={meetings} />} />
-                <Route path="/add" element={<AddPage />} />
+                <Route path="/" element={<HomePage/>}/>
+                <Route path="/meetinglist" element={<MeetingList meetings={meetings} />} />
+                <Route path="/addmeeting" element={<AddPage />} />
                 <Route path="/:id" element={<DetailPage />} />
-                <Route path="/:id/edit" element={<EditPage/>} />
+                <Route path="/:id/editmeeting" element={<EditPage/>} />
             </Routes>
 
             <StyledApp>
-                <Link to={"/"}>
-                    <button>My Meetings</button>
+                <Link to={"/meetinglist"}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        sx={{
+                            backgroundColor: '#d1adee',
+                            color: 'black',
+                            borderRadius: '5px',
+                            width: '139px',
+                        }}
+                    >
+                        MY MEETINGS
+                    </Button>
                 </Link>
-                <Link to={"/add"}>
-                    <button>New Meeting</button>
+                <Link to={"/addmeeting"}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        sx={{
+                            backgroundColor: '#d1adee',
+                            color: 'black',
+                            borderRadius: '5px',
+                            width: '139px',
+                        }}
+                    >
+                        NEW MEETING
+                    </Button>
                 </Link>
             </StyledApp>
         </main>
