@@ -9,6 +9,8 @@ import {styled} from "styled-components";
 import HomePage from "./pages/HomePage.tsx";
 import {Button} from "@mui/material";
 import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function App() {
     const meetings = useFetch((state) => state.meetings);
@@ -16,18 +18,7 @@ export default function App() {
     return (
         <main>
             <Header />
-            <ToastContainer
-                position="top-left"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored"
-            />
+            <ToastContainer/>
             <Routes>
                 <Route path="/" element={<HomePage/>}/>
                 <Route path="/meetinglist" element={<MeetingList meetings={meetings} />} />

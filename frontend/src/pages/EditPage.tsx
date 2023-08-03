@@ -2,6 +2,13 @@ import {useFetch} from "../hooks/useFetch.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import InputFormMeetings from "../components/InputFormMeetings.tsx";
 import {toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
+type MeetingWithoutId = {
+    title: string;
+    date: string;
+    location: string;
+}
 
 export default function EditPage() {
     const { id } = useParams();
@@ -16,9 +23,31 @@ export default function EditPage() {
     function handleSubmit(formData: MeetingWithoutId) {
         putMeeting({ ...formData, id: id as string });
         navigate(`/${id}`);
-        toast("You have successfully edited your meeting!", {
-            position: "top-left",
+        toast.success("You have successfully edited your meeting!", {
+            position: "top-right",
             autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            closeButton: <button>x</button>,
+            style: { background: '#b2dfdb', color: "black" },
+        });
+    }
+
+    function handleCancel() {
+        navigate(`/${id}`);
+        toast.info("You successfully canceled editing the meeting!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            closeButton: <button>x</button>,
+            style: { background: '#bbdefb', color: "black" },
         });
     }
 
@@ -30,14 +59,8 @@ export default function EditPage() {
                 date: meeting.date || "",
                 location: meeting.location || "",
             }}
-            onCancel={() => navigate(`/${id}`)}
+            onCancel={handleCancel}
             onSubmit={handleSubmit}
         />
     );
 }
-
-type MeetingWithoutId = {
-    title: string;
-    date: string;
-    location: string;
-};

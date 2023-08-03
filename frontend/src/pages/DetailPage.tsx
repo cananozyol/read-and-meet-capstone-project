@@ -17,6 +17,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
 import {toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function DetailPage() {
     const navigate = useNavigate();
@@ -32,15 +33,16 @@ export default function DetailPage() {
     const handleDelete = () => {
         deleteMeeting(id);
         navigate("/meetinglist");
-        toast("You have deleted your meeting!", {
-            position: "top-left",
+        toast.warning("You have deleted your meeting!", {
+            position: "top-right",
             autoClose: 3000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            bodyClassName: "toast-body-grey",
+            closeButton: <button>x</button>,
+            style: { background: '#fff9c4', color: "black" },
         });
     };
 

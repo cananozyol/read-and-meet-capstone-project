@@ -40,14 +40,3 @@ img, picture, video, canvas, svg {
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Roboto', sans-serif;
 }
-
-.toast-body-grey {
-    background-color: #ccc;
-    color: black;
-    border: 5px solid #000;
-    padding: 8px;
-}
-
-.Toastify__toast-container .Toastify__toast {
-    margin-bottom: 0;
-}
