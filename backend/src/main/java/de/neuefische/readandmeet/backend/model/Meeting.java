@@ -8,10 +8,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
-@Document
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "meetings")
 public class Meeting {
 
     @Id
@@ -19,4 +19,5 @@ public class Meeting {
     private String title;
     private LocalDate date;
     private String location;
+    private String bookId;
 }
