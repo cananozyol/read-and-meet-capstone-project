@@ -1,15 +1,30 @@
-import {useNavigate, useParams} from "react-router-dom";
-import {Card, CardContent, Typography} from "@mui/material";
+import {
+    Button,
+    Card,
+    CardContent,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    Typography
+} from "@mui/material";
 import {useFetch} from "../hooks/useFetch.ts";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {styled} from "styled-components";
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import {useNavigate, useParams} from "react-router-dom";
+import {useState} from "react";
+import {toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function DetailPage() {
     const navigate = useNavigate();
     const { id } = useParams();
     const meeting = useFetch((state) => state.getMeetingById(id));
     const { deleteMeeting } = useFetch();
+    const [open, setOpen] = useState(false);
 
     if (!meeting) {
         return <>No Meeting</>;
@@ -17,8 +32,27 @@ export default function DetailPage() {
 
     const handleDelete = () => {
         deleteMeeting(id);
-        navigate("/");
+        navigate("/meetinglist");
+        toast.warning("You have deleted your meeting!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            closeButton: <button>x</button>,
+            style: { background: '#fff9c4', color: "black" },
+        });
     };
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
 
     return (
         <Card sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -37,9 +71,52 @@ export default function DetailPage() {
             </CardContent>
             <CardContent style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
                 <StyledButton>
-                    <button onClick={() => navigate(`/${id}/edit`)}>Edit</button>
-                    <button onClick={handleDelete}>Delete</button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<BorderColorIcon style={{ color: 'white' }} />}
+                        onClick={() => navigate(`/${id}/editmeeting`)}
+                        sx={{
+                            backgroundColor: '#d1adee',
+                            color: 'black',
+                            borderRadius: '5px',
+                            width: '139px',
+                        }}
+                    >
+                        EDIT
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<DeleteForeverIcon style={{ color: 'white' }} />}
+                        onClick={handleClickOpen}
+                        sx={{
+                            backgroundColor: '#d1adee',
+                            color: 'black',
+                            borderRadius: '5px',
+                            width: '139px',
+                        }}
+                    >
+                        Delete
+                    </Button>
                 </StyledButton>
+                <Dialog
+                    open={open}
+                    keepMounted
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description" sx={{ color: 'black' }}>
+                            Are you sure you want to delete your meeting?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                        <Button onClick={handleClose} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>No</Button>
+                        <Button onClick={() => { handleDelete(); }} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>Yes</Button>
+                    </DialogActions>
+
+                </Dialog>
             </CardContent>
         </Card>
     );
