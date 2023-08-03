@@ -22,7 +22,7 @@ class MeetingServiceTest {
     @Test
     void expectListOfAllMeetings() {
         //GIVEN
-        Meeting meeting = new Meeting("123", "book", LocalDate.now(), "online");
+        Meeting meeting = new Meeting("123", "book", LocalDate.now(), "online", "b001");
         List<Meeting> expected = new ArrayList<>(List.of(meeting));
 
         //WHEN
@@ -51,8 +51,8 @@ class MeetingServiceTest {
     @Test
     void expectMeeting_whenPOSTingMeeting() {
         //GIVEN
-        MeetingWithoutId meetingWithoutId = new MeetingWithoutId("book", LocalDate.now(), "online");
-        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online");
+        MeetingWithoutId meetingWithoutId = new MeetingWithoutId("book", LocalDate.now(), "online", "b001");
+        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", "b001");
 
         //WHEN
         when(uuIdService.getRandomId()).thenReturn("123");
@@ -64,10 +64,13 @@ class MeetingServiceTest {
         verify(meetingRepo).insert(expected);
         assertEquals(expected, actual);
     }
+
+
+
     @Test
     void expectMeeting_whenGETMeetingById() {
         //GIVEN
-        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online");
+        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", "b001");
 
         //WHEN
         when(meetingRepo.findById("abc")).thenReturn(Optional.of(expected));
@@ -82,7 +85,7 @@ class MeetingServiceTest {
     void expectDeletingMethod_whenDeleteMethodIsCalled() {
         // GIVEN
         String id = "123";
-        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online");
+        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", "b001");
 
         // WHEN
         when(meetingRepo.findById(id)).thenReturn(Optional.of(expected));
@@ -100,8 +103,8 @@ class MeetingServiceTest {
     void expectEditedMeeting_whenEditingMeeting () {
         //GIVEN
         String id = "123";
-        MeetingWithoutId meetingWithoutId = new MeetingWithoutId("book", LocalDate.now(), "online");
-        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online");
+        MeetingWithoutId meetingWithoutId = new MeetingWithoutId("book", LocalDate.now(), "online", "b001");
+        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", "b001");
 
         //WHEN
         when(meetingRepo.findById(id)).thenReturn(Optional.of(expected));
@@ -113,4 +116,24 @@ class MeetingServiceTest {
         verify(meetingRepo).save(expected);
         assertEquals(expected, actual);
     }
+
+    @Test
+    void expectEditedMeetingWithBookId_whenEditingMeetingWithBookId () {
+        //GIVEN
+        String id = "123";
+        MeetingWithoutId meetingWithoutId = new MeetingWithoutId("book", LocalDate.now(), "online", "b002");
+        Meeting existingMeeting = new Meeting("123", "book", LocalDate.now(), "online", "b001");
+        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", "b002");
+
+        //WHEN
+        when(meetingRepo.findById(id)).thenReturn(Optional.of(existingMeeting));
+        when(meetingRepo.save(expected)).thenReturn(expected);
+        Meeting actual = meetingService.editMeetingById(meetingWithoutId, id);
+
+        //THEN
+        verify(meetingRepo).findById(id);
+        verify(meetingRepo).save(expected);
+        assertEquals(expected, actual);
+    }
+
 }

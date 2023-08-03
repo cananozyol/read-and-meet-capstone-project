@@ -13,6 +13,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest
@@ -32,7 +36,7 @@ class MeetingControllerTest {
     @DirtiesContext
     void expectMeetingList_whenGETMeetingList() throws Exception {
         //GIVEN
-        Meeting meeting = new Meeting("123", "Resonance Surge", null, "online");
+        Meeting meeting = new Meeting("123", "Resonance Surge", null, "online", "b001");
         meetingRepo.insert(meeting);
 
         String expected = """
@@ -41,7 +45,8 @@ class MeetingControllerTest {
                         "id": "123",
                         "title": "Resonance Surge",
                         "date": null,
-                        "location": "online"
+                        "location": "online",
+                        "bookId": "b001"
                     }
                 ]
                 """;
@@ -61,7 +66,8 @@ class MeetingControllerTest {
                    {
                    "title": "book",
                    "date": "2023-08-08",
-                   "location": "online"
+                   "location": "online",
+                   "bookId": "b001"
                    }
                                 """;
 
@@ -75,7 +81,8 @@ class MeetingControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("book"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].date").value("2023-08-08"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].location").value("online"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].location").value("online"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].bookId").value("b001"));
     }
 
     @Test
@@ -86,7 +93,8 @@ class MeetingControllerTest {
                    {
                    "title": "book",
                    "date": "2023-08-08",
-                   "location": "online"
+                   "location": "online",
+                   "bookId": "b001"
                    }
                                 """;
 
@@ -99,7 +107,8 @@ class MeetingControllerTest {
                             "id": "%s",
                             "title": "book",
                             "date": "2023-08-08",
-                            "location": "online"
+                            "location": "online",
+                            "bookId": "b001"
                          }
                 """.formatted(id);
 
@@ -118,7 +127,8 @@ class MeetingControllerTest {
                    {
                    "title": "book",
                    "date": "2023-08-08",
-                   "location": "online"
+                   "location": "online",
+                   "bookId": "b001"
                    }
                                 """;
 
@@ -146,7 +156,8 @@ class MeetingControllerTest {
                    {
                    "title": "book",
                    "date": "2023-08-08",
-                   "location": "online"
+                   "location": "online",
+                   "bookId": "b001"
                    }
                                 """;
         mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings").content(initialMeetingWithoutId).contentType(MediaType.APPLICATION_JSON));
@@ -155,7 +166,8 @@ class MeetingControllerTest {
                    {
                    "title": "book",
                    "date": "2023-09-09",
-                   "location": "home"
+                   "location": "home",
+                   "bookId": "b002"
                    }
                                 """;
 
@@ -165,7 +177,8 @@ class MeetingControllerTest {
                             "id": "%s",
                             "title": "book",
                             "date": "2023-09-09",
-                            "location": "home"
+                            "location": "home",
+                            "bookId": "b002"
                          }
                 """.formatted(id);
 
@@ -174,5 +187,13 @@ class MeetingControllerTest {
 
                 //THEN
                 .andExpect(MockMvcResultMatchers.content().json(updatedMeeting)).andExpect(MockMvcResultMatchers.status().isOk());
+
+        // VERIFY DATABASE
+        Meeting updatedMeetingInDatabase = meetingRepo.findById(id).orElse(null);
+        assertNotNull(updatedMeetingInDatabase);
+        assertEquals("book", updatedMeetingInDatabase.getTitle());
+        assertEquals(LocalDate.parse("2023-09-09"), updatedMeetingInDatabase.getDate());
+        assertEquals("home", updatedMeetingInDatabase.getLocation());
+        assertEquals("b002", updatedMeetingInDatabase.getBookId());
     }
 }

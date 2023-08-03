@@ -14,4 +14,5 @@ public class MeetingWithoutId {
     private String title;
     private LocalDate date;
     private String location;
+    private String bookId;
 }
