@@ -11,7 +11,7 @@ type State = {
     putMeeting: (requestBody: Meeting) => void;
 };
 
-export const useFetch = create<State>((set, get) => ({
+export const useMeetings = create<State>((set, get) => ({
     meetings: [],
     fetchMeetings: () => {
         axios
