@@ -106,7 +106,6 @@ class BookControllerTest {
 
         String updatedBook = """
                 {
-                    "id": "1",
                     "title": "Pride and Prejudice",
                     "author": "Jane Austen",
                     "genre": "FANTASY",
