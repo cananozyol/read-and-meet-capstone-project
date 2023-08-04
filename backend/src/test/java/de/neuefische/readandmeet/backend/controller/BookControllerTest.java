@@ -1,9 +1,6 @@
 package de.neuefische.readandmeet.backend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.neuefische.readandmeet.backend.model.Book;
-import de.neuefische.readandmeet.backend.model.BookWithoutId;
 import de.neuefische.readandmeet.backend.model.Genre;
 import de.neuefische.readandmeet.backend.model.Status;
 import de.neuefische.readandmeet.backend.repository.BookRepo;
@@ -21,8 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 @SpringBootTest
@@ -43,8 +39,8 @@ class BookControllerTest {
     void expectBookList_whenGETBookList() throws Exception {
         //GIVEN
         List<Book> expectedBooks = new ArrayList<>();
-        expectedBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, 4, Status.READ));
-        expectedBooks.add(new Book("2", "Resonance Surge", "Nalini Singh", Genre.FANTASY, 4, Status.READ));
+        expectedBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE,  Status.READ,4));
+        expectedBooks.add(new Book("2", "Resonance Surge", "Nalini Singh", Genre.FANTASY, Status.READ,4));
 
         bookRepo.insert(expectedBooks);
 
@@ -71,85 +67,127 @@ class BookControllerTest {
                 //THEN
                 .andExpect(MockMvcResultMatchers.content().json(expected)).andExpect(MockMvcResultMatchers.status().isOk());
     }
+
     @Test
+    @DirtiesContext
     void expectBookCreated_whenPOSTNewBook() throws Exception {
-        // GIVE
-        BookWithoutId newBook = new BookWithoutId("The Great Gatsby", "F. Scott Fitzgerald", Genre.CLASSIC, Status.NOT_READ, 3);
+        //GIVEN
+        String bookWithoutId = """
+                            {
+                                "title": "The Great Gatsby",
+                                "author": "F. Scott Fitzgerald",
+                                "genre": "CLASSIC",
+                                "status": "NOT_READ",
+                                "rating": null
+                            }
+                           """;
 
-        // WHEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/books")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(newBook)))
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/books").content(bookWithoutId).contentType(MediaType.APPLICATION_JSON))
 
-                // THEN
+                //THEN
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("The Great Gatsby"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].author").value("F. Scott Fitzgerald"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].genre").value("CLASSIC"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].status").value("NOT_READ"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].rating").value(0))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+    @Test
+    @DirtiesContext
+    void expectBookUpdated_whenPUTBook() throws Exception {
+        //GIVEN
+        List<Book> initialBooks = new ArrayList<>();
+        initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.NOT_READ, 4));
+        bookRepo.insert(initialBooks);
+        String bookId = bookService.list().get(0).getId();
+
+        String updatedBook = """
+                {
+                    "id": "1",
+                    "title": "Pride and Prejudice",
+                    "author": "Jane Austen",
+                    "genre": "FANTASY",
+                    "status": "READ",
+                    "rating": 5
+                }
+                """;
+
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/books/" + bookId)
+                        .content(updatedBook)
+                        .contentType(MediaType.APPLICATION_JSON))
+
+                //THEN
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(updatedBook));
     }
 
     @Test
-    void expectUpdatedBook_whenPUTBook() throws Exception {
-        // GIVE
-        BookWithoutId initialBook = new BookWithoutId("Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4);
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/books")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(initialBook)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+    @DirtiesContext
+    void expectBookDeleted_whenDELETEBook() throws Exception {
+        //GIVEN
+        List<Book> initialBooks = new ArrayList<>();
+        initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4));
+        bookRepo.insert(initialBooks);
+        String bookId = bookService.list().get(0).getId();
+
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/books/" + bookId))
+
+                //THEN
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+        //VERIFY
+        assertFalse(bookService.list().stream().anyMatch(book -> book.getId().equals(bookId)));
+    }
+
+    @Test
+    @DirtiesContext
+    void expectBookById_whenGETBookById() throws Exception {
+        //GIVEN
+        String bookWithoutId = """
+                {
+                    "title": "Pride and Prejudice",
+                    "author": "Jane Austen",
+                    "genre": "ROMANCE",
+                    "status": "READ",
+                    "rating": 4
+                }
+                """;
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/books").content(bookWithoutId).contentType(MediaType.APPLICATION_JSON));
 
         String bookId = bookService.list().get(0).getId();
 
-        BookWithoutId updatedBook = new BookWithoutId("Updated Book", "Author Updated", Genre.FANTASY, Status.READING, 5);
-        String updatedBookJson = toJson(updatedBook);
+        String expected = """
+                {
+                    "id": "%s",
+                    "title": "Pride and Prejudice",
+                    "author": "Jane Austen",
+                    "genre": "ROMANCE",
+                    "status": "READ",
+                    "rating": 4
+                }
+                """.formatted(bookId);
 
-        // WHEN
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/books/" + bookId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updatedBookJson))
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/books/" + bookId))
 
-                // THEN
+                //THEN
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(updatedBookJson));
-
-        // VERIFY DATABASE
-        Book updatedBookInDatabase = bookRepo.findById(bookId).orElse(null);
-        assertNotNull(updatedBookInDatabase);
-        assertEquals("Updated Book", updatedBookInDatabase.getTitle());
-        assertEquals("Author Updated", updatedBookInDatabase.getAuthor());
-        assertEquals(Genre.FANTASY, updatedBookInDatabase.getGenre());
-        assertEquals(Status.READING, updatedBookInDatabase.getStatus());
-        assertEquals(5, updatedBookInDatabase.getRating());
-    }
-
-
-    @Test
-    void expectNoContent_whenDELETEBook() throws Exception {
-        // GIVE
-        String bookId = "1";
-
-        // WHEN
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/books/" + bookId)
-                        .contentType(MediaType.APPLICATION_JSON))
-
-                // THEN
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.content().json(expected));
     }
 
     @Test
-    void expectBook_whenGETBookById() throws Exception {
-        // GIVE
-        String bookId = "1";
-        Book book = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, 4, Status.READ);
+    void expectNotFoundStatus_whenGetBookByIdWithNonexistentId() throws Exception {
+        //GIVEN
+        String nonExistentId = "non_existent_id";
 
-        // WHEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/books/" + bookId)
-                        .contentType(MediaType.APPLICATION_JSON))
-
-                // THEN
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(toJson(book)));
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/books/" + nonExistentId))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
-
-    private String toJson(Object object) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(object);
-    }
-
 }
