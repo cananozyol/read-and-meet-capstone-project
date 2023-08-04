@@ -1,8 +1,8 @@
-import {useFetch} from "../hooks/useFetch.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import InputFormMeetings from "../components/InputFormMeetings.tsx";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {useMeetings} from "../hooks/useMeetings.ts";
 
 type MeetingWithoutId = {
     title: string;
@@ -12,7 +12,7 @@ type MeetingWithoutId = {
 
 export default function EditPage() {
     const { id } = useParams();
-    const { putMeeting, getMeetingById } = useFetch();
+    const { putMeeting, getMeetingById } = useMeetings();
     const meeting = getMeetingById(id);
     const navigate = useNavigate();
 
