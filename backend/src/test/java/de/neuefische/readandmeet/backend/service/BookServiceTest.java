@@ -1,9 +1,7 @@
 package de.neuefische.readandmeet.backend.service;
 
-import de.neuefische.readandmeet.backend.model.Book;
-import de.neuefische.readandmeet.backend.model.BookWithoutId;
-import de.neuefische.readandmeet.backend.model.Genre;
-import de.neuefische.readandmeet.backend.model.Status;
+import de.neuefische.readandmeet.backend.exceptions.NoSuchBookException;
+import de.neuefische.readandmeet.backend.model.*;
 import de.neuefische.readandmeet.backend.repository.BookRepo;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class BookServiceTest {
@@ -24,10 +23,10 @@ class BookServiceTest {
 
     @Test
     void listShouldReturnListOfAllBooks() {
-        // GIVE
+        //GIVEN
         List<Book> expectedBooks = new ArrayList<>();
-        expectedBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, 4, Status.READ));
-        expectedBooks.add(new Book("2", "Resonance Surge", "Nalini Singh", Genre.FANTASY, 4, Status.READ));
+        expectedBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4));
+        expectedBooks.add(new Book("2", "Resonance Surge", "Nalini Singh", Genre.FANTASY, Status.READING, 4));
 
         //WHEN
         when(bookRepo.findAll()).thenReturn(expectedBooks);
@@ -40,74 +39,79 @@ class BookServiceTest {
 
     @Test
     void addBookShouldReturnAddedBook() {
-        // GIVE
+        //GIVEN
         BookWithoutId bookWithoutId = new BookWithoutId("Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4);
+        Book expectedBook = new Book("b001", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4);
 
-        String generatedId = "1";
-        when(uuIdService.getRandomId()).thenReturn(generatedId);
-
-        Book expectedBook = new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, 4, Status.READ);
-        when(bookRepo.insert(any(Book.class))).thenReturn(expectedBook);
-
-        // WHEN
+        //WHEN
+        when(uuIdService.getRandomId()).thenReturn("b001");
+        when(bookRepo.insert(expectedBook)).thenReturn(expectedBook);
         Book actualBook = bookService.addBook(bookWithoutId);
 
-        // THEN
+        //THEN
         verify(uuIdService).getRandomId();
-        verify(bookRepo).insert(any(Book.class));
+        verify(bookRepo).insert(expectedBook);
         assertEquals(expectedBook, actualBook);
     }
 
     @Test
     void updateBookShouldReturnUpdatedBook() {
-        // GIVE
-        String bookId = "1";
-        BookWithoutId updatedBook = new BookWithoutId("Resonance Surge", "Nalini Singh", Genre.FANTASY, Status.READ, 4);
+        //GIVEN
+        String bookId = "b001";
+        Book existingBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READING, 4);
+        BookEditData updatedBook = new BookEditData(Genre.FANTASY, Status.READ, 5);
+        Book expectedBook = new Book("b001", "Pride and Prejudice", "Jane Austen", Genre.FANTASY,  Status.READ, 5);
 
-        Book existingBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, 4, Status.READ);
+        //WHEN
         when(bookRepo.findById(bookId)).thenReturn(Optional.of(existingBook));
-
-        Book expectedBook = new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, 4, Status.READ);
-        when(bookRepo.save(any(Book.class))).thenReturn(expectedBook);
-
-        // WHEN
+        when(bookRepo.save(expectedBook)).thenReturn(expectedBook);
         Book actualBook = bookService.updateBook(bookId, updatedBook);
 
-        // THEN
+        //THEN
         verify(bookRepo).findById(bookId);
-        verify(bookRepo).save(any(Book.class));
+        verify(bookRepo).save(expectedBook);
         assertEquals(expectedBook, actualBook);
     }
 
     @Test
     void getBookByIdShouldReturnBookWithMatchingId() {
-        // GIVE
-        String bookId = "1";
-        Book expectedBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, 4, Status.READ);
-        when(bookRepo.findById(bookId)).thenReturn(Optional.of(expectedBook));
+        //GIVEN
+        String bookId = "b001";
+        Book expectedBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4);
 
-        // WHEN
+        //WHEN
+        when(bookRepo.findById(bookId)).thenReturn(Optional.of(expectedBook));
         Book actualBook = bookService.getBookById(bookId);
 
-        // THEN
+        //THEN
         verify(bookRepo).findById(bookId);
         assertEquals(expectedBook, actualBook);
     }
 
     @Test
     void deleteBookShouldDeleteBookWithMatchingId() {
-        // GIVE
+        //GIVEN
         String bookId = "1";
-        Book existingBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, 4, Status.READ);
-        when(bookRepo.findById(bookId)).thenReturn(Optional.of(existingBook));
+        Book existingBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4);
 
-        // WHEN
+        //WHEN
+        when(bookRepo.findById(bookId)).thenReturn(Optional.of(existingBook));
+        doNothing().when(bookRepo).delete(existingBook);
         bookService.deleteBook(bookId);
 
-        // THEN
+        //THEN
         verify(bookRepo).findById(bookId);
         verify(bookRepo).delete(existingBook);
     }
 
+    @Test
+    void expectNoSuchBookException_whenGetBookByIdWithNonexistentId() {
+        //GIVEN
+        String nonExistentId = "non_existent_id";
 
+        //WHEN & THEN
+        assertThrows(NoSuchBookException.class, () -> {
+            bookService.getBookById(nonExistentId);
+        });
+    }
 }
