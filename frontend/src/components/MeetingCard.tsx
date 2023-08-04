@@ -14,7 +14,7 @@ type Props = {
 
 export default function MeetingCard({ meeting }: Props) {
     const navigate = useNavigate();
-    const { title, date, location } = meeting;
+    const { title, date, location, book } = meeting;
     const theme = createTheme({});
 
     return (
@@ -31,9 +31,14 @@ export default function MeetingCard({ meeting }: Props) {
                             <LocationOnIcon fontSize="small" sx={{ marginRight: "4px" }} />
                             Location: {location}
                         </Typography>
+                        {/* Display Book Title and Author */}
+                        <Typography variant="body2">
+                            Book: {book?.title} by {book?.author}
+                        </Typography>
                     </CardContent>
                 </CardActionArea>
             </Card>
         </ThemeProvider>
     );
 }
+

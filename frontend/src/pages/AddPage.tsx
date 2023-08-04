@@ -1,4 +1,4 @@
-import {useFetch} from "../hooks/useFetch.ts";
+import {useMeetings} from "../hooks/useMeetings.ts";
 import {MeetingWithoutId} from "../models/meeting.ts";
 import {useNavigate} from "react-router-dom";
 import InputFormMeetings from "../components/InputFormMeetings.tsx";
@@ -6,7 +6,7 @@ import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddPage() {
-    const postMeeting = useFetch((state) => state.postMeeting);
+    const postMeeting = useMeetings((state) => state.postMeeting);
     const navigate = useNavigate();
 
     function handleSubmit(formData: MeetingWithoutId) {
