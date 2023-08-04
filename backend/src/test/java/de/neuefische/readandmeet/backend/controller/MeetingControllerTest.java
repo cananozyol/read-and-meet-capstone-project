@@ -76,13 +76,13 @@ class MeetingControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings").content(meetingWithoutId).contentType(MediaType.APPLICATION_JSON))
 
         //THEN
-                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("book"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].date").value("2023-08-08"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].location").value("online"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].bookId").value("b001"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].bookId").value("b001"))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
     @Test
@@ -142,7 +142,8 @@ class MeetingControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/meetings/" + id))
 
         //THEN
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings"))
                 .andExpect(MockMvcResultMatchers.content().json(expected)).andExpect(MockMvcResultMatchers.status().isOk());
@@ -195,5 +196,15 @@ class MeetingControllerTest {
         assertEquals(LocalDate.parse("2023-09-09"), updatedMeetingInDatabase.getDate());
         assertEquals("home", updatedMeetingInDatabase.getLocation());
         assertEquals("b002", updatedMeetingInDatabase.getBookId());
+    }
+
+    @Test
+    void expectNotFoundStatus_whenGetMeetingByIdWithNonexistentId() throws Exception {
+        //GIVEN
+        String nonExistentId = "non_existent_id";
+
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/" + nonExistentId))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
