@@ -26,9 +26,9 @@ public class MeetingService {
         return this.meetingRepo.findAll();
     }
 
-    public Meeting add(MeetingWithoutId m) {
+    public Meeting add(MeetingWithoutId meetingWithoutId) {
         String id = uuIdService.getRandomId();
-        Meeting meeting = new Meeting(id, m.getTitle(), m.getDate(), m.getLocation(), m.getBookId());
+        Meeting meeting = new Meeting(id, meetingWithoutId.getTitle(), meetingWithoutId.getDate(), meetingWithoutId.getLocation(), meetingWithoutId.getBook());
         return this.meetingRepo.insert(meeting);
     }
     public Meeting getDetails(String id) {
@@ -41,11 +41,11 @@ public class MeetingService {
         this.meetingRepo.delete(meeting);
     }
 
-    public Meeting editMeetingById(MeetingWithoutId m, String id) {
+    public Meeting editMeetingById(MeetingWithoutId meetingWithoutId, String id) {
         Meeting meeting = this.meetingRepo.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Meeting with ID " + id + " not found"));
 
-        Meeting editedMeeting = new Meeting(meeting.getId(), m.getTitle(), m.getDate(), m.getLocation(), m.getBookId());
+        Meeting editedMeeting = new Meeting(meeting.getId(), meetingWithoutId.getTitle(), meetingWithoutId.getDate(), meetingWithoutId.getLocation(), meetingWithoutId.getBook());
 
         return this.meetingRepo.save(editedMeeting);
     }
