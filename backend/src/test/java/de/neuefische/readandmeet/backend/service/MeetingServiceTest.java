@@ -1,5 +1,6 @@
 package de.neuefische.readandmeet.backend.service;
 
+import de.neuefische.readandmeet.backend.exceptions.NoSuchMeetingException;
 import de.neuefische.readandmeet.backend.model.Meeting;
 import de.neuefische.readandmeet.backend.model.MeetingWithoutId;
 import de.neuefische.readandmeet.backend.repository.MeetingRepo;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class MeetingServiceTest {
@@ -35,7 +37,7 @@ class MeetingServiceTest {
     }
 
     @Test
-    void whenMeetingAdded_ThenReturnId() {
+    void expectId_whenMeetingIsAdded() {
         //GIVEN
         String expected = "123";
 
@@ -49,7 +51,7 @@ class MeetingServiceTest {
     }
 
     @Test
-    void expectMeeting_whenPOSTingMeeting() {
+    void expectMeeting_whenAddingMeeting() {
         //GIVEN
         MeetingWithoutId meetingWithoutId = new MeetingWithoutId("book", LocalDate.now(), "online", "b001");
         Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", "b001");
@@ -65,75 +67,64 @@ class MeetingServiceTest {
         assertEquals(expected, actual);
     }
 
-
-
     @Test
-    void expectMeeting_whenGETMeetingById() {
+    void expectMeeting_whenMeetingGetById() {
         //GIVEN
-        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", "b001");
+        String id = "123";
+        Meeting expected = new Meeting(id, "book", LocalDate.now(), "online", "b001");
 
         //WHEN
-        when(meetingRepo.findById("abc")).thenReturn(Optional.of(expected));
-        Meeting actual = meetingService.getDetails("abc");
+        when(meetingRepo.findById(id)).thenReturn(Optional.of(expected));
+        Meeting actual = meetingService.getDetails(id);
 
         //THEN
-        verify(meetingRepo).findById("abc");
+        verify(meetingRepo).findById(id);
         assertEquals(expected, actual);
     }
 
     @Test
     void expectDeletingMethod_whenDeleteMethodIsCalled() {
-        // GIVEN
+        //GIVEN
         String id = "123";
         Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", "b001");
 
-        // WHEN
+        //WHEN
         when(meetingRepo.findById(id)).thenReturn(Optional.of(expected));
         doNothing().when(meetingRepo).delete(expected);
 
         meetingService.delete(id);
 
-        // THEN
+        //THEN
         verify(meetingRepo).findById(id);
         verify(meetingRepo).delete(expected);
     }
-
 
     @Test
     void expectEditedMeeting_whenEditingMeeting () {
         //GIVEN
         String id = "123";
-        MeetingWithoutId meetingWithoutId = new MeetingWithoutId("book", LocalDate.now(), "online", "b001");
-        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", "b001");
-
-        //WHEN
-        when(meetingRepo.findById(id)).thenReturn(Optional.of(expected));
-        when(meetingRepo.save(expected)).thenReturn(expected);
-        Meeting actual = meetingService.editMeetingById(meetingWithoutId, id);
-
-        //THEN
-        verify(meetingRepo).findById(id);
-        verify(meetingRepo).save(expected);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void expectEditedMeetingWithBookId_whenEditingMeetingWithBookId () {
-        //GIVEN
-        String id = "123";
-        MeetingWithoutId meetingWithoutId = new MeetingWithoutId("book", LocalDate.now(), "online", "b002");
         Meeting existingMeeting = new Meeting("123", "book", LocalDate.now(), "online", "b001");
-        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", "b002");
+        MeetingWithoutId updatedMeeting = new MeetingWithoutId("books", LocalDate.now(), "home", "b001");
+        Meeting expected = new Meeting("123", "books", LocalDate.now(), "home", "b001");
 
         //WHEN
         when(meetingRepo.findById(id)).thenReturn(Optional.of(existingMeeting));
         when(meetingRepo.save(expected)).thenReturn(expected);
-        Meeting actual = meetingService.editMeetingById(meetingWithoutId, id);
+        Meeting actual = meetingService.editMeetingById(updatedMeeting, id);
 
         //THEN
         verify(meetingRepo).findById(id);
         verify(meetingRepo).save(expected);
         assertEquals(expected, actual);
     }
+    @Test
+    void expectNoSuchMeetingException_whenGetMeetingByIdWithNonexistentId() {
+        //GIVEN
+        String nonExistentId = "non_existent_id";
 
+        //WHEN & THEN
+        assertThrows(NoSuchMeetingException.class, () -> {
+            meetingService.getDetails(nonExistentId);
+        });
+    }
 }
