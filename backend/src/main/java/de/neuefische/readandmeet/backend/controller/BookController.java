@@ -2,6 +2,7 @@ package de.neuefische.readandmeet.backend.controller;
 
 import de.neuefische.readandmeet.backend.exceptions.NoSuchBookException;
 import de.neuefische.readandmeet.backend.model.Book;
+import de.neuefische.readandmeet.backend.model.BookEditData;
 import de.neuefische.readandmeet.backend.model.BookWithoutId;
 import de.neuefische.readandmeet.backend.service.BookService;
 import org.springframework.http.HttpStatus;
@@ -32,11 +33,10 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(books);
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable String id, @RequestBody BookWithoutId bookWithoutId) {
+    public ResponseEntity<Book> updateBook(@PathVariable String id, @RequestBody BookEditData bookEditData) {
         try {
-            Book updatedBook = this.bookService.updateBook(id, bookWithoutId);
+            Book updatedBook = this.bookService.updateBook(id, bookEditData);
             return ResponseEntity.ok(updatedBook);
         } catch (NoSuchBookException e) {
             return ResponseEntity.notFound().build();
