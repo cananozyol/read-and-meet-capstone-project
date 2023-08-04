@@ -9,4 +9,3 @@ public class NoSuchMeetingException extends RuntimeException {
         super("Meeting not found for ID: " + id);
     }
 }
-
