@@ -32,7 +32,7 @@ public class BookService {
 
     public Book updateBook(String bookId, BookEditData bookEditData) {
         Book book = bookRepo.findById(bookId)
-                .orElseThrow(() -> new NoSuchBookException("Book with ID " + bookId + " not found"));
+                .orElseThrow(() -> new NoSuchBookException(bookId));
 
         book.setGenre(bookEditData.getGenre());
         book.setStatus(bookEditData.getStatus());
@@ -43,14 +43,13 @@ public class BookService {
 
     public void deleteBook(String bookId) {
         Book book = bookRepo.findById(bookId)
-                .orElseThrow(() -> new NoSuchBookException("Book with ID " + bookId + " not found"));
+                .orElseThrow(() -> new NoSuchBookException(bookId));
 
         bookRepo.delete(book);
     }
 
     public Book getBookById(String bookId) {
         return bookRepo.findById(bookId)
-                .orElseThrow(() -> new NoSuchBookException("Book with ID " + bookId + " not found"));
+                .orElseThrow(() -> new NoSuchBookException(bookId));
     }
 }
-

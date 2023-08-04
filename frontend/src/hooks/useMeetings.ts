@@ -35,10 +35,8 @@ export const useMeetings = create<State>((set, get) => ({
         if (!id) {
             throw new Error("No id provided");
         }
-
         const { meetings } = get();
-        const meeting = meetings.find((meeting) => meeting.id === id);
-        return meeting;
+        return meetings.find((meeting) => meeting.id === id);
     },
 
     deleteMeeting: (id: string | undefined) => {

@@ -7,7 +7,6 @@ import de.neuefische.readandmeet.backend.repository.MeetingRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class MeetingService {
@@ -15,7 +14,6 @@ public class MeetingService {
     private final MeetingRepo meetingRepo;
 
     private final UuIdService uuIdService;
-
 
     public MeetingService(MeetingRepo meetingRepo, UuIdService uuIdService) {
         this.meetingRepo = meetingRepo;
@@ -31,19 +29,20 @@ public class MeetingService {
         Meeting meeting = new Meeting(id, meetingWithoutId.getTitle(), meetingWithoutId.getDate(), meetingWithoutId.getLocation(), meetingWithoutId.getBook());
         return this.meetingRepo.insert(meeting);
     }
+
     public Meeting getDetails(String id) {
         return this.meetingRepo.findById(id).orElseThrow(() -> new NoSuchMeetingException(id));
     }
 
     public void delete(String id) {
         Meeting meeting = this.meetingRepo.findById(id)
-                .orElseThrow(() -> new NoSuchMeetingException("Meeting with ID " + id + " not found"));
+                .orElseThrow(() -> new NoSuchMeetingException(id));
         this.meetingRepo.delete(meeting);
     }
 
     public Meeting editMeetingById(MeetingWithoutId meetingWithoutId, String id) {
         Meeting meeting = this.meetingRepo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Meeting with ID " + id + " not found"));
+                .orElseThrow(() -> new NoSuchMeetingException(id));
 
         Meeting editedMeeting = new Meeting(meeting.getId(), meetingWithoutId.getTitle(), meetingWithoutId.getDate(), meetingWithoutId.getLocation(), meetingWithoutId.getBook());
 
