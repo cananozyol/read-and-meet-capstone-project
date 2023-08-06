@@ -2,6 +2,8 @@ import {useBooks} from "../hooks/useBooks.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Genre, Status} from "../models/books.ts";
+import {styled} from "styled-components";
+
 
 export default function AddBookPage() {
 
@@ -44,9 +46,9 @@ export default function AddBookPage() {
 
 
     return (
-        <form onSubmit={handleSubmit}>
+        <FormContainer onSubmit={handleSubmit}>
             <h1>Add Book</h1>
-            <label htmlFor="book-title">Title</label>
+
             <input
                 type="text"
                 id="book-title"
@@ -54,9 +56,10 @@ export default function AddBookPage() {
                 value={formData.title}
                 onChange={handleInputChange}
                 required
+                placeholder="Enter the book title"
             />
+            <p></p>
 
-            <label htmlFor="book-author">Author</label>
             <input
                 type="text"
                 id="book-author"
@@ -64,9 +67,10 @@ export default function AddBookPage() {
                 value={formData.author}
                 onChange={handleInputChange}
                 required
+                placeholder="Enter the author's name"
             />
-
-            <label htmlFor="book-genre">Genre</label>
+            <p></p>
+            <label htmlFor="book-genre">Genre: </label>
             <select
                 id="book-genre"
                 name="genre"
@@ -84,8 +88,8 @@ export default function AddBookPage() {
                 <option value={Genre.HORROR}>Horror</option>
                 <option value={Genre.NON_FICTION}>Non-Fiction</option>
             </select>
-
-            <label>Status</label>
+            <p></p>
+            <label>Status: </label>
             <div>
                 <label>
                     <input
@@ -118,8 +122,8 @@ export default function AddBookPage() {
                     Read
                 </label>
             </div>
-
-            <label>Rating</label>
+            <p></p>
+            <label>Rating: </label>
             <div>
                 {[0, 1, 2, 3, 4, 5].map((rating) => (
                     <label key={rating}>
@@ -134,12 +138,21 @@ export default function AddBookPage() {
                     </label>
                 ))}
             </div>
-
+            <p></p>
             <div>
+                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                 <button type={"submit"}>Add</button>
                 <button onClick={() => navigate('/booklist')}>Cancel</button>
+                </div>
             </div>
-        </form>
+        </FormContainer>
     )
 }
 
+
+export const FormContainer = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
