@@ -1,6 +1,7 @@
 package de.neuefische.readandmeet.backend.model;
 
 public enum Genre {
+    NOT_SELECTED,
     FICTION,
     FANTASY,
     ROMANCE,

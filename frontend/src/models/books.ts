@@ -8,6 +8,7 @@ export type Book = {
 }
 
 export enum Genre {
+    NOT_SELECTED = "NOT_SELECTED",
     CLASSIC = "CLASSIC",
     FANTASY = "FANTASY",
     MYSTERY = "MYSTERY",
@@ -16,7 +17,6 @@ export enum Genre {
     THRILLER = "THRILLER",
     HORROR = "HORROR",
     NON_FICTION = "NON_FICTION",
-    OTHER = "OTHER"
 }
 
 export enum Status {
