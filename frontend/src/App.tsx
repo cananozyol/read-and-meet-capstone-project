@@ -1,10 +1,7 @@
 import {Link, Route, Routes} from "react-router-dom";
 import Header from "./components/Header.tsx";
 import MeetingList from "./pages/MeetingList.tsx";
-import AddPage from "./pages/AddPage.tsx";
-import DetailPage from "./pages/DetailPage.tsx";
-import EditPage from "./pages/EditPage.tsx";
-import BookList from "./pages/BookList.tsx"; // Import the BookList component
+import BookList from "./pages/BookList.tsx";
 import {useMeetings} from "./hooks/useMeetings.ts";
 import {styled} from "styled-components";
 import HomePage from "./pages/HomePage.tsx";
@@ -12,6 +9,11 @@ import {Button} from "@mui/material";
 import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {useBooks} from "./hooks/useBooks.ts";
+import AddBookPage from "./pages/AddBookPage.tsx";
+import AddMeetingPage from "./pages/AddMeetingPage.tsx";
+import EditMeetingPage from "./pages/EditMeetingPage.tsx";
+import DetailMeetingPage from "./pages/DetailMeetingPage.tsx";
+import DetailBookPage from "./pages/DetailBookPage.tsx";
 
 export default function App() {
     const meetings = useMeetings((state) => state.meetings);
@@ -24,12 +26,13 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/meetinglist" element={<MeetingList meetings={meetings} />} />
-                <Route path="/addmeeting" element={<AddPage />} />
-                <Route path="/:id" element={<DetailPage />} />
-                <Route path="/:id/editmeeting" element={<EditPage />} />
+                <Route path="/addmeeting" element={<AddMeetingPage />} />
+                <Route path="/meeting/:id" element={<DetailMeetingPage />} />
+                <Route path="/:id/editmeeting" element={<EditMeetingPage />} />
                 <Route path="/booklist" element={<BookList books={books}/>} />
+                <Route path="/addbook" element={<AddBookPage />} />
+                <Route path="/book/:id" element={<DetailBookPage />} />
             </Routes>
-
             <StyledApp>
                 <Link to={"/meetinglist"}>
                     <Button
@@ -59,6 +62,8 @@ export default function App() {
                         NEW MEETING
                     </Button>
                 </Link>
+            </StyledApp>
+            <StyledApp>
                 <Link to={"/booklist"}>
                     <Button
                         variant="contained"
@@ -71,6 +76,20 @@ export default function App() {
                         }}
                     >
                         MY BOOKS
+                    </Button>
+                </Link>
+                <Link to={"/addbook"}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        sx={{
+                            backgroundColor: "#d1adee",
+                            color: "black",
+                            borderRadius: "5px",
+                            width: "139px",
+                        }}
+                    >
+                        NEW BOOK
                     </Button>
                 </Link>
             </StyledApp>
