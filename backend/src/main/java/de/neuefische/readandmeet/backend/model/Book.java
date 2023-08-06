@@ -5,17 +5,16 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
-
 @Data
 @AllArgsConstructor
-@Document(collection = "meetings")
-public class Meeting {
+@Document(collection = "books")
+public class Book {
 
     @Id
     private final String id;
-    private String title;
-    private LocalDate date;
-    private String location;
-    private Book book;
+    private final String title;
+    private final String author;
+    private Genre genre;
+    private Status status;
+    private int rating;
 }

@@ -4,15 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MeetingWithoutId {
+public class BookEditData {
 
-    private String title;
-    private LocalDate date;
-    private String location;
-    private Book book;
+    private Genre genre;
+    private Status status;
+    private int rating;
+
 }

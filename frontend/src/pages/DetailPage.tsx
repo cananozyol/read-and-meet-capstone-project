@@ -8,7 +8,7 @@ import {
     DialogContentText,
     Typography
 } from "@mui/material";
-import {useFetch} from "../hooks/useFetch.ts";
+import {useMeetings} from "../hooks/useMeetings.ts";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {styled} from "styled-components";
@@ -22,8 +22,8 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function DetailPage() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const meeting = useFetch((state) => state.getMeetingById(id));
-    const { deleteMeeting } = useFetch();
+    const meeting = useMeetings((state) => state.getMeetingById(id));
+    const { deleteMeeting } = useMeetings();
     const [open, setOpen] = useState(false);
 
     if (!meeting) {

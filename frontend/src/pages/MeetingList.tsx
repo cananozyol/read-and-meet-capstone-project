@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid';
 import MeetingCard from '../components/MeetingCard.tsx';
-import {useFetch} from "../hooks/useFetch.ts";
+import {useMeetings} from "../hooks/useMeetings.ts";
 import {useEffect} from "react";
 import {Meeting} from "../models/meeting.ts";
 
@@ -9,7 +9,7 @@ type Props = {
 }
 export default function MeetingList(props: Props) {
 
-    const { meetings, fetchMeetings } = useFetch();
+    const { meetings, fetchMeetings } = useMeetings();
 
     useEffect(() => {fetchMeetings();}, [fetchMeetings]);
 
