@@ -19,7 +19,7 @@ export default function BookCard({ book }: Props) {
     return (
         <ThemeProvider theme={theme}>
             <Card sx={{ width: "100%", height: "100%" }}>
-                <CardActionArea onClick={() => navigate(`/${book.id}`)}>
+                <CardActionArea onClick={() => navigate(`/book/${book.id}`)}>
                     <CardContent>
                         <Typography variant="body1">
                             <LibraryBooksIcon fontSize="small" sx={{ marginRight: "4px" }} />
