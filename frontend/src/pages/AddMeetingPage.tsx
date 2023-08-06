@@ -5,7 +5,7 @@ import InputFormMeetings from "../components/InputFormMeetings.tsx";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function AddPage() {
+export default function AddMeetingPage() {
     const postMeeting = useMeetings((state) => state.postMeeting);
     const navigate = useNavigate();
 
