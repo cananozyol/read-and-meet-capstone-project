@@ -5,20 +5,17 @@ import de.neuefische.readandmeet.backend.model.Book;
 import de.neuefische.readandmeet.backend.model.BookEditData;
 import de.neuefische.readandmeet.backend.model.BookWithoutId;
 import de.neuefische.readandmeet.backend.repository.BookRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BookService {
 
     private final BookRepo bookRepo;
     private final UuIdService uuIdService;
-
-    public BookService(BookRepo bookRepo, UuIdService uuIdService) {
-        this.bookRepo = bookRepo;
-        this.uuIdService = uuIdService;
-    }
 
     public List<Book> list() {
         return bookRepo.findAll();

@@ -11,9 +11,7 @@ type Props = {
 export default function BookList(props: Props) {
     const { books, fetchBooks } = useBooks();
 
-    useEffect(() => {
-        fetchBooks();
-    }, [fetchBooks]);
+    useEffect(fetchBooks, [fetchBooks]);
 
     return (
         <>

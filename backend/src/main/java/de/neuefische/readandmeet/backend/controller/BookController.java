@@ -5,6 +5,7 @@ import de.neuefische.readandmeet.backend.model.Book;
 import de.neuefische.readandmeet.backend.model.BookEditData;
 import de.neuefische.readandmeet.backend.model.BookWithoutId;
 import de.neuefische.readandmeet.backend.service.BookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
+@RequiredArgsConstructor
 public class BookController {
 
     private final BookService bookService;
-
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
 
     @GetMapping
     public List<Book> listOfBooks() {

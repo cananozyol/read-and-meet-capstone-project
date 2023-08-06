@@ -31,7 +31,6 @@ export default function MeetingCard({ meeting }: Props) {
                             <LocationOnIcon fontSize="small" sx={{ marginRight: "4px" }} />
                             Location: {location}
                         </Typography>
-                        {/* Display Book Title and Author */}
                         <Typography variant="body2">
                             Book: {book?.title} by {book?.author}
                         </Typography>
@@ -41,4 +40,3 @@ export default function MeetingCard({ meeting }: Props) {
         </ThemeProvider>
     );
 }
-
