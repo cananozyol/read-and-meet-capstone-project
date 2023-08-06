@@ -19,7 +19,7 @@ import {useState} from "react";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function DetailPage() {
+export default function DetailMeetingPage() {
     const navigate = useNavigate();
     const { id } = useParams();
     const meeting = useMeetings((state) => state.getMeetingById(id));
@@ -68,6 +68,11 @@ export default function DetailPage() {
                     <LocationOnIcon fontSize="small" sx={{ marginRight: "4px" }} />
                     Location: {meeting.location}
                 </Typography>
+                {meeting.book && (
+                    <Typography variant="body2" align="center">
+                        Book: {meeting.book.title} by {meeting.book.author}
+                    </Typography>
+                )}
             </CardContent>
             <CardContent style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
                 <StyledButton>
