@@ -68,11 +68,6 @@ export default function DetailMeetingPage() {
                     <LocationOnIcon fontSize="small" sx={{ marginRight: "4px" }} />
                     Location: {meeting.location}
                 </Typography>
-                {meeting.book && (
-                    <Typography variant="body2" align="center">
-                        Book: {meeting.book.title} by {meeting.book.author}
-                    </Typography>
-                )}
             </CardContent>
             <CardContent style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
                 <StyledButton>
