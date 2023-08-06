@@ -10,7 +10,7 @@ type MeetingWithoutId = {
     location: string;
 }
 
-export default function EditPage() {
+export default function EditMeetingPage() {
     const { id } = useParams();
     const { putMeeting, getMeetingById } = useMeetings();
     const meeting = getMeetingById(id);
