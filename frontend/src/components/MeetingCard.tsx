@@ -20,7 +20,7 @@ export default function MeetingCard({ meeting }: Props) {
     return (
         <ThemeProvider theme={theme}>
             <Card sx={{ width: "100%", height: "100%" }}>
-                <CardActionArea onClick={() => navigate(`/${meeting.id}`)}>
+                <CardActionArea onClick={() => navigate(`/meeting/${meeting.id}`)}>
                     <CardContent>
                         <Typography variant="body1">{title}</Typography>
                         <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
