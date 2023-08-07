@@ -19,7 +19,7 @@ export default function EditMeetingPage() {
     useEffect(() => {
         if (id) {
             getBooksForMeeting(id).then(() => books);}
-    }, [getBooksForMeeting, id]);
+    }, [getBooksForMeeting, id, books]);
 
 
     if (!meeting) {
