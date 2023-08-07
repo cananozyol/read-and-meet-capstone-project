@@ -1,6 +1,7 @@
 package de.neuefische.readandmeet.backend.controller;
 
 import de.neuefische.readandmeet.backend.exceptions.NoSuchMeetingException;
+import de.neuefische.readandmeet.backend.model.Book;
 import de.neuefische.readandmeet.backend.model.Meeting;
 import de.neuefische.readandmeet.backend.model.MeetingWithoutId;
 import de.neuefische.readandmeet.backend.service.MeetingService;
@@ -15,6 +16,7 @@ import java.util.List;
 public class MeetingController {
 
     private final MeetingService meetingService;
+
 
     public MeetingController(MeetingService meetingService) {
         this.meetingService = meetingService;
@@ -61,4 +63,17 @@ public class MeetingController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/{id}/books")
+    public ResponseEntity<List<Book>> getBooksForMeeting(@PathVariable String id) {
+        try {
+            List<Book> booksForMeeting = meetingService.getBookByMeetingId(id);
+
+            return ResponseEntity.ok(booksForMeeting);
+        } catch (NoSuchMeetingException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }
