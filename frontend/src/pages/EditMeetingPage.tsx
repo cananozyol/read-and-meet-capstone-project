@@ -10,14 +10,17 @@ import {MeetingWithoutId} from "../models/meeting.ts";
 
 export default function EditMeetingPage() {
     const { id } = useParams();
-    const { putMeeting, getMeetingById } = useMeetings();
+    const { putMeeting, getMeetingById, getBooksForMeeting } = useMeetings();
     const meeting = getMeetingById(id);
     const navigate = useNavigate();
-    const { books, fetchBooks } = useBooks();
-    const [selectedBookId, setSelectedBookId] = useState<string | undefined>(meeting?.book?.id);
+    const { books } = useBooks();
+    const [selectedBookId, setSelectedBookId] = useState<string | undefined>(meeting?.book?.id || '');
 
-    useEffect(() => {fetchBooks();
-    }, [fetchBooks]);
+    useEffect(() => {
+        if (id) {
+            getBooksForMeeting(id).then(() => books);}
+    }, [getBooksForMeeting, id]);
+
 
     if (!meeting) {
         return <>No Meeting</>;
