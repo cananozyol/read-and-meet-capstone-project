@@ -68,6 +68,9 @@ export default function DetailMeetingPage() {
                     <LocationOnIcon fontSize="small" sx={{ marginRight: "4px" }} />
                     Location: {meeting.location}
                 </Typography>
+                <Typography variant="body2">
+                    Book: {meeting.book?.title} by {meeting.book?.author}
+                </Typography>
             </CardContent>
             <CardContent style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
                 <StyledButton>
@@ -115,7 +118,6 @@ export default function DetailMeetingPage() {
                         <Button onClick={handleClose} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>No</Button>
                         <Button onClick={() => { handleDelete(); }} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>Yes</Button>
                     </DialogActions>
-
                 </Dialog>
             </CardContent>
         </Card>
