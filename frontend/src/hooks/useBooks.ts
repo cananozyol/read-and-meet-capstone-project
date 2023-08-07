@@ -8,7 +8,7 @@ type State = {
     postBook: (requestBody: BookWithoutId) => void;
     getBookById: (id: string | undefined) => Book | undefined;
     deleteBook: (id: string | undefined) => void;
-    putBook: (id: string, requestBody: BookEditData) => void; // Update putBook function here
+    putBook: (id: string, requestBody: BookEditData) => void;
 };
 
 export const useBooks = create<State>((set, get) => ({
