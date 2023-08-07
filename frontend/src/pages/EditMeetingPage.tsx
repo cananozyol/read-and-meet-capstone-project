@@ -3,25 +3,31 @@ import InputFormMeetings from "../components/InputFormMeetings.tsx";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useMeetings} from "../hooks/useMeetings.ts";
+import {useBooks} from "../hooks/useBooks.ts";
+import {useEffect, useState} from "react";
+import {MeetingWithoutId} from "../models/meeting.ts";
 
-type MeetingWithoutId = {
-    title: string;
-    date: string;
-    location: string;
-}
 
 export default function EditMeetingPage() {
     const { id } = useParams();
     const { putMeeting, getMeetingById } = useMeetings();
     const meeting = getMeetingById(id);
     const navigate = useNavigate();
+    const { books, fetchBooks } = useBooks();
+    const [selectedBookId, setSelectedBookId] = useState<string | undefined>(meeting?.book?.id);
+
+    useEffect(() => {fetchBooks();
+    }, [fetchBooks]);
 
     if (!meeting) {
         return <>No Meeting</>;
     }
 
     function handleSubmit(formData: MeetingWithoutId) {
-        putMeeting({ ...formData, id: id as string });
+        const selectedBook = books.find((book) => book.id === selectedBookId);
+        const meetingWithBook = { ...formData, book: selectedBook };
+
+        putMeeting({ ...meetingWithBook, id: id as string });
         navigate(`/${id}`);
         toast.success("You have successfully edited your meeting!", {
             position: "top-right",
@@ -61,6 +67,9 @@ export default function EditMeetingPage() {
             }}
             onCancel={handleCancel}
             onSubmit={handleSubmit}
+            books={books}
+            selectedBookId={selectedBookId}
+            onBookSelect={(bookId) => setSelectedBookId(bookId)}
         />
     );
 }
