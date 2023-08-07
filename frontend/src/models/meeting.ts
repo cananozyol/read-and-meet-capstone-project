@@ -4,17 +4,20 @@ export type Meeting = {
     date: string,
     location: string,
     book?: {
-        title?: string,
-        author?: string
+        id?: string;
+        title?: string;
+        author?: string;
     }
 }
+
 
 export type MeetingWithoutId = {
     title: string,
     date: string,
     location: string,
     book?: {
-        title?: string,
-        author?: string
+        id?: string;
+        title?: string;
+        author?: string;
     }
 }
