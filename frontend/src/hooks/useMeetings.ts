@@ -1,6 +1,7 @@
 import {Meeting, MeetingWithoutId} from "../models/meeting.ts";
 import {create} from "zustand";
 import axios from "axios";
+import {Book} from "../models/books.ts";
 
 type State = {
     meetings: Meeting[];
@@ -9,6 +10,7 @@ type State = {
     getMeetingById: (id: string | undefined) => Meeting | undefined;
     deleteMeeting: (id: string | undefined) => void;
     putMeeting: (requestBody: Meeting) => void;
+    getBooksForMeeting: (meetingId: string) => Promise<Book[]>;
 };
 
 export const useMeetings = create<State>((set, get) => ({
@@ -66,4 +68,15 @@ export const useMeetings = create<State>((set, get) => ({
             })
             .catch(console.error);
     },
+
+    getBooksForMeeting: (meetingId: string) => {
+        return axios
+            .get(`/api/meetings/${meetingId}/books`)
+            .then((response) => response.data)
+            .catch((error) => {
+                console.error("Error fetching books for meeting:", error);
+                return [];
+            });
+    },
+
 }));
