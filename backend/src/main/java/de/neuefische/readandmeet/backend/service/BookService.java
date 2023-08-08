@@ -49,4 +49,5 @@ public class BookService {
         return bookRepo.findById(bookId)
                 .orElseThrow(() -> new NoSuchBookException(bookId));
     }
+
 }
