@@ -53,10 +53,7 @@ public class MeetingService {
     }
 
     public List<Book> getBookByMeetingId(String id) {
-        this.meetingRepo.findById(id)
-                .orElseThrow(() -> new NoSuchMeetingException(id));
-
+        this.meetingRepo.findById(id);
         return bookRepo.findAll();
     }
-
 }

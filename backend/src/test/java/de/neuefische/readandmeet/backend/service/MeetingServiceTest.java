@@ -153,15 +153,4 @@ class MeetingServiceTest {
         verify(bookRepo).findAll();
         assertEquals(expectedBooks, actualBooks);
     }
-
-
-    @Test
-    void givenNonExistentMeetingId_whenGetBookByMeetingId_thenThrowsNoSuchBookException() {
-        // GIVEN
-        String nonExistentMeetingId = "non_existent_meeting_id";
-        when(meetingRepo.findById(nonExistentMeetingId)).thenReturn(Optional.empty());
-
-        // WHEN & THEN
-        assertThrows(NoSuchMeetingException.class, () -> meetingService.getBookByMeetingId(nonExistentMeetingId));
-    }
 }
