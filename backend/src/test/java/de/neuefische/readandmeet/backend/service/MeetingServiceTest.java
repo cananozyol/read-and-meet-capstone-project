@@ -123,16 +123,16 @@ class MeetingServiceTest {
         verify(meetingRepo).save(expected);
         assertEquals(expected, actual);
     }
+
     @Test
     void expectNoSuchMeetingException_whenGetMeetingByIdWithNonexistentId() {
         //GIVEN
         String nonExistentId = "non_existent_id";
 
         //WHEN & THEN
-        assertThrows(NoSuchMeetingException.class, () -> {
-            meetingService.getDetails(nonExistentId);
-        });
+        assertThrows(NoSuchMeetingException.class, () -> meetingService.getDetails(nonExistentId));
     }
+
 
     @Test
     void givenMeetingId_whenGetBookByMeetingId_thenReturnsListOfBooks() {
