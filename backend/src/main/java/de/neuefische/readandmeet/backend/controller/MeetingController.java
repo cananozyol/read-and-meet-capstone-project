@@ -65,15 +65,7 @@ public class MeetingController {
     }
 
     @GetMapping("/{id}/books")
-    public ResponseEntity<List<Book>> getBooksForMeeting(@PathVariable String id) {
-        try {
-            List<Book> booksForMeeting = meetingService.getBookByMeetingId(id);
-
-            return ResponseEntity.ok(booksForMeeting);
-        } catch (NoSuchMeetingException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public List<Book> getBooksForMeeting(@PathVariable String id) {
+        return meetingService.getBookByMeetingId(id);
     }
-
-
 }

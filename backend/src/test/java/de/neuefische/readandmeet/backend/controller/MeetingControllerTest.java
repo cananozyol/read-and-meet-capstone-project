@@ -223,17 +223,4 @@ class MeetingControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{id}/books", meetingId).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
-
-
-    @Test
-    @DirtiesContext
-    void givenNonExistentMeetingId_whenGetBookByMeetingId_thenReturnNotFound() throws Exception {
-        // GIVEN
-        String nonExistentMeetingId = "non_existent_meeting_id";
-
-        // WHEN & THEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{id}/books", nonExistentMeetingId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
 }
