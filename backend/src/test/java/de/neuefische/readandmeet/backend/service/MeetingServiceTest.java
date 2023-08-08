@@ -1,6 +1,5 @@
 package de.neuefische.readandmeet.backend.service;
 
-import de.neuefische.readandmeet.backend.exceptions.NoSuchBookException;
 import de.neuefische.readandmeet.backend.exceptions.NoSuchMeetingException;
 import de.neuefische.readandmeet.backend.model.*;
 import de.neuefische.readandmeet.backend.repository.BookRepo;
@@ -163,6 +162,6 @@ class MeetingServiceTest {
         when(meetingRepo.findById(nonExistentMeetingId)).thenReturn(Optional.empty());
 
         // WHEN & THEN
-        assertThrows(NoSuchBookException.class, () -> meetingService.getBookByMeetingId(nonExistentMeetingId));
+        assertThrows(NoSuchMeetingException.class, () -> meetingService.getBookByMeetingId(nonExistentMeetingId));
     }
 }
