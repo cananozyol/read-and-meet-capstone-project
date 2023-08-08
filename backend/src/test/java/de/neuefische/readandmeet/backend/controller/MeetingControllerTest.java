@@ -22,6 +22,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
@@ -67,7 +68,7 @@ class MeetingControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings"))
 
                 //THEN
-                .andExpect(MockMvcResultMatchers.content().json(expected)).andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.content().json(expected)).andExpect(status().isOk());
     }
 
     @Test
@@ -102,7 +103,7 @@ class MeetingControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].date").value("2023-08-08"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].location").value("Hogwarts"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].book.id").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.status().isCreated());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -135,7 +136,7 @@ class MeetingControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/" + id))
 
         //THEN
-                .andExpect(MockMvcResultMatchers.content().json(expected)).andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.content().json(expected)).andExpect(status().isOk());
     }
 
     @Test
@@ -151,7 +152,7 @@ class MeetingControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/meetings/" + id))
 
         //THEN
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -186,7 +187,7 @@ class MeetingControllerTest {
                         .content(updatedMeeting).contentType(MediaType.APPLICATION_JSON))
 
                 //THEN
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(updatedMeeting));
 
         // VERIFY DATABASE
@@ -199,12 +200,40 @@ class MeetingControllerTest {
     }
 
     @Test
+    @DirtiesContext
     void expectNotFoundStatus_whenGetMeetingByIdWithNonexistentId() throws Exception {
         //GIVEN
         String nonExistentId = "non_existent_id";
 
         //WHEN & THEN
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/" + nonExistentId))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext
+    void givenMeetingId_whenGetBookByMeetingId_thenReturnListOfBooks() throws Exception {
+        //GIVEN
+        List<Meeting> meetings = new ArrayList<>();
+        meetings.add(new Meeting("123", "Silent Bonds Book Club", null, "online", new Book("b004", "Silver Silence", "Nalini Singh", Genre.FANTASY, Status.NOT_READ, 0)));
+        meetingRepo.insert(meetings);
+        String meetingId = meetingService.list().get(0).getId();
+
+        // WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{id}/books", meetingId).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    @DirtiesContext
+    void givenNonExistentMeetingId_whenGetBookByMeetingId_thenReturnNotFound() throws Exception {
+        // GIVEN
+        String nonExistentMeetingId = "non_existent_meeting_id";
+
+        // WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{id}/books", nonExistentMeetingId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }

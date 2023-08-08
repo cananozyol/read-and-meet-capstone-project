@@ -16,7 +16,6 @@ public class MeetingService {
 
     private final MeetingRepo meetingRepo;
     private final BookRepo bookRepo;
-
     private final UuIdService uuIdService;
 
     public MeetingService(MeetingRepo meetingRepo, BookRepo bookRepo, UuIdService uuIdService) {
