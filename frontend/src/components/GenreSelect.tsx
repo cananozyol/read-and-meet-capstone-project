@@ -8,7 +8,7 @@ type Props = {
 
 export default function GenreSelect({ selectedGenre, onGenreChange }: Props) {
     return (
-        <select name="genre" value={selectedGenre || Genre.NOT_SELECTED} onChange={onGenreChange} required>
+        <select name="genre" value={selectedGenre ?? Genre.NOT_SELECTED} onChange={onGenreChange} required>
             <option value={Genre.NOT_SELECTED}>Not Selected</option>
             <option value={Genre.CLASSIC}>Classic</option>
             <option value={Genre.DRAMA}>Drama</option>
