@@ -4,6 +4,7 @@ import {useBooks} from '../hooks/useBooks';
 import {BookEditData, Genre, Status} from "../models/books.ts";
 import RatingStars from "../components/RatingStars.tsx";
 import {styled} from "styled-components";
+import GenreSelect from "../components/GenreSelect.tsx";
 
 export default function DetailBookPage() {
     const { id } = useParams();
@@ -54,20 +55,9 @@ export default function DetailBookPage() {
             {isEditMode ? (
                 <>
                     <label>Genre: </label>
-                    <select
-                        value={editedData.genre}
-                        onChange={(e) => setEditedData({ ...editedData, genre: e.target.value as Genre })}
-                    >
-                        <option value={Genre.NOT_SELECTED}>Not Selected</option>
-                        <option value={Genre.CLASSIC}>Classic</option>
-                        <option value={Genre.FANTASY}>Fantasy</option>
-                        <option value={Genre.MYSTERY}>Mystery</option>
-                        <option value={Genre.ROMANCE}>Romance</option>
-                        <option value={Genre.SCIENCE_FICTION}>Science Fiction</option>
-                        <option value={Genre.THRILLER}>Thriller</option>
-                        <option value={Genre.HORROR}>Horror</option>
-                        <option value={Genre.NON_FICTION}>Non-Fiction</option>
-                    </select>
+                    <GenreSelect selectedGenre={editedData.genre}
+                        onGenreChange={(e) => setEditedData({ ...editedData, genre: e.target.value as Genre })}
+                    />
                     <p></p>
 
                     <label>Status: </label>
@@ -121,8 +111,8 @@ export default function DetailBookPage() {
                     </div>
                     <p></p>
                     <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                    <button onClick={handleSave}>Save</button>
-                    <button onClick={handleCancel}>Cancel</button>
+                        <button onClick={handleSave}>Save</button>
+                        <button onClick={handleCancel}>Cancel</button>
                     </div>
                 </>
             ) : (

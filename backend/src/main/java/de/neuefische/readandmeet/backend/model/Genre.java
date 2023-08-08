@@ -2,15 +2,14 @@ package de.neuefische.readandmeet.backend.model;
 
 public enum Genre {
     NOT_SELECTED,
-    FICTION,
-    FANTASY,
-    ROMANCE,
-    SCIENCE_FICTION,
-    HISTORICAL_FICTION,
-    NON_FICTION,
-    HORROR,
-    MYSTERY,
+    CLASSIC,
     DRAMA,
-    CRIME_THRILLER,
-    CLASSIC
+    ROMANCE,
+    FANTASY,
+    SCIENCE_FICTION,
+    THRILLER,
+    BIOGRAPHY,
+    HORROR,
+    NON_FICTION,
+    MYSTERY
 }

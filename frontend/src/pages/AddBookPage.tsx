@@ -3,6 +3,7 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Genre, Status} from "../models/books.ts";
 import {styled} from "styled-components";
+import GenreSelect from "../components/GenreSelect.tsx";
 
 
 export default function AddBookPage() {
@@ -21,11 +22,6 @@ export default function AddBookPage() {
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
-    };
-
-    const handleGenreChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        const genre = event.target.value as Genre;
-        setFormData((prevData) => ({ ...prevData, genre }));
     };
 
     const handleStatusChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -71,23 +67,9 @@ export default function AddBookPage() {
             />
             <p></p>
             <label htmlFor="book-genre">Genre: </label>
-            <select
-                id="book-genre"
-                name="genre"
-                value={formData.genre}
-                onChange={handleGenreChange}
-                required
-            >
-                <option value={Genre.NOT_SELECTED}>Select</option>
-                <option value={Genre.CLASSIC}>Classic</option>
-                <option value={Genre.FANTASY}>Fantasy</option>
-                <option value={Genre.MYSTERY}>Mystery</option>
-                <option value={Genre.ROMANCE}>Romance</option>
-                <option value={Genre.SCIENCE_FICTION}>Science Fiction</option>
-                <option value={Genre.THRILLER}>Thriller</option>
-                <option value={Genre.HORROR}>Horror</option>
-                <option value={Genre.NON_FICTION}>Non-Fiction</option>
-            </select>
+            <GenreSelect selectedGenre={formData.genre}
+                onGenreChange={(e) => setFormData({ ...formData, genre: e.target.value as Genre })}
+            />
             <p></p>
             <label>Status: </label>
             <div>
@@ -141,8 +123,8 @@ export default function AddBookPage() {
             <p></p>
             <div>
                 <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                <button type={"submit"}>Add</button>
-                <button onClick={() => navigate('/booklist')}>Cancel</button>
+                    <button type={"submit"}>Add</button>
+                    <button onClick={() => navigate('/booklist')}>Cancel</button>
                 </div>
             </div>
         </FormContainer>
