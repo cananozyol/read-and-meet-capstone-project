@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import {Book} from "../models/books.ts";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import RatingStars from "./RatingStars.tsx";
 
 type Props = {
     book: Book;
@@ -19,7 +20,7 @@ export default function BookCard({ book }: Props) {
     return (
         <ThemeProvider theme={theme}>
             <Card sx={{ width: "100%", height: "100%" }}>
-                <CardActionArea onClick={() => navigate(`/${book.id}`)}>
+                <CardActionArea onClick={() => navigate(`/book/${book.id}`)}>
                     <CardContent>
                         <Typography variant="body1">
                             <LibraryBooksIcon fontSize="small" sx={{ marginRight: "4px" }} />
@@ -31,23 +32,23 @@ export default function BookCard({ book }: Props) {
                         <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
                             Genre: {genre}
                         </Typography>
-                        {status === "READ" && (
-                            <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
-                                Status: Read
-                            </Typography>
-                        )}
-                        {status === "READING" && (
-                            <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
-                                Status: Reading
-                            </Typography>
-                        )}
                         {status === "NOT_READ" && (
                             <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
                                 Status: Not Read
                             </Typography>
                         )}
+                        {status === "READING" && (
+                            <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+                                Status: Currently reading
+                            </Typography>
+                        )}
+                        {status === "READ" && (
+                            <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+                                Status: Read
+                            </Typography>
+                        )}
                         <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
-                            Rating: {rating}
+                            Rating: <RatingStars rating={rating} />
                         </Typography>
                     </CardContent>
                 </CardActionArea>

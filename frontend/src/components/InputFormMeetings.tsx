@@ -1,18 +1,33 @@
 import React, {useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField} from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    FormControl,
+    MenuItem,
+    Select,
+    TextField
+} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {styled} from "styled-components";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import {Book} from "../models/books.ts";
+import {MeetingWithoutId} from "../models/meeting.ts";
 
 type Props = {
     title: string;
     initialFormData: MeetingWithoutId;
     onCancel: () => void;
     onSubmit: (formData: MeetingWithoutId) => void;
+    books: Book[];
+    selectedBookId: string | undefined;
+    onBookSelect: (bookId: string | undefined) => void;
 };
 
-export default function InputFormMeetings({ title, initialFormData, onCancel, onSubmit }: Props) {
+export default function InputFormMeetings({ title, initialFormData, onCancel, onSubmit, books, selectedBookId, onBookSelect  }: Props) {
     const [formData, setFormData] = useState<MeetingWithoutId>(initialFormData);
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
@@ -76,6 +91,24 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
                 onChange={handleChange}
                 style={{ marginBottom: "10px", width: "300px" }}
             />
+
+            <FormControl style={{ marginBottom: "10px", width: "300px" }}>
+                <Select
+                    value={selectedBookId}
+                    onChange={(event) => onBookSelect(event.target.value as string)}
+                    displayEmpty
+                    inputProps={{ "aria-label": "Select Book" }}
+                >
+                    <MenuItem value="" disabled>
+                        Select a Book
+                    </MenuItem>
+                    {books.map((book) => (
+                        <MenuItem key={book.id} value={book.id}>
+                            {book.title}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
             <StyledButton>
                 <Button
                     onClick={handleCancel}
@@ -132,9 +165,3 @@ const StyledButton = styled.div`
   gap: 1.1em;
   padding-top: 2em;
 `;
-
-type MeetingWithoutId = {
-    title: string;
-    date: string;
-    location: string;
-};

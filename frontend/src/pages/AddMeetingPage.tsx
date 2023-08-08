@@ -4,13 +4,22 @@ import {useNavigate} from "react-router-dom";
 import InputFormMeetings from "../components/InputFormMeetings.tsx";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {useBooks} from "../hooks/useBooks.ts";
+import {useEffect, useState} from "react";
 
-export default function AddPage() {
+export default function AddMeetingPage() {
     const postMeeting = useMeetings((state) => state.postMeeting);
     const navigate = useNavigate();
+    const { books, fetchBooks } = useBooks();
+    const [selectedBookId, setSelectedBookId] = useState<string | undefined>("");
+
+    useEffect(() => {fetchBooks();
+    }, [fetchBooks]);
 
     function handleSubmit(formData: MeetingWithoutId) {
-        postMeeting(formData);
+        const selectedBook = books.find((book) => book.id === selectedBookId);
+        const meetingWithBook = { ...formData, book: selectedBook };
+        postMeeting(meetingWithBook);
         navigate("/meetinglist");
         toast.success('You have successfully added your new meeting!', {
             position: "top-right",
@@ -46,6 +55,9 @@ export default function AddPage() {
             initialFormData={{ title: "", date: "", location: "" }}
             onCancel={handleCancel}
             onSubmit={handleSubmit}
+            books={books}
+            selectedBookId={selectedBookId}
+            onBookSelect={(bookId) => setSelectedBookId(bookId)}
         />
     );
 }
