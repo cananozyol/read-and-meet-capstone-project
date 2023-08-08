@@ -1,6 +1,5 @@
 package de.neuefische.readandmeet.backend.service;
 
-import de.neuefische.readandmeet.backend.exceptions.NoSuchBookException;
 import de.neuefische.readandmeet.backend.exceptions.NoSuchMeetingException;
 import de.neuefische.readandmeet.backend.model.Book;
 import de.neuefische.readandmeet.backend.model.Meeting;
@@ -54,8 +53,9 @@ public class MeetingService {
     }
 
     public List<Book> getBookByMeetingId(String id) {
-        meetingRepo.findById(id)
-                .orElseThrow(() -> new NoSuchBookException(id));
+        this.meetingRepo.findById(id)
+                .orElseThrow(() -> new NoSuchMeetingException(id));
+
         return bookRepo.findAll();
     }
 
