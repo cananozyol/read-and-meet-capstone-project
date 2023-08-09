@@ -46,7 +46,7 @@ export default function EditMeetingPage() {
     }
 
     function handleCancel() {
-        navigate(`/${id}`);
+        navigate(`/meeting/${meeting?.id}`);
         toast.info("You successfully canceled editing the meeting!", {
             position: "top-right",
             autoClose: 3000,

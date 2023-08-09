@@ -177,9 +177,7 @@ export default function AddBookPage() {
                 ))}
             </RadioGroup>
 
-
             <StyledButton>
-
                 <Button
                     onClick={handleCancel}
                     variant="contained"
@@ -223,14 +221,7 @@ export default function AddBookPage() {
                         </Button>
                     </DialogActions>
                 </Dialog>
-
             </StyledButton>
-
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-
-
-                </div>
-
         </FormContainer>
     )
 }
