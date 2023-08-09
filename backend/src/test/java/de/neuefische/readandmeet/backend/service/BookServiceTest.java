@@ -114,4 +114,21 @@ class BookServiceTest {
             bookService.getBookById(nonExistentId);
         });
     }
+    @Test
+    void testGetLabel() {
+        // GIVEN
+        Status notRead = Status.NOT_READ;
+        Status reading = Status.READING;
+        Status read = Status.READ;
+
+        // WHEN
+        String notReadLabel = notRead.getLabel();
+        String readingLabel = reading.getLabel();
+        String readLabel = read.getLabel();
+
+        // THEN
+        assertEquals("Not Read", notReadLabel);
+        assertEquals("Reading", readingLabel);
+        assertEquals("Read", readLabel);
+    }
 }
