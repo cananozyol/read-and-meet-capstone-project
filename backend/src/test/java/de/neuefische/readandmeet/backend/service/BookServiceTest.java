@@ -110,9 +110,8 @@ class BookServiceTest {
         String nonExistentId = "non_existent_id";
 
         //WHEN & THEN
-        assertThrows(NoSuchBookException.class, () -> {
-            bookService.getBookById(nonExistentId);
-        });
+        assertThrows(NoSuchBookException.class, () -> bookService.getBookById(nonExistentId));
+
     }
     @Test
     void testGetLabel() {
