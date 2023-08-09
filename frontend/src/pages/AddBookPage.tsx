@@ -1,15 +1,36 @@
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    FormControl,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+    TextField
+} from "@mui/material";
+import {Check as CheckIcon, Close as CloseIcon} from "@mui/icons-material";
 import {useBooks} from "../hooks/useBooks.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Genre, Status} from "../models/books.ts";
 import {styled} from "styled-components";
 import GenreSelect from "../components/GenreSelect.tsx";
+import Typography from "@mui/material/Typography";
+import StarIcon from "@mui/icons-material/Star";
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import {toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function AddBookPage() {
 
     const navigate = useNavigate();
     const { postBook } = useBooks();
+    const [open, setOpen] = useState(false);
+
+
 
     const [formData, setFormData] = useState({
         title: "",
@@ -38,98 +59,189 @@ export default function AddBookPage() {
         event.preventDefault();
         postBook(formData);
         navigate("/booklist");
+        toast.success('You have successfully added your new book!', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            closeButton: <button>x</button>,
+            style: { background: '#b2dfdb', color: "black" },
+        });
     };
 
+    const handleCancel = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleConfirmCancel = () => {
+        setOpen(false);
+        navigate('/booklist')
+        toast.info('You canceled adding a new book!', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            closeButton: <button>x</button>,
+            style: { background: '#bbdefb', color: "black" },
+        });
+    }
 
     return (
-        <FormContainer onSubmit={handleSubmit}>
-            <h1>Add Book</h1>
+        <FormContainer onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Typography variant="h4" component="h1" style={{ margin: "20px 0", fontFamily: "Roboto", fontWeight: "bold" }}>
+                Add Book
+            </Typography>
 
-            <input
-                type="text"
+            <TextField
                 id="book-title"
                 name="title"
+                variant="outlined"
                 value={formData.title}
                 onChange={handleInputChange}
                 required
                 placeholder="Enter the book title"
+                style={{ marginBottom: "10px", width: "300px" }}
             />
-            <p></p>
 
-            <input
-                type="text"
+            <TextField
                 id="book-author"
                 name="author"
+                variant="outlined"
                 value={formData.author}
                 onChange={handleInputChange}
                 required
                 placeholder="Enter the author's name"
+                style={{ marginBottom: "10px", width: "300px" }}
             />
-            <p></p>
-            <label htmlFor="book-genre">Genre: </label>
+
             <GenreSelect selectedGenre={formData.genre}
                 onGenreChange={(e) => setFormData({ ...formData, genre: e.target.value as Genre })}
             />
-            <p></p>
-            <label>Status: </label>
-            <div>
-                <label>
-                    <input
-                        type="radio"
-                        name="status"
+            <Typography variant="body1">Status:</Typography>
+            <FormControl component="fieldset" style={{ marginBottom: "10px", display: "flex"}}>
+               <RadioGroup
+                    aria-label="status"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleStatusChange}
+                    style={{ display: "flex", flexDirection: "row" }}
+                >
+                    <FormControlLabel
                         value={Status.NOT_READ}
-                        checked={formData.status === Status.NOT_READ}
-                        onChange={handleStatusChange}
+                        control={<Radio />}
+                        label="Not Read"
+                        style={{ marginRight: "20px" }}
                     />
-                    Not Read
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        name="status"
+                    <FormControlLabel
                         value={Status.READING}
-                        checked={formData.status === Status.READING}
-                        onChange={handleStatusChange}
+                        control={<Radio />}
+                        label="Reading"
+                        style={{ marginRight: "20px" }}
                     />
-                    Reading
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        name="status"
+                    <FormControlLabel
                         value={Status.READ}
-                        checked={formData.status === Status.READ}
-                        onChange={handleStatusChange}
+                        control={<Radio />}
+                        label="Read"
                     />
-                    Read
-                </label>
-            </div>
-            <p></p>
-            <label>Rating: </label>
-            <div>
-                {[0, 1, 2, 3, 4, 5].map((rating) => (
-                    <label key={rating}>
-                        <input
-                            type="radio"
-                            name="rating"
-                            value={rating}
-                            checked={formData.rating === rating}
-                            onChange={handleRatingChange}
-                        />
-                        {rating}
-                    </label>
+                </RadioGroup>
+            </FormControl>
+            <Typography variant="body1">Rating:</Typography>
+            <RadioGroup
+                row
+                name="rating"
+                value={formData.rating}
+                onChange={handleRatingChange}
+            >
+                {[1, 2, 3, 4, 5].map((rating) => (
+                    <FormControlLabel
+                        key={rating}
+                        value={rating}
+                        control={
+                            <Radio
+                                icon={<StarOutlineIcon />}
+                                checkedIcon={<StarIcon />}
+                            />
+                        }
+                        label=""
+                    />
                 ))}
-            </div>
-            <p></p>
-            <div>
+            </RadioGroup>
+
+
+            <StyledButton>
+
+                <Button
+                    onClick={handleCancel}
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<CloseIcon style={{ color: "white" }} />}
+                    sx={{
+                        backgroundColor: "#d1adee",
+                        color: "black",
+                        borderRadius: "5px",
+                        width: "139px",
+                    }}
+                >
+                    Cancel
+                </Button>
+
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<CheckIcon style={{ color: "white" }} />}
+                    sx={{
+                        backgroundColor: "#d1adee",
+                        color: "black",
+                        borderRadius: "5px",
+                        width: "139px",
+                    }}
+                >Save</Button>
+
+                <Dialog open={open} onClose={handleClose} aria-describedby="alert-dialog-description">
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description" sx={{ color: "black" }}>
+                            Are you sure you want to cancel adding a book?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions style={{ display: "flex", justifyContent: "space-evenly" }}>
+                        <Button onClick={handleClose} variant="outlined" sx={{ color: "black", backgroundColor: "#d1adee" }}>
+                            No
+                        </Button>
+                        <Button onClick={handleConfirmCancel} variant="outlined" sx={{ color: "black", backgroundColor: "#d1adee" }}>
+                            Yes
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+            </StyledButton>
+
                 <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                    <button type={"submit"}>Add</button>
-                    <button onClick={() => navigate('/booklist')}>Cancel</button>
+
+
                 </div>
-            </div>
+
         </FormContainer>
     )
 }
+
+const StyledButton = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1.1em;
+  padding-top: 2em;
+`;
 
 
 export const FormContainer = styled.form`
