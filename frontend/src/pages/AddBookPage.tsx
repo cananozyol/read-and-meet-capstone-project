@@ -8,8 +8,11 @@ import {
     FormControlLabel,
     Radio,
     RadioGroup,
+    Rating,
     TextField
 } from "@mui/material";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {Check as CheckIcon, Close as CloseIcon} from "@mui/icons-material";
 import {useBooks} from "../hooks/useBooks.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
@@ -18,8 +21,6 @@ import {Genre, Status} from "../models/books.ts";
 import {styled} from "styled-components";
 import GenreSelect from "../components/GenreSelect.tsx";
 import Typography from "@mui/material/Typography";
-import StarIcon from "@mui/icons-material/Star";
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -50,9 +51,10 @@ export default function AddBookPage() {
         setFormData((prevData) => ({ ...prevData, status }));
     };
 
-    const handleRatingChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const rating = parseInt(event.target.value);
-        setFormData((prevData) => ({ ...prevData, rating }));
+    const handleRatingChange = (_: React.ChangeEvent<any>, newRating: number | null) => {
+        if (newRating !== null) {
+            setFormData((prevData) => ({ ...prevData, rating: newRating }));
+        }
     };
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -156,26 +158,13 @@ export default function AddBookPage() {
                 </RadioGroup>
             </FormControl>
             <Typography variant="body1">Rating:</Typography>
-            <RadioGroup
-                row
+            <Rating
                 name="rating"
                 value={formData.rating}
                 onChange={handleRatingChange}
-            >
-                {[1, 2, 3, 4, 5].map((rating) => (
-                    <FormControlLabel
-                        key={rating}
-                        value={rating}
-                        control={
-                            <Radio
-                                icon={<StarOutlineIcon />}
-                                checkedIcon={<StarIcon />}
-                            />
-                        }
-                        label=""
-                    />
-                ))}
-            </RadioGroup>
+                emptyIcon={<FavoriteBorderIcon fontSize="inherit" style={{ color: "#d1adee" }} />}
+                icon={<FavoriteIcon fontSize="inherit" style={{ color: "#d1adee" }} />}
+            />
 
             <StyledButton>
                 <Button

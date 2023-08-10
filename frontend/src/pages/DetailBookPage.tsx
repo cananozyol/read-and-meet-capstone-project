@@ -7,13 +7,14 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
+    Rating,
     Typography
 } from "@mui/material";
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {useBooks} from '../hooks/useBooks';
 import {BookEditData, Genre, Status} from "../models/books.ts";
-import RatingStars from "../components/RatingStars.tsx";
+import RatingHearts from "../components/RatingHearts.tsx";
 import {styled} from "styled-components";
 import GenreSelect from "../components/GenreSelect.tsx";
 import {toast} from "react-toastify";
@@ -22,6 +23,8 @@ import CardActionArea from "@mui/material/CardActionArea";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {Check as CheckIcon, Close as CloseIcon} from "@mui/icons-material";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
 export default function DetailBookPage() {
@@ -74,6 +77,17 @@ export default function DetailBookPage() {
             genre: book.genre || Genre.NOT_SELECTED,
             status: book.status || Status.NOT_READ,
             rating: book.rating || 0,
+        });
+        toast.info("You successfully canceled editing the book!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            closeButton: <button>x</button>,
+            style: { background: '#bbdefb', color: "black" },
         });
     };
 
@@ -143,22 +157,14 @@ export default function DetailBookPage() {
                             Read
                         </label>
                     </div>
-                    <Typography variant="body1">Rating: </Typography>
-                    <div>
-                        {[0, 1, 2, 3, 4, 5].map((rating) => (
-                            <label key={rating}>
-                                <input
-                                    type="radio"
-                                    name="rating"
-                                    value={rating}
-                                    checked={editedData.rating === rating}
-                                    onChange={() => setEditedData({ ...editedData, rating })}
-                                />
-                                {rating}
-                            </label>
-                        ))}
-                    </div>
-
+                        <Typography variant="body1">Rating: </Typography>
+                        <Rating
+                            name="model-rating"
+                            value={editedData.rating}
+                            onChange={(_, newValue) => setEditedData({ ...editedData, rating: newValue ?? undefined })}
+                            icon={<FavoriteIcon style={{ color: "#d1adee" }} />}
+                            emptyIcon={<FavoriteBorderIcon style={{ color: "#d1adee" }} />}
+                        />
                     <StyledButton>
                         <Button
                             onClick={handleCancel}
@@ -192,7 +198,7 @@ export default function DetailBookPage() {
                 <>
                     <Typography variant="body1">Genre: {book.genre}</Typography>
                     <Typography variant="body1">Status: {book.status}</Typography>
-                    <Typography variant="body1">Rating: <RatingStars rating={book.rating} /></Typography>
+                    <Typography variant="body1">Rating: <RatingHearts rating={book.rating} /></Typography>
 
 
                     <StyledButton>
