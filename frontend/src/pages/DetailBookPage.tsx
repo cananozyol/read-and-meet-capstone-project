@@ -7,6 +7,11 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    Radio,
+    RadioGroup,
     Rating,
     Typography
 } from "@mui/material";
@@ -32,7 +37,10 @@ export default function DetailBookPage() {
     const book = useBooks((state) => state.getBookById(id));
     const navigate = useNavigate();
     const { deleteBook, putBook } = useBooks();
-    const [open, setOpen] = useState(false);
+
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+
     const [isEditMode, setIsEditMode] = useState(false);
     const [editedData, setEditedData] = useState<BookEditData>({
         genre: book?.genre || Genre.NOT_SELECTED,
@@ -43,6 +51,16 @@ export default function DetailBookPage() {
     if (!book) {
         return <div>Book not found.</div>;
     }
+
+    const handleEdit = () => {
+        setIsEditMode(true);
+    };
+    const handleSave = () => {
+        if (id) {
+            putBook(id, editedData);
+            setIsEditMode(false);
+        }
+    };
 
     const handleDelete = () => {
         deleteBook(id);
@@ -58,17 +76,6 @@ export default function DetailBookPage() {
             closeButton: <button>x</button>,
             style: { background: '#fff9c4', color: "black" },
         });
-    };
-
-    const handleEdit = () => {
-        setIsEditMode(true);
-    };
-
-    const handleSave = () => {
-        if (id) {
-            putBook(id, editedData);
-            setIsEditMode(false);
-        }
     };
 
     const handleCancel = () => {
@@ -91,13 +98,22 @@ export default function DetailBookPage() {
         });
     };
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    }
+    const handleClickCancel = () => {
+        setCancelDialogOpen(true);
+    };
 
-    const handleClose = () => {
-        setOpen(false);
-    }
+    const handleClickDelete = () => {
+        setDeleteDialogOpen(true);
+    };
+
+    const handleCancelClose = () => {
+        setCancelDialogOpen(false);
+    };
+
+    const handleDeleteClose = () => {
+        setDeleteDialogOpen(false);
+    };
+
 
     return (
         <Card sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
@@ -125,38 +141,20 @@ export default function DetailBookPage() {
                         onGenreChange={(e) => setEditedData({ ...editedData, genre: e.target.value as Genre })}
                     />
                     <Typography variant="body1">Status: </Typography>
-                    <div>
-                        <label>
-                            <input
-                                type="radio"
-                                name="status"
-                                value={Status.NOT_READ}
-                                checked={editedData.status === Status.NOT_READ}
-                                onChange={() => setEditedData({ ...editedData, status: Status.NOT_READ })}
-                            />
-                            Not Read
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="status"
-                                value={Status.READING}
-                                checked={editedData.status === Status.READING}
-                                onChange={() => setEditedData({ ...editedData, status: Status.READING })}
-                            />
-                            Currently reading
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="status"
-                                value={Status.READ}
-                                checked={editedData.status === Status.READ}
-                                onChange={() => setEditedData({ ...editedData, status: Status.READ })}
-                            />
-                            Read
-                        </label>
-                    </div>
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">Status</FormLabel>
+                        <RadioGroup
+                            name="status"
+                            value={editedData.status}
+                            onChange={(event) =>
+                                setEditedData({ ...editedData, status: event.target.value as Status })
+                            }
+                        >
+                            <FormControlLabel value={Status.NOT_READ} control={<Radio />} label="Not Read" />
+                            <FormControlLabel value={Status.READING} control={<Radio />} label="Currently reading" />
+                            <FormControlLabel value={Status.READ} control={<Radio />} label="Read" />
+                        </RadioGroup>
+                    </FormControl>
                         <Typography variant="body1">Rating: </Typography>
                         <Rating
                             name="model-rating"
@@ -193,6 +191,22 @@ export default function DetailBookPage() {
                             }}
                         >Save</Button>
                     </StyledButton>
+                    <Dialog
+                        open={cancelDialogOpen}
+                        keepMounted
+                        onClose={handleClickCancel}
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description" sx={{ color: 'black' }}>
+                                Are you sure you want to cancel editing your book?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                            <Button onClick={handleCancelClose} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>No</Button>
+                            <Button onClick={() => { handleCancel(); }} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>Yes</Button>
+                        </DialogActions>
+                    </Dialog>
                 </>
             ) : (
                 <>
@@ -220,7 +234,7 @@ export default function DetailBookPage() {
                             variant="contained"
                             color="secondary"
                             startIcon={<DeleteForeverIcon style={{ color: 'white' }} />}
-                            onClick={handleClickOpen}
+                            onClick={handleClickDelete}
                             sx={{
                                 backgroundColor: '#d1adee',
                                 color: 'black',
@@ -234,9 +248,9 @@ export default function DetailBookPage() {
                 </>
             )}
                 <Dialog
-                    open={open}
+                    open={deleteDialogOpen}
                     keepMounted
-                    onClose={handleClose}
+                    onClose={handleDeleteClose}
                     aria-describedby="alert-dialog-description"
                 >
                     <DialogContent>
@@ -245,7 +259,7 @@ export default function DetailBookPage() {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                        <Button onClick={handleClose} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>No</Button>
+                        <Button onClick={handleDeleteClose} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>No</Button>
                         <Button onClick={() => { handleDelete(); }} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>Yes</Button>
                     </DialogActions>
                 </Dialog>

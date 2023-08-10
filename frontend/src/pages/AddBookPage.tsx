@@ -156,9 +156,14 @@ export default function AddBookPage() {
                 name="rating"
                 value={formData.rating}
                 onChange={(_, newValue) => {
+
                     if (newValue !== null) {
-                        setFormData({ ...formData, rating: newValue });}
-                }}emptyIcon={<FavoriteBorderIcon fontSize="inherit" style={{ color: "#d1adee" }} />}
+
+                        setFormData({ ...formData, rating: newValue });
+                    }
+                }}
+
+                emptyIcon={<FavoriteBorderIcon fontSize="inherit" style={{ color: "#d1adee" }} />}
                 icon={<FavoriteIcon fontSize="inherit" style={{ color: "#d1adee" }} />}
             />
 
