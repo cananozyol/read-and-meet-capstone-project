@@ -51,12 +51,6 @@ export default function AddBookPage() {
         setFormData((prevData) => ({ ...prevData, status }));
     };
 
-    const handleRatingChange = (_: React.ChangeEvent<any>, newRating: number | null) => {
-        if (newRating !== null) {
-            setFormData((prevData) => ({ ...prevData, rating: newRating }));
-        }
-    };
-
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         postBook(formData);
@@ -161,8 +155,10 @@ export default function AddBookPage() {
             <Rating
                 name="rating"
                 value={formData.rating}
-                onChange={handleRatingChange}
-                emptyIcon={<FavoriteBorderIcon fontSize="inherit" style={{ color: "#d1adee" }} />}
+                onChange={(_, newValue) => {
+                    if (newValue !== null) {
+                        setFormData({ ...formData, rating: newValue });}
+                }}emptyIcon={<FavoriteBorderIcon fontSize="inherit" style={{ color: "#d1adee" }} />}
                 icon={<FavoriteIcon fontSize="inherit" style={{ color: "#d1adee" }} />}
             />
 
