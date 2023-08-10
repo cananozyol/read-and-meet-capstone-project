@@ -9,7 +9,6 @@ import {
     DialogContentText,
     FormControl,
     FormControlLabel,
-    FormLabel,
     Radio,
     RadioGroup,
     Rating,
@@ -21,7 +20,6 @@ import {useBooks} from '../hooks/useBooks';
 import {BookEditData, Genre, Status} from "../models/books.ts";
 import RatingHearts from "../components/RatingHearts.tsx";
 import {styled} from "styled-components";
-import GenreSelect from "../components/GenreSelect.tsx";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import CardActionArea from "@mui/material/CardActionArea";
@@ -43,9 +41,9 @@ export default function DetailBookPage() {
 
     const [isEditMode, setIsEditMode] = useState(false);
     const [editedData, setEditedData] = useState<BookEditData>({
-        genre: book?.genre || Genre.NOT_SELECTED,
-        status: book?.status || Status.NOT_READ,
-        rating: book?.rating || 0,
+        genre: book?.genre ?? Genre.NOT_SELECTED,
+        status: book?.status ?? Status.NOT_READ,
+        rating: book?.rating ?? 0,
     });
 
     if (!book) {
@@ -116,45 +114,76 @@ export default function DetailBookPage() {
 
 
     return (
-        <Card sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-            <CardActionArea>
-            <CardMedia
-                component="img"
-                height="150"
-                image="https://images.unsplash.com/photo-1534978184044-62700a717864?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80"
-                alt="Book Cover"
-                sx={{ maxWidth: "150px" }}
-            /></CardActionArea>
-            <CardContent style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    {book.title}
-                </Typography>
-                <Typography variant="h6" component="h3">
-                    by: {book.author}
-                </Typography>
-
+        <Card>
+            <div style={{ display: "flex" }}>
+                <CardActionArea
+                    style={{
+                        flex: 1,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <CardMedia
+                        component="img"
+                        height={228}
+                        width={170}
+                        image="https://images.unsplash.com/photo-1534978184044-62700a717864?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80"
+                        alt="Book Cover"
+                        style={{ margin: "8px" }} // Set the desired margin
+                    />
+                </CardActionArea>
+                <CardContent
+                    style={{
+                    display: "flex",
+                    flex: 1,
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "stretch",
+                }}>
+                    <Typography variant="h4" component="h1" gutterBottom>
+                        {book.title}
+                    </Typography>
+                    <Typography variant="h6" component="h3">
+                        by: {book.author}
+                    </Typography>
+                    <Typography variant="body1">
+                        Genre: {book.genre}
+                    </Typography>
+                </CardContent>
+            </div>
+            <CardContent>
 
             {isEditMode ? (
                 <>
-                    <Typography variant="body1">Genre: </Typography>
-                    <GenreSelect selectedGenre={editedData.genre}
-                        onGenreChange={(e) => setEditedData({ ...editedData, genre: e.target.value as Genre })}
-                    />
                     <Typography variant="body1">Status: </Typography>
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">Status</FormLabel>
                         <RadioGroup
                             name="status"
                             value={editedData.status}
                             onChange={(event) =>
                                 setEditedData({ ...editedData, status: event.target.value as Status })
                             }
+                            style={{ display: "flex", flexDirection: "row" }}
                         >
-                            <FormControlLabel value={Status.NOT_READ} control={<Radio />} label="Not Read" />
-                            <FormControlLabel value={Status.READING} control={<Radio />} label="Currently reading" />
-                            <FormControlLabel value={Status.READ} control={<Radio />} label="Read" />
+                            <FormControlLabel
+                                value={Status.NOT_READ}
+                                control={<Radio />}
+                                label={<span style={{ fontSize: "13px" }}>Not Read</span>}
+                            />
+                            <FormControlLabel
+                                value={Status.READING}
+                                control={<Radio />}
+                                label={<span style={{ fontSize: "13px" }}>Currently reading</span>}
+                            />
+                            <FormControlLabel
+                                value={Status.READ}
+                                control={<Radio />}
+                                label={<span style={{ fontSize: "13px" }}>Read</span>}
+                            />
                         </RadioGroup>
                     </FormControl>
+
                         <Typography variant="body1">Rating: </Typography>
                         <Rating
                             name="model-rating"
@@ -165,7 +194,7 @@ export default function DetailBookPage() {
                         />
                     <StyledButton>
                         <Button
-                            onClick={handleCancel}
+                            onClick={handleClickCancel}
                             variant="contained"
                             color="secondary"
                             startIcon={<CloseIcon style={{ color: "white" }} />}
@@ -210,7 +239,7 @@ export default function DetailBookPage() {
                 </>
             ) : (
                 <>
-                    <Typography variant="body1">Genre: {book.genre}</Typography>
+
                     <Typography variant="body1">Status: {book.status}</Typography>
                     <Typography variant="body1">Rating: <RatingHearts rating={book.rating} /></Typography>
 

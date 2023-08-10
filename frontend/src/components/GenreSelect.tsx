@@ -31,7 +31,7 @@ export default function GenreSelect({ selectedGenre, onGenreChange }: Props) {
                 inputProps={{ "aria-label": "Select Genre" }}
             >
                 <MenuItem value="" disabled>
-                    <Typography variant="body1">
+                    <Typography variant="body1" style={{ fontSize: "13px" }}>
                         Select Genre
                     </Typography>
                 </MenuItem>
@@ -39,7 +39,7 @@ export default function GenreSelect({ selectedGenre, onGenreChange }: Props) {
                     <MenuItem key={option.value} value={option.value}
                               style={{ paddingTop: '5px', paddingBottom: '5px' }}
                     >
-                        <Typography variant="body1">
+                        <Typography variant="body1" style={{ fontSize: "13px" }}>
                             {option.label}
                         </Typography>
                     </MenuItem>
