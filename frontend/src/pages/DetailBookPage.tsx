@@ -30,7 +30,7 @@ import StatusSelect from "../components/StatusSelect.tsx";
 
 export default function DetailBookPage() {
     const { id } = useParams();
-    const book = useStore((state) => state.getBookById(id!));
+    const book = useStore((state) => state.getBookById(id || ""));
     const navigate = useNavigate();
     const { deleteBook, putBook } = useStore();
 
