@@ -11,9 +11,15 @@ export default function EditMeetingPage() {
     const { id } = useParams();
     const { putMeeting, getMeetingById, getBooksForMeeting } = useStore();
     const meeting = getMeetingById(id!);
+    const previousSelectedBookId = meeting?.book?.id;
     const navigate = useNavigate();
     const { books } = useStore();
-    const [selectedBookId, setSelectedBookId] = useState<string | undefined>(meeting?.book?.id ?? '');
+    const bookExists = books.some(book => book.id === previousSelectedBookId);
+
+    const [selectedBookId, setSelectedBookId] = useState<string | undefined>(
+        bookExists ? previousSelectedBookId : ''
+    );
+
 
     useEffect(() => {
         if (id) {
