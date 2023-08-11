@@ -13,7 +13,7 @@ export default function RatingHearts({ rating }: Props) {
 
     for (let i = 1; i <= 5; i++) {
         if (i <= filledStars) {
-            stars.push(<FavoriteIcon key={i} />);
+            stars.push(<FavoriteIcon key={i} fontSize="small"/>);
         } else if (hasHalfStar && i === filledStars + 1) {
             stars.push(
                 <span key={i} style={{ display: 'inline-flex', alignItems: 'center' }}>
@@ -22,7 +22,7 @@ export default function RatingHearts({ rating }: Props) {
         </span>
             );
         } else {
-            stars.push(<FavoriteIcon key={i} style={{ color: 'rgba(0, 0, 0, 0.38)' }} />);
+            stars.push(<FavoriteIcon key={i} style={{ color: 'rgba(0, 0, 0, 0.38)' }} fontSize="small"/>);
         }
     }
 
