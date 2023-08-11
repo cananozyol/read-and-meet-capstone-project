@@ -1,13 +1,11 @@
 package de.neuefische.readandmeet.backend.controller;
 
-import de.neuefische.readandmeet.backend.exceptions.NoSuchBookException;
 import de.neuefische.readandmeet.backend.model.Book;
 import de.neuefische.readandmeet.backend.model.BookEditData;
 import de.neuefische.readandmeet.backend.model.BookWithoutId;
 import de.neuefische.readandmeet.backend.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,39 +23,25 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<List<Book>> addNewBook(@RequestBody BookWithoutId bookWithoutId) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<Book> addNewBook(@RequestBody BookWithoutId bookWithoutId) {
         this.bookService.addBook(bookWithoutId);
-        List<Book> books = this.bookService.list();
-        return ResponseEntity.status(HttpStatus.CREATED).body(books);
+        return this.bookService.list();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable String id, @RequestBody BookEditData bookEditData) {
-        try {
-            Book updatedBook = this.bookService.updateBook(id, bookEditData);
-            return ResponseEntity.ok(updatedBook);
-        } catch (NoSuchBookException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Book updateBook(@PathVariable String id, @RequestBody BookEditData bookEditData) {
+        return this.bookService.updateBook(id, bookEditData);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable String id) {
-        try {
-            this.bookService.deleteBook(id);
-            return ResponseEntity.noContent().build();
-        } catch (NoSuchBookException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBook(@PathVariable String id) {
+        this.bookService.deleteBook(id);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable String id) {
-        try {
-            Book book = this.bookService.getBookById(id);
-            return ResponseEntity.ok(book);
-        } catch (NoSuchBookException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Book getBookById(@PathVariable String id) {
+        return this.bookService.getBookById(id);
     }
 }

@@ -31,7 +31,6 @@ public class BookService {
         Book book = bookRepo.findById(bookId)
                 .orElseThrow(() -> new NoSuchBookException(bookId));
 
-        book.setGenre(bookEditData.getGenre());
         book.setStatus(bookEditData.getStatus());
         book.setRating(bookEditData.getRating());
 

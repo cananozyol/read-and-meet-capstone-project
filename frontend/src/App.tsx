@@ -2,22 +2,22 @@ import {Link, Route, Routes} from "react-router-dom";
 import Header from "./components/Header.tsx";
 import MeetingList from "./pages/MeetingList.tsx";
 import BookList from "./pages/BookList.tsx";
-import {useMeetings} from "./hooks/useMeetings.ts";
 import {styled} from "styled-components";
 import HomePage from "./pages/HomePage.tsx";
 import {Button} from "@mui/material";
 import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {useBooks} from "./hooks/useBooks.ts";
 import AddBookPage from "./pages/AddBookPage.tsx";
 import AddMeetingPage from "./pages/AddMeetingPage.tsx";
 import EditMeetingPage from "./pages/EditMeetingPage.tsx";
 import DetailMeetingPage from "./pages/DetailMeetingPage.tsx";
 import DetailBookPage from "./pages/DetailBookPage.tsx";
+import {useStore} from "./hooks/useStore.ts";
+
 
 export default function App() {
-    const meetings = useMeetings((state) => state.meetings);
-    const books = useBooks((state) => state.books);
+    const meetings = useStore((state) => state.meetings);
+    const books = useStore((state) => state.books);
 
     return (
         <main>

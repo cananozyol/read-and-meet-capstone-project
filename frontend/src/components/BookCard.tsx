@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import {Book} from "../models/books.ts";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-import RatingStars from "./RatingStars.tsx";
+import RatingStars from "./RatingHearts.tsx";
 
 type Props = {
     book: Book;

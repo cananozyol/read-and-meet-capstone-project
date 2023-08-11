@@ -8,7 +8,6 @@ import {
     DialogContentText,
     Typography
 } from "@mui/material";
-import {useMeetings} from "../hooks/useMeetings.ts";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {styled} from "styled-components";
@@ -16,14 +15,16 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
-import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {useStore} from "../hooks/useStore.ts";
+import {showWarningToast} from "../components/ToastHelpers.tsx";
+import ButtonStyle from "../components/ButtonStyle.tsx";
 
 export default function DetailMeetingPage() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const meeting = useMeetings((state) => state.getMeetingById(id));
-    const { deleteMeeting } = useMeetings();
+    const meeting = useStore((state) => state.getMeetingById(id || ""));
+    const { deleteMeeting } = useStore();
     const [open, setOpen] = useState(false);
 
     if (!meeting) {
@@ -31,20 +32,14 @@ export default function DetailMeetingPage() {
     }
 
     const handleDelete = () => {
-        deleteMeeting(id);
+        deleteMeeting(id || "");
         navigate("/meetinglist");
-        toast.warning("You have deleted your meeting!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            closeButton: <button>x</button>,
-            style: { background: '#fff9c4', color: "black" },
-        });
+        showWarningToast('You have deleted your meeting!');
     };
+
+    const handleEdit = () => {
+        navigate(`/${id}/editmeeting`);
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -74,34 +69,12 @@ export default function DetailMeetingPage() {
             </CardContent>
             <CardContent style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
                 <StyledButton>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<BorderColorIcon style={{ color: 'white' }} />}
-                        onClick={() => navigate(`/${id}/editmeeting`)}
-                        sx={{
-                            backgroundColor: '#d1adee',
-                            color: 'black',
-                            borderRadius: '5px',
-                            width: '139px',
-                        }}
-                    >
+                    <ButtonStyle onClick={handleEdit} startIcon={BorderColorIcon}>
                         EDIT
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<DeleteForeverIcon style={{ color: 'white' }} />}
-                        onClick={handleClickOpen}
-                        sx={{
-                            backgroundColor: '#d1adee',
-                            color: 'black',
-                            borderRadius: '5px',
-                            width: '139px',
-                        }}
-                    >
+                    </ButtonStyle>
+                    <ButtonStyle onClick={handleClickOpen} startIcon={DeleteForeverIcon}>
                         Delete
-                    </Button>
+                    </ButtonStyle>
                 </StyledButton>
                 <Dialog
                     open={open}

@@ -1,25 +1,29 @@
 import {useNavigate, useParams} from "react-router-dom";
 import InputFormMeetings from "../components/InputFormMeetings.tsx";
-import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import {useMeetings} from "../hooks/useMeetings.ts";
-import {useBooks} from "../hooks/useBooks.ts";
 import {useEffect, useState} from "react";
 import {MeetingWithoutId} from "../models/meeting.ts";
+import {useStore} from "../hooks/useStore.ts";
+import {showInfoToast, showSuccessToast} from "../components/ToastHelpers.tsx";
 
 
 export default function EditMeetingPage() {
     const { id } = useParams();
-    const { putMeeting, getMeetingById, getBooksForMeeting } = useMeetings();
-    const meeting = getMeetingById(id);
+    const { putMeeting, getMeetingById, fetchBooks } = useStore();
+    const meeting = getMeetingById(id || "");
+    const previousSelectedBookId = meeting?.book?.id;
     const navigate = useNavigate();
-    const { books } = useBooks();
-    const [selectedBookId, setSelectedBookId] = useState<string | undefined>(meeting?.book?.id || '');
+    const { books } = useStore();
+    const bookExists = books.some(book => book.id === previousSelectedBookId);
+
+    const [selectedBookId, setSelectedBookId] = useState<string | undefined>(
+        bookExists ? previousSelectedBookId : ''
+    );
+
 
     useEffect(() => {
-        if (id) {
-            getBooksForMeeting(id).then(() => books);}
-    }, [getBooksForMeeting, id, books]);
+        fetchBooks()
+    }, [fetchBooks]);
 
 
     if (!meeting) {
@@ -32,32 +36,12 @@ export default function EditMeetingPage() {
 
         putMeeting({ ...meetingWithBook, id: id as string });
         navigate(`/${id}`);
-        toast.success("You have successfully edited your meeting!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            closeButton: <button>x</button>,
-            style: { background: '#b2dfdb', color: "black" },
-        });
+        showSuccessToast('Changes have been saved successfully!');
     }
 
     function handleCancel() {
-        navigate(`/${id}`);
-        toast.info("You successfully canceled editing the meeting!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            closeButton: <button>x</button>,
-            style: { background: '#bbdefb', color: "black" },
-        });
+        navigate(`/meeting/${meeting?.id}`);
+        showInfoToast('You canceled editing your meeting!');
     }
 
     return (

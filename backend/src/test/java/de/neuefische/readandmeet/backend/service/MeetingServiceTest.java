@@ -2,7 +2,6 @@ package de.neuefische.readandmeet.backend.service;
 
 import de.neuefische.readandmeet.backend.exceptions.NoSuchMeetingException;
 import de.neuefische.readandmeet.backend.model.*;
-import de.neuefische.readandmeet.backend.repository.BookRepo;
 import de.neuefische.readandmeet.backend.repository.MeetingRepo;
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +18,8 @@ class MeetingServiceTest {
 
 
     MeetingRepo meetingRepo = mock(MeetingRepo.class);
-    BookRepo bookRepo = mock(BookRepo.class);
     UuIdService uuIdService = mock(UuIdService.class);
-    MeetingService meetingService = new MeetingService(meetingRepo, bookRepo, uuIdService);
+    MeetingService meetingService = new MeetingService(meetingRepo, uuIdService);
 
     Book book = new Book("b001", "The Great Gatsby", "F. Scott Fitzgerald", Genre.CLASSIC, Status.NOT_READ, 0);
 
@@ -131,26 +129,5 @@ class MeetingServiceTest {
 
         //WHEN & THEN
         assertThrows(NoSuchMeetingException.class, () -> meetingService.getDetails(nonExistentId));
-    }
-
-
-    @Test
-    void givenMeetingId_whenGetBookByMeetingId_thenReturnsListOfBooks() {
-        //GIVEN
-        String meetingId = "123";
-        Meeting expected = new Meeting(meetingId, "book", LocalDate.now(), "online", new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4));
-        List<Book> expectedBooks = new ArrayList<>();
-        expectedBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4));
-        expectedBooks.add(new Book("2", "Resonance Surge", "Nalini Singh", Genre.FANTASY, Status.READING, 4));
-
-        //WHEN
-        when(meetingRepo.findById(meetingId)).thenReturn(Optional.of(expected));
-        when(bookRepo.findAll()).thenReturn(expectedBooks);
-        List<Book> actualBooks = meetingService.getBookByMeetingId(meetingId);
-
-        //THEN
-        verify(meetingRepo).findById(meetingId);
-        verify(bookRepo).findAll();
-        assertEquals(expectedBooks, actualBooks);
     }
 }

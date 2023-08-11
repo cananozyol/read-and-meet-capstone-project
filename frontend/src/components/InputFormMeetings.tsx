@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -10,12 +9,14 @@ import {
     Select,
     TextField
 } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
 import {useNavigate} from "react-router-dom";
 import {styled} from "styled-components";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
 import {Book} from "../models/books.ts";
 import {MeetingWithoutId} from "../models/meeting.ts";
+import DialogButtonStyles from "../components/DialogButtonStyles.tsx";
+import ButtonStyle from "../components/ButtonStyle.tsx";
 
 type Props = {
     title: string;
@@ -109,36 +110,16 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
                     ))}
                 </Select>
             </FormControl>
+
             <StyledButton>
-                <Button
-                    onClick={handleCancel}
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<CloseIcon style={{ color: "white" }} />}
-                    sx={{
-                        backgroundColor: "#d1adee",
-                        color: "black",
-                        borderRadius: "5px",
-                        width: "139px",
-                    }}
-                >
+                <ButtonStyle onClick={handleCancel} startIcon={CloseIcon} type="button">
                     Cancel
-                </Button>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<CheckIcon style={{ color: "white" }} />}
-                    sx={{
-                        backgroundColor: "#d1adee",
-                        color: "black",
-                        borderRadius: "5px",
-                        width: "139px",
-                    }}
-                >
+                </ButtonStyle>
+                <ButtonStyle type="submit" startIcon={CheckIcon}>
                     Save
-                </Button>
+                </ButtonStyle>
             </StyledButton>
+
             <Dialog open={open} onClose={handleClose} aria-describedby="alert-dialog-description">
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description" sx={{ color: "black" }}>
@@ -146,12 +127,8 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions style={{ display: "flex", justifyContent: "space-evenly" }}>
-                    <Button onClick={handleClose} variant="outlined" sx={{ color: "black", backgroundColor: "#d1adee" }}>
-                        No
-                    </Button>
-                    <Button onClick={handleConfirmCancel} variant="outlined" sx={{ color: "black", backgroundColor: "#d1adee" }}>
-                        Yes
-                    </Button>
+                    <DialogButtonStyles onClick={handleClose}>No</DialogButtonStyles>
+                    <DialogButtonStyles onClick={handleConfirmCancel}>Yes</DialogButtonStyles>
                 </DialogActions>
             </Dialog>
         </form>

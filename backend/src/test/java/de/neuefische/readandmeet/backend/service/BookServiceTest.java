@@ -59,8 +59,8 @@ class BookServiceTest {
         //GIVEN
         String bookId = "b001";
         Book existingBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READING, 4);
-        BookEditData updatedBook = new BookEditData(Genre.FANTASY, Status.READ, 5);
-        Book expectedBook = new Book("b001", "Pride and Prejudice", "Jane Austen", Genre.FANTASY,  Status.READ, 5);
+        BookEditData updatedBook = new BookEditData(Status.READ, 5);
+        Book expectedBook = new Book("b001", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE,  Status.READ, 5);
 
         //WHEN
         when(bookRepo.findById(bookId)).thenReturn(Optional.of(existingBook));
@@ -110,8 +110,24 @@ class BookServiceTest {
         String nonExistentId = "non_existent_id";
 
         //WHEN & THEN
-        assertThrows(NoSuchBookException.class, () -> {
-            bookService.getBookById(nonExistentId);
-        });
+        assertThrows(NoSuchBookException.class, () -> bookService.getBookById(nonExistentId));
+
+    }
+    @Test
+    void testGetLabel() {
+        // GIVEN
+        Status notRead = Status.NOT_READ;
+        Status reading = Status.READING;
+        Status read = Status.READ;
+
+        // WHEN
+        String notReadLabel = notRead.getLabel();
+        String readingLabel = reading.getLabel();
+        String readLabel = read.getLabel();
+
+        // THEN
+        assertEquals("Not Read", notReadLabel);
+        assertEquals("Reading", readingLabel);
+        assertEquals("Read", readLabel);
     }
 }

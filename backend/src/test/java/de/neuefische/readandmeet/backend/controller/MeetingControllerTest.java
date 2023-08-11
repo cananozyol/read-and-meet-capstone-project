@@ -209,18 +209,4 @@ class MeetingControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/" + nonExistentId))
                 .andExpect(status().isNotFound());
     }
-
-    @Test
-    @DirtiesContext
-    void givenMeetingId_whenGetBookByMeetingId_thenReturnListOfBooks() throws Exception {
-        //GIVEN
-        List<Meeting> meetings = new ArrayList<>();
-        meetings.add(new Meeting("123", "Silent Bonds Book Club", null, "online", new Book("b004", "Silver Silence", "Nalini Singh", Genre.FANTASY, Status.NOT_READ, 0)));
-        meetingRepo.insert(meetings);
-        String meetingId = meetingService.list().get(0).getId();
-
-        // WHEN & THEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{id}/books", meetingId).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
 }

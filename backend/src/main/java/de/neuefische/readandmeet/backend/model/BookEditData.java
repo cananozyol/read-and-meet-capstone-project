@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BookEditData {
 
-    private Genre genre;
     private Status status;
     private int rating;
 

@@ -1,15 +1,15 @@
 import Grid from '@mui/material/Grid';
 import MeetingCard from '../components/MeetingCard.tsx';
-import {useMeetings} from "../hooks/useMeetings.ts";
 import {useEffect} from "react";
 import {Meeting} from "../models/meeting.ts";
+import {useStore} from "../hooks/useStore.ts";
 
 type Props = {
     meetings: Meeting[];
 }
 export default function MeetingList(props: Props) {
 
-    const { meetings, fetchMeetings } = useMeetings();
+    const { meetings, fetchMeetings } = useStore();
 
     useEffect(() => {fetchMeetings();}, [fetchMeetings]);
 
