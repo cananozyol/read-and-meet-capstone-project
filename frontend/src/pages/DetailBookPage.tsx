@@ -7,10 +7,6 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    FormControl,
-    FormControlLabel,
-    Radio,
-    RadioGroup,
     Rating,
     Typography
 } from "@mui/material";
@@ -28,6 +24,8 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useStore} from "../hooks/useStore.ts";
 import {showInfoToast, showSuccessToast, showWarningToast} from "../components/ToastHelpers.tsx";
+import ButtonStyle from "../components/ButtonStyle.tsx";
+import StatusSelect from "../components/StatusSelect.tsx";
 
 
 export default function DetailBookPage() {
@@ -136,32 +134,7 @@ export default function DetailBookPage() {
             {isEditMode ? (
                 <>
                     <Typography variant="body1">Status: </Typography>
-                    <FormControl component="fieldset">
-                        <RadioGroup
-                            name="status"
-                            value={editedData.status}
-                            onChange={(event) =>
-                                setEditedData({ ...editedData, status: event.target.value as Status })
-                            }
-                            style={{ display: "flex", flexDirection: "row" }}
-                        >
-                            <FormControlLabel
-                                value={Status.NOT_READ}
-                                control={<Radio />}
-                                label={<span style={{ fontSize: "13px" }}>Not Read</span>}
-                            />
-                            <FormControlLabel
-                                value={Status.READING}
-                                control={<Radio />}
-                                label={<span style={{ fontSize: "13px" }}>Currently reading</span>}
-                            />
-                            <FormControlLabel
-                                value={Status.READ}
-                                control={<Radio />}
-                                label={<span style={{ fontSize: "13px" }}>Read</span>}
-                            />
-                        </RadioGroup>
-                    </FormControl>
+                    <StatusSelect selectedStatus={editedData.status || Status.NOT_READ} onStatusChange={(event) => setEditedData({ ...editedData, status: event.target.value as Status })} />
 
                         <Typography variant="body1">Rating: </Typography>
                         <Rating
@@ -172,32 +145,12 @@ export default function DetailBookPage() {
                             emptyIcon={<FavoriteBorderIcon style={{ color: "#d1adee" }} />}
                         />
                     <StyledButton>
-                        <Button
-                            onClick={handleClickCancel}
-                            variant="contained"
-                            color="secondary"
-                            startIcon={<CloseIcon style={{ color: "white" }} />}
-                            sx={{
-                                backgroundColor: "#d1adee",
-                                color: "black",
-                                borderRadius: "5px",
-                                width: "139px",
-                            }}
-                        >
+                        <ButtonStyle onClick={handleClickCancel} startIcon={CloseIcon}>
                             Cancel
-                        </Button>
-                        <Button
-                            onClick={handleSave}
-                            variant="contained"
-                            color="secondary"
-                            startIcon={<CheckIcon style={{ color: "white" }} />}
-                            sx={{
-                                backgroundColor: "#d1adee",
-                                color: "black",
-                                borderRadius: "5px",
-                                width: "139px",
-                            }}
-                        >Save</Button>
+                        </ButtonStyle>
+                        <ButtonStyle onClick={handleSave} startIcon={CheckIcon}>
+                            Save
+                        </ButtonStyle>
                     </StyledButton>
                     <Dialog
                         open={cancelDialogOpen}
@@ -224,34 +177,12 @@ export default function DetailBookPage() {
 
 
                     <StyledButton>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            startIcon={<BorderColorIcon style={{ color: 'white' }} />}
-                            onClick={handleEdit}
-                            sx={{
-                                backgroundColor: '#d1adee',
-                                color: 'black',
-                                borderRadius: '5px',
-                                width: '139px',
-                            }}
-                        >
+                        <ButtonStyle onClick={handleEdit} startIcon={BorderColorIcon}>
                             EDIT
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            startIcon={<DeleteForeverIcon style={{ color: 'white' }} />}
-                            onClick={handleClickDelete}
-                            sx={{
-                                backgroundColor: '#d1adee',
-                                color: 'black',
-                                borderRadius: '5px',
-                                width: '139px',
-                            }}
-                        >
+                        </ButtonStyle>
+                        <ButtonStyle onClick={handleClickDelete} startIcon={DeleteForeverIcon}>
                             Delete
-                        </Button>
+                        </ButtonStyle>
                     </StyledButton>
                 </>
             )}
