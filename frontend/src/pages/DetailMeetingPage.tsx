@@ -18,6 +18,7 @@ import {useState} from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import {useStore} from "../hooks/useStore.ts";
 import {showWarningToast} from "../components/ToastHelpers.tsx";
+import ButtonStyle from "../components/ButtonStyle.tsx";
 
 export default function DetailMeetingPage() {
     const navigate = useNavigate();
@@ -35,6 +36,10 @@ export default function DetailMeetingPage() {
         navigate("/meetinglist");
         showWarningToast('You have deleted your meeting!');
     };
+
+    const handleEdit = () => {
+        navigate(`/${id}/editmeeting`);
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -64,34 +69,12 @@ export default function DetailMeetingPage() {
             </CardContent>
             <CardContent style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
                 <StyledButton>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<BorderColorIcon style={{ color: 'white' }} />}
-                        onClick={() => navigate(`/${id}/editmeeting`)}
-                        sx={{
-                            backgroundColor: '#d1adee',
-                            color: 'black',
-                            borderRadius: '5px',
-                            width: '139px',
-                        }}
-                    >
+                    <ButtonStyle onClick={handleEdit} startIcon={BorderColorIcon}>
                         EDIT
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<DeleteForeverIcon style={{ color: 'white' }} />}
-                        onClick={handleClickOpen}
-                        sx={{
-                            backgroundColor: '#d1adee',
-                            color: 'black',
-                            borderRadius: '5px',
-                            width: '139px',
-                        }}
-                    >
+                    </ButtonStyle>
+                    <ButtonStyle onClick={handleClickOpen} startIcon={DeleteForeverIcon}>
                         Delete
-                    </Button>
+                    </ButtonStyle>
                 </StyledButton>
                 <Dialog
                     open={open}
