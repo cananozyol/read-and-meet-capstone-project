@@ -1,6 +1,5 @@
 package de.neuefische.readandmeet.backend.controller;
 
-import de.neuefische.readandmeet.backend.model.Book;
 import de.neuefische.readandmeet.backend.model.Meeting;
 import de.neuefische.readandmeet.backend.model.MeetingWithoutId;
 import de.neuefische.readandmeet.backend.service.MeetingService;
@@ -45,10 +44,5 @@ public class MeetingController {
     @PutMapping("/{id}")
     public Meeting updateMeetingById(@PathVariable String id, @RequestBody MeetingWithoutId meetingWithoutId) {
         return this.meetingService.editMeetingById(meetingWithoutId, id);
-    }
-
-    @GetMapping("/{id}/books")
-    public List<Book> getBooksForMeeting(@PathVariable String id) {
-        return meetingService.getBookByMeetingId(id);
     }
 }

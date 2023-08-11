@@ -1,10 +1,8 @@
 package de.neuefische.readandmeet.backend.service;
 
 import de.neuefische.readandmeet.backend.exceptions.NoSuchMeetingException;
-import de.neuefische.readandmeet.backend.model.Book;
 import de.neuefische.readandmeet.backend.model.Meeting;
 import de.neuefische.readandmeet.backend.model.MeetingWithoutId;
-import de.neuefische.readandmeet.backend.repository.BookRepo;
 import de.neuefische.readandmeet.backend.repository.MeetingRepo;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +12,10 @@ import java.util.List;
 public class MeetingService {
 
     private final MeetingRepo meetingRepo;
-    private final BookRepo bookRepo;
     private final UuIdService uuIdService;
 
-    public MeetingService(MeetingRepo meetingRepo, BookRepo bookRepo, UuIdService uuIdService) {
+    public MeetingService(MeetingRepo meetingRepo, UuIdService uuIdService) {
         this.meetingRepo = meetingRepo;
-        this.bookRepo = bookRepo;
         this.uuIdService = uuIdService;
     }
 
@@ -52,8 +48,4 @@ public class MeetingService {
         return this.meetingRepo.save(editedMeeting);
     }
 
-    public List<Book> getBookByMeetingId(String id) {
-        this.meetingRepo.findById(id);
-        return bookRepo.findAll();
-    }
 }

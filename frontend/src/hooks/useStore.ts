@@ -16,7 +16,6 @@ type State = {
     getMeetingById: (id: string) => Meeting | undefined;
     deleteMeeting: (id: string) => void;
     putMeeting: (requestBody: Meeting) => void;
-    getBooksForMeeting: (meetingId: string) => Promise<Book[]>;
 };
 
 export const useStore = create<State>((set, get) => ({
@@ -25,7 +24,7 @@ export const useStore = create<State>((set, get) => ({
 
     fetchBooks: () => {
         axios
-            .get("api/books")
+            .get("/api/books")
             .then((response) => response.data)
             .then((data) => {
                 set({ books: data });
@@ -69,7 +68,7 @@ export const useStore = create<State>((set, get) => ({
 
     fetchMeetings: () => {
         axios
-            .get("api/meetings")
+            .get("/api/meetings")
             .then((response) => response.data)
             .then((data) => {
                 set({ meetings: data });
@@ -114,14 +113,5 @@ export const useStore = create<State>((set, get) => ({
             .catch(console.error);
     },
 
-    getBooksForMeeting: (meetingId: string) => {
-        return axios
-            .get(`/api/meetings/${meetingId}/books`)
-            .then((response) => response.data)
-            .catch((error) => {
-                console.error("Error fetching books for meeting:", error);
-                return [];
-            });
-    },
 }));
 
