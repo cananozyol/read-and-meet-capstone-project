@@ -23,7 +23,7 @@ import ButtonStyle from "../components/ButtonStyle.tsx";
 export default function DetailMeetingPage() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const meeting = useStore((state) => state.getMeetingById(id!));
+    const meeting = useStore((state) => state.getMeetingById(id || ""));
     const { deleteMeeting } = useStore();
     const [open, setOpen] = useState(false);
 
@@ -32,7 +32,7 @@ export default function DetailMeetingPage() {
     }
 
     const handleDelete = () => {
-        deleteMeeting(id!);
+        deleteMeeting(id || "");
         navigate("/meetinglist");
         showWarningToast('You have deleted your meeting!');
     };

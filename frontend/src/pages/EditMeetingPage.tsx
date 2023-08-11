@@ -9,8 +9,8 @@ import {showInfoToast, showSuccessToast} from "../components/ToastHelpers.tsx";
 
 export default function EditMeetingPage() {
     const { id } = useParams();
-    const { putMeeting, getMeetingById, getBooksForMeeting } = useStore();
-    const meeting = getMeetingById(id!);
+    const { putMeeting, getMeetingById, fetchBooks } = useStore();
+    const meeting = getMeetingById(id || "");
     const previousSelectedBookId = meeting?.book?.id;
     const navigate = useNavigate();
     const { books } = useStore();
@@ -22,9 +22,8 @@ export default function EditMeetingPage() {
 
 
     useEffect(() => {
-        if (id) {
-            getBooksForMeeting(id).then(() => books);}
-    }, [getBooksForMeeting, id, books]);
+        fetchBooks()
+    }, [fetchBooks]);
 
 
     if (!meeting) {

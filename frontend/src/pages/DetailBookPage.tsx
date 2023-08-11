@@ -59,13 +59,14 @@ export default function DetailBookPage() {
     };
 
     const handleDelete = () => {
-        deleteBook(id!);
+        deleteBook(id || "");
         navigate('/booklist');
         showWarningToast('You have deleted your book!');
     };
 
     const handleCancel = () => {
         setIsEditMode(false);
+        setCancelDialogOpen(false);
         setEditedData({
             status: book.status || Status.NOT_READ,
             rating: book.rating || 0,
@@ -155,7 +156,7 @@ export default function DetailBookPage() {
                     <Dialog
                         open={cancelDialogOpen}
                         keepMounted
-                        onClose={handleClickCancel}
+                        onClose={handleCancelClose}
                         aria-describedby="alert-dialog-description"
                     >
                         <DialogContent>
