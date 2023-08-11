@@ -17,7 +17,7 @@ import {
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {useBooks} from '../hooks/useBooks';
-import {BookEditData, Genre, Status} from "../models/books.ts";
+import {BookEditData, Status} from "../models/books.ts";
 import RatingHearts from "../components/RatingHearts.tsx";
 import {styled} from "styled-components";
 import {toast} from "react-toastify";
@@ -41,7 +41,6 @@ export default function DetailBookPage() {
 
     const [isEditMode, setIsEditMode] = useState(false);
     const [editedData, setEditedData] = useState<BookEditData>({
-        genre: book?.genre ?? Genre.NOT_SELECTED,
         status: book?.status ?? Status.NOT_READ,
         rating: book?.rating ?? 0,
     });
@@ -79,7 +78,6 @@ export default function DetailBookPage() {
     const handleCancel = () => {
         setIsEditMode(false);
         setEditedData({
-            genre: book.genre || Genre.NOT_SELECTED,
             status: book.status || Status.NOT_READ,
             rating: book.rating || 0,
         });

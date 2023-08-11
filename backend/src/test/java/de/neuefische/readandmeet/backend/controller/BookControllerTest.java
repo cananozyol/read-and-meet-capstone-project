@@ -100,7 +100,7 @@ class BookControllerTest {
     void expectBookUpdated_whenPUTBook() throws Exception {
         //GIVEN
         List<Book> initialBooks = new ArrayList<>();
-        initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.NOT_READ, 4));
+        initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.NOT_READ, 0));
         bookRepo.insert(initialBooks);
         String bookId = bookService.list().get(0).getId();
 
@@ -108,7 +108,7 @@ class BookControllerTest {
                 {
                     "title": "Pride and Prejudice",
                     "author": "Jane Austen",
-                    "genre": "FANTASY",
+                    "genre": "ROMANCE",
                     "status": "READ",
                     "rating": 5
                 }

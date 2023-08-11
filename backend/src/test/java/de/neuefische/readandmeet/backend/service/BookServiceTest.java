@@ -59,8 +59,8 @@ class BookServiceTest {
         //GIVEN
         String bookId = "b001";
         Book existingBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READING, 4);
-        BookEditData updatedBook = new BookEditData(Genre.FANTASY, Status.READ, 5);
-        Book expectedBook = new Book("b001", "Pride and Prejudice", "Jane Austen", Genre.FANTASY,  Status.READ, 5);
+        BookEditData updatedBook = new BookEditData(Status.READ, 5);
+        Book expectedBook = new Book("b001", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE,  Status.READ, 5);
 
         //WHEN
         when(bookRepo.findById(bookId)).thenReturn(Optional.of(existingBook));

@@ -36,7 +36,6 @@ export type BookWithoutId = {
 }
 
 export type BookEditData = {
-    genre?: Genre;
     status?: Status;
     rating?: number;
 }
