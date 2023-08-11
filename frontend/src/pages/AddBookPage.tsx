@@ -14,7 +14,7 @@ import {
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {Check as CheckIcon, Close as CloseIcon} from "@mui/icons-material";
-import {useBooks} from "../hooks/useBooks.ts";
+import {useStore} from "../hooks/useStore.ts";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Genre, Status} from "../models/books.ts";
@@ -28,7 +28,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function AddBookPage() {
 
     const navigate = useNavigate();
-    const { postBook } = useBooks();
+    const { postBook } = useStore();
     const [open, setOpen] = useState(false);
 
 

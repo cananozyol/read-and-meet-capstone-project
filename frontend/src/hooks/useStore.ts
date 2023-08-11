@@ -1,20 +1,72 @@
-import {Meeting, MeetingWithoutId} from "../models/meeting.ts";
-import {create} from "zustand";
-import axios from "axios";
-import {Book} from "../models/books.ts";
+import {create} from 'zustand';
+import axios from 'axios';
+import {Book, BookEditData, BookWithoutId} from '../models/books.ts';
+import {Meeting, MeetingWithoutId} from '../models/meeting.ts';
 
 type State = {
+    books: Book[];
     meetings: Meeting[];
+    fetchBooks: () => void;
+    postBook: (requestBody: BookWithoutId) => void;
+    getBookById: (id: string) => Book | undefined;
+    deleteBook: (id: string) => void;
+    putBook: (id: string, requestBody: BookEditData) => void;
     fetchMeetings: () => void;
     postMeeting: (requestBody: MeetingWithoutId) => void;
-    getMeetingById: (id: string | undefined) => Meeting | undefined;
-    deleteMeeting: (id: string | undefined) => void;
+    getMeetingById: (id: string) => Meeting | undefined;
+    deleteMeeting: (id: string) => void;
     putMeeting: (requestBody: Meeting) => void;
     getBooksForMeeting: (meetingId: string) => Promise<Book[]>;
 };
 
-export const useMeetings = create<State>((set, get) => ({
+export const useStore = create<State>((set, get) => ({
+    books: [],
     meetings: [],
+
+    fetchBooks: () => {
+        axios
+            .get("api/books")
+            .then((response) => response.data)
+            .then((data) => {
+                set({ books: data });
+            })
+            .catch(console.error);
+    },
+
+    postBook: (requestBody: BookWithoutId) => {
+        const { fetchBooks } = get();
+        axios
+            .post("/api/books", requestBody)
+            .then(fetchBooks)
+            .catch(console.error);
+    },
+
+    getBookById: (id: string) => {
+        const { books } = get();
+        return books.find((book) => book.id === id);
+    },
+
+    deleteBook: (id: string) => {
+        axios
+            .delete(`/api/books/${id}`)
+            .then(() => {
+                set((state) => ({ books: state.books.filter((book) => book.id !== id) }));
+            })
+            .catch(console.error);
+    },
+
+    putBook: (id: string, requestBody: BookEditData) => {
+        axios
+            .put(`/api/books/${id}`, requestBody)
+            .then((response) => response.data)
+            .then((updatedBook) => {
+                set((state) => ({
+                    books: state.books.map((book) => (book.id === id ? { ...updatedBook, id } : book)),
+                }));
+            })
+            .catch(console.error);
+    },
+
     fetchMeetings: () => {
         axios
             .get("api/meetings")
@@ -33,19 +85,12 @@ export const useMeetings = create<State>((set, get) => ({
             .catch(console.error);
     },
 
-    getMeetingById: (id: string | undefined) => {
-        if (!id) {
-            throw new Error("No id provided");
-        }
+    getMeetingById: (id: string) => {
         const { meetings } = get();
         return meetings.find((meeting) => meeting.id === id);
     },
 
-    deleteMeeting: (id: string | undefined) => {
-        if (!id) {
-            throw new Error("No id provided");
-        }
-
+    deleteMeeting: (id: string) => {
         axios
             .delete(`/api/meetings/${id}`)
             .then(() => {
@@ -78,5 +123,5 @@ export const useMeetings = create<State>((set, get) => ({
                 return [];
             });
     },
-
 }));
+

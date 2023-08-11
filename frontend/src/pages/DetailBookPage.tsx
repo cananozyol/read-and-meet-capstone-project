@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {useBooks} from '../hooks/useBooks';
 import {BookEditData, Status} from "../models/books.ts";
 import RatingHearts from "../components/RatingHearts.tsx";
 import {styled} from "styled-components";
@@ -28,13 +27,14 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {Check as CheckIcon, Close as CloseIcon} from "@mui/icons-material";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import {useStore} from "../hooks/useStore.ts";
 
 
 export default function DetailBookPage() {
     const { id } = useParams();
-    const book = useBooks((state) => state.getBookById(id));
+    const book = useStore((state) => state.getBookById(id!));
     const navigate = useNavigate();
-    const { deleteBook, putBook } = useBooks();
+    const { deleteBook, putBook } = useStore();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
@@ -60,7 +60,7 @@ export default function DetailBookPage() {
     };
 
     const handleDelete = () => {
-        deleteBook(id);
+        deleteBook(id!);
         navigate('/booklist');
         toast.warning("You have deleted your book!", {
             position: "top-right",

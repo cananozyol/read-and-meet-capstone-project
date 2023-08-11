@@ -1,15 +1,15 @@
 import Grid from "@mui/material/Grid";
 import BookCard from "../components/BookCard.tsx";
-import {useBooks} from "../hooks/useBooks.ts";
 import {useEffect} from "react";
 import {Book} from "../models/books.ts";
+import {useStore} from "../hooks/useStore.ts";
 
 type Props = {
     books: Book[];
 };
 
 export default function BookList(props: Props) {
-    const { books, fetchBooks } = useBooks();
+    const { books, fetchBooks } = useStore();
 
     useEffect(fetchBooks, [fetchBooks]);
 

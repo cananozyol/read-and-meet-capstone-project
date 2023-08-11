@@ -8,7 +8,6 @@ import {
     DialogContentText,
     Typography
 } from "@mui/material";
-import {useMeetings} from "../hooks/useMeetings.ts";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {styled} from "styled-components";
@@ -18,12 +17,13 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {useStore} from "../hooks/useStore.ts";
 
 export default function DetailMeetingPage() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const meeting = useMeetings((state) => state.getMeetingById(id));
-    const { deleteMeeting } = useMeetings();
+    const meeting = useStore((state) => state.getMeetingById(id!));
+    const { deleteMeeting } = useStore();
     const [open, setOpen] = useState(false);
 
     if (!meeting) {
@@ -31,7 +31,7 @@ export default function DetailMeetingPage() {
     }
 
     const handleDelete = () => {
-        deleteMeeting(id);
+        deleteMeeting(id!);
         navigate("/meetinglist");
         toast.warning("You have deleted your meeting!", {
             position: "top-right",

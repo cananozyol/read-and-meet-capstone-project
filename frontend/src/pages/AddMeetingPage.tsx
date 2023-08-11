@@ -1,16 +1,15 @@
-import {useMeetings} from "../hooks/useMeetings.ts";
 import {MeetingWithoutId} from "../models/meeting.ts";
 import {useNavigate} from "react-router-dom";
 import InputFormMeetings from "../components/InputFormMeetings.tsx";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import {useBooks} from "../hooks/useBooks.ts";
 import {useEffect, useState} from "react";
+import {useStore} from "../hooks/useStore.ts";
 
 export default function AddMeetingPage() {
-    const postMeeting = useMeetings((state) => state.postMeeting);
+    const postMeeting = useStore((state) => state.postMeeting);
     const navigate = useNavigate();
-    const { books, fetchBooks } = useBooks();
+    const { books, fetchBooks } = useStore();
     const [selectedBookId, setSelectedBookId] = useState<string | undefined>("");
 
     useEffect(() => {fetchBooks();
