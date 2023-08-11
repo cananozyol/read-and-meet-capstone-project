@@ -15,9 +15,9 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
-import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useStore} from "../hooks/useStore.ts";
+import {showWarningToast} from "../components/ToastHelpers.tsx";
 
 export default function DetailMeetingPage() {
     const navigate = useNavigate();
@@ -33,17 +33,7 @@ export default function DetailMeetingPage() {
     const handleDelete = () => {
         deleteMeeting(id!);
         navigate("/meetinglist");
-        toast.warning("You have deleted your meeting!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            closeButton: <button>x</button>,
-            style: { background: '#fff9c4', color: "black" },
-        });
+        showWarningToast('You have deleted your meeting!');
     };
 
     const handleClickOpen = () => {

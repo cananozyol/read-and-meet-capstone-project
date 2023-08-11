@@ -19,7 +19,6 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {BookEditData, Status} from "../models/books.ts";
 import RatingHearts from "../components/RatingHearts.tsx";
 import {styled} from "styled-components";
-import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import CardActionArea from "@mui/material/CardActionArea";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
@@ -28,6 +27,7 @@ import {Check as CheckIcon, Close as CloseIcon} from "@mui/icons-material";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useStore} from "../hooks/useStore.ts";
+import {showInfoToast, showSuccessToast, showWarningToast} from "../components/ToastHelpers.tsx";
 
 
 export default function DetailBookPage() {
@@ -56,23 +56,14 @@ export default function DetailBookPage() {
         if (id) {
             putBook(id, editedData);
             setIsEditMode(false);
+            showSuccessToast('Changes have been saved successfully!');
         }
     };
 
     const handleDelete = () => {
         deleteBook(id!);
         navigate('/booklist');
-        toast.warning("You have deleted your book!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            closeButton: <button>x</button>,
-            style: { background: '#fff9c4', color: "black" },
-        });
+        showWarningToast('You have deleted your book!');
     };
 
     const handleCancel = () => {
@@ -81,17 +72,7 @@ export default function DetailBookPage() {
             status: book.status || Status.NOT_READ,
             rating: book.rating || 0,
         });
-        toast.info("You successfully canceled editing the book!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            closeButton: <button>x</button>,
-            style: { background: '#bbdefb', color: "black" },
-        });
+        showInfoToast('You canceled editing your book!');
     };
 
     const handleClickCancel = () => {

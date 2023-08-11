@@ -1,3 +1,4 @@
+import {ChangeEvent, FormEvent, useState} from "react";
 import {
     Button,
     Dialog,
@@ -9,20 +10,20 @@ import {
     Radio,
     RadioGroup,
     Rating,
-    TextField
+    TextField,
+    Typography
 } from "@mui/material";
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {Check as CheckIcon, Close as CloseIcon} from "@mui/icons-material";
 import {useStore} from "../hooks/useStore.ts";
-import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Genre, Status} from "../models/books.ts";
 import {styled} from "styled-components";
 import GenreSelect from "../components/GenreSelect.tsx";
-import Typography from "@mui/material/Typography";
-import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import {showInfoToast, showSuccessToast} from "../components/ToastHelpers.tsx";
 
 
 export default function AddBookPage() {
@@ -55,17 +56,7 @@ export default function AddBookPage() {
         event.preventDefault();
         postBook(formData);
         navigate("/booklist");
-        toast.success('You have successfully added your new book!', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            closeButton: <button>x</button>,
-            style: { background: '#b2dfdb', color: "black" },
-        });
+        showSuccessToast('You added your new book!');
     };
 
     const handleCancel = () => {
@@ -78,18 +69,8 @@ export default function AddBookPage() {
 
     const handleConfirmCancel = () => {
         setOpen(false);
-        navigate('/booklist')
-        toast.info('You canceled adding a new book!', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            closeButton: <button>x</button>,
-            style: { background: '#bbdefb', color: "black" },
-        });
+        navigate('/booklist');
+        showInfoToast('You canceled adding a new book!');
     }
 
     return (

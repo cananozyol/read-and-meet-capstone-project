@@ -1,10 +1,10 @@
 import {useNavigate, useParams} from "react-router-dom";
 import InputFormMeetings from "../components/InputFormMeetings.tsx";
-import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useEffect, useState} from "react";
 import {MeetingWithoutId} from "../models/meeting.ts";
 import {useStore} from "../hooks/useStore.ts";
+import {showInfoToast, showSuccessToast} from "../components/ToastHelpers.tsx";
 
 
 export default function EditMeetingPage() {
@@ -31,32 +31,12 @@ export default function EditMeetingPage() {
 
         putMeeting({ ...meetingWithBook, id: id as string });
         navigate(`/${id}`);
-        toast.success("You have successfully edited your meeting!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            closeButton: <button>x</button>,
-            style: { background: '#b2dfdb', color: "black" },
-        });
+        showSuccessToast('Changes have been saved successfully!');
     }
 
     function handleCancel() {
         navigate(`/meeting/${meeting?.id}`);
-        toast.info("You successfully canceled editing the meeting!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            closeButton: <button>x</button>,
-            style: { background: '#bbdefb', color: "black" },
-        });
+        showInfoToast('You canceled editing your meeting!');
     }
 
     return (
