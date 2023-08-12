@@ -1,20 +1,41 @@
-#root {
-    margin: 0;
-}
-
 * {
+    font-family: 'Roboto', sans-serif;
+    overflow-wrap: break-word;
     margin: 0;
 }
 
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-
-.main-container {
+.header-container {
+    background-color: #d1adee;
     display: flex;
     align-items: center;
     padding: 10px;
     margin-bottom: 20px;
+    width: 100%;
+}
+
+.header-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 24px;
+    color: black;
+    font-weight: bold;
+    margin: 0px;
+}
+
+.header-text .plus-sign {
+    color: #7a33dd;
+}
+
+.main {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+body {
+    line-height: 1.5;
+    margin: 0;
     width: 100%;
 }
 
@@ -24,19 +45,21 @@ p, h1, h2, h3, h4, h5, h6 {
     margin: 10px;
 }
 
-body {
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    margin: 0;
+.div-meetingList {
+    margin: 10px;
     width: 100%;
 }
 
-img, picture, video, canvas, svg {
-    display: block;
-    max-width: 100%;
-
+.div-bookList {
+    margin: 10px;
+    width: 100%;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Roboto', sans-serif;
+.navigation-paper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
+
+

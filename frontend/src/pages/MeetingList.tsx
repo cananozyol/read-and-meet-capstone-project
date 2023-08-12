@@ -15,6 +15,7 @@ export default function MeetingList(props: Props) {
 
     return (
         <>
+            <div className="div-meetingList">
             <p>You have <b>{meetings.length}</b> meetings</p>
             <Grid container spacing={2}>
                 {props.meetings.map(meeting => (
@@ -23,6 +24,7 @@ export default function MeetingList(props: Props) {
                     </Grid>
                 ))}
             </Grid>
+            </div>
         </>
     );
 }

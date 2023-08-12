@@ -16,6 +16,7 @@ export default function BookList(props: Props) {
     return (
         <>
             <p>You have <b>{books.length}</b> books</p>
+            <div className="div-bookList">
             <Grid container spacing={2}>
                 {props.books.map((book) => (
                     <Grid key={book.id} item xs={6} sm={6} md={6} lg={6}>
@@ -23,6 +24,7 @@ export default function BookList(props: Props) {
                     </Grid>
                 ))}
             </Grid>
+            </div>
         </>
     );
 }

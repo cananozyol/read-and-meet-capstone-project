@@ -1,10 +1,9 @@
+import "./App.css";
 import {Link, Route, Routes} from "react-router-dom";
 import Header from "./components/Header.tsx";
 import MeetingList from "./pages/MeetingList.tsx";
 import BookList from "./pages/BookList.tsx";
-import {styled} from "styled-components";
 import HomePage from "./pages/HomePage.tsx";
-import {Button} from "@mui/material";
 import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddBookPage from "./pages/AddBookPage.tsx";
@@ -13,13 +12,19 @@ import EditMeetingPage from "./pages/EditMeetingPage.tsx";
 import DetailMeetingPage from "./pages/DetailMeetingPage.tsx";
 import DetailBookPage from "./pages/DetailBookPage.tsx";
 import {useStore} from "./hooks/useStore.ts";
+import {BottomNavigation, BottomNavigationAction, Paper} from "@mui/material";
+import {Add, Groups, Home, MenuBook} from "@mui/icons-material";
 
 
 export default function App() {
     const meetings = useStore((state) => state.meetings);
     const books = useStore((state) => state.books);
 
+
+
+
     return (
+        <>
         <main>
             <Header />
             <ToastContainer />
@@ -33,75 +38,19 @@ export default function App() {
                 <Route path="/addbook" element={<AddBookPage />} />
                 <Route path="/book/:id" element={<DetailBookPage />} />
             </Routes>
-            <StyledApp>
-                <Link to={"/meetinglist"}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        sx={{
-                            backgroundColor: "#d1adee",
-                            color: "black",
-                            borderRadius: "5px",
-                            width: "139px",
-                        }}
-                    >
-                        MY MEETINGS
-                    </Button>
-                </Link>
-                <Link to={"/addmeeting"}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        sx={{
-                            backgroundColor: "#d1adee",
-                            color: "black",
-                            borderRadius: "5px",
-                            width: "139px",
-                        }}
-                    >
-                        NEW MEETING
-                    </Button>
-                </Link>
-            </StyledApp>
-            <StyledApp>
-                <Link to={"/booklist"}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        sx={{
-                            backgroundColor: "#d1adee",
-                            color: "black",
-                            borderRadius: "5px",
-                            width: "139px",
-                        }}
-                    >
-                        MY BOOKS
-                    </Button>
-                </Link>
-                <Link to={"/addbook"}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        sx={{
-                            backgroundColor: "#d1adee",
-                            color: "black",
-                            borderRadius: "5px",
-                            width: "139px",
-                        }}
-                    >
-                        NEW BOOK
-                    </Button>
-                </Link>
-            </StyledApp>
+
         </main>
+            <Paper className="navigation-paper">
+            <BottomNavigation sx={{ bgcolor: "#d1adee", height: "80px" }} showLabels>
+                <BottomNavigationAction label="Meeting" icon={<Add />} component={Link} to="/addmeeting" />
+                <BottomNavigationAction label="Meetings" icon={<Groups />} component={Link} to="/meetinglist" />
+                <BottomNavigationAction label="Home" icon={<Home />} component={Link} to="/" />
+                <BottomNavigationAction label="Books" icon={<MenuBook />} component={Link} to="/booklist" />
+                <BottomNavigationAction label="Books" icon={<Add />} component={Link} to="/addbook" />
+            </BottomNavigation>
+            </Paper>
+
+        </>
     );
 }
 
-const StyledApp = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 1.1em;
-  padding-top: 2em;
-`;

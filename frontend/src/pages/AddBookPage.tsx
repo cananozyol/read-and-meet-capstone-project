@@ -55,10 +55,7 @@ export default function AddBookPage() {
     }
     return (
         <FormContainer onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Typography variant="h4" component="h1" style={{ margin: "20px 0", fontFamily: "Roboto", fontWeight: "bold" }}>
-                Add Book
-            </Typography>
-
+            <h1>Add Book</h1>
             <TextField
                 id="book-title"
                 name="title"
