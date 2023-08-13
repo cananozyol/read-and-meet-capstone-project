@@ -13,7 +13,7 @@ import DetailMeetingPage from "./pages/DetailMeetingPage.tsx";
 import DetailBookPage from "./pages/DetailBookPage.tsx";
 import {useStore} from "./hooks/useStore.ts";
 import {BottomNavigation, BottomNavigationAction, Paper} from "@mui/material";
-import {Add, Groups, Home, MenuBook} from "@mui/icons-material";
+import {Groups, Home, MenuBook} from "@mui/icons-material";
 
 
 export default function App() {
@@ -41,12 +41,10 @@ export default function App() {
 
         </main>
             <Paper className="navigation-paper">
-            <BottomNavigation sx={{ bgcolor: "#d1adee", height: "80px" }} showLabels>
-                <BottomNavigationAction label="Meeting" icon={<Add />} component={Link} to="/addmeeting" />
-                <BottomNavigationAction label="Meetings" icon={<Groups />} component={Link} to="/meetinglist" />
-                <BottomNavigationAction label="Home" icon={<Home />} component={Link} to="/" />
-                <BottomNavigationAction label="Books" icon={<MenuBook />} component={Link} to="/booklist" />
-                <BottomNavigationAction label="Books" icon={<Add />} component={Link} to="/addbook" />
+                <BottomNavigation sx={{ bgcolor: "#d1adee", height: "70px" }} showLabels>
+                    <BottomNavigationAction label="Meetings" icon={<Groups />} style={{ color: 'black' }} component={Link} to="/meetinglist" />
+                    <BottomNavigationAction label="Home" icon={<Home />} style={{ color: 'black' }} component={Link} to="/" />
+                    <BottomNavigationAction label="Books" icon={<MenuBook />} style={{ color: 'black' }} component={Link} to="/booklist" />
             </BottomNavigation>
             </Paper>
 
