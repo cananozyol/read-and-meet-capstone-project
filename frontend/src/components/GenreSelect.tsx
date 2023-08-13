@@ -29,6 +29,7 @@ export default function GenreSelect({ selectedGenre, onGenreChange }: Props) {
                 onChange={onGenreChange}
                 displayEmpty
                 inputProps={{ "aria-label": "Select Genre" }}
+                color="secondary"
             >
                 <MenuItem value="" disabled>
                     <Typography variant="body1" style={{ fontSize: "13px" }}>

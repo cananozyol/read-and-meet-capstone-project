@@ -65,6 +65,7 @@ export default function AddBookPage() {
                 required
                 placeholder="Enter the book title"
                 style={{ marginBottom: "10px", width: "300px" }}
+                color="secondary"
             />
 
             <TextField
@@ -76,6 +77,7 @@ export default function AddBookPage() {
                 required
                 placeholder="Enter the author's name"
                 style={{ marginBottom: "10px", width: "300px" }}
+                color="secondary"
             />
 
             <GenreSelect selectedGenre={formData.genre}

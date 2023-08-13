@@ -18,9 +18,9 @@ export default function StatusSelect ({ selectedStatus, onStatusChange }: Props)
                 onChange={onStatusChange}
                 style={{ display: 'flex', flexDirection: 'row' }}
             >
-                <FormControlLabel value={Status.NOT_READ} control={<Radio />} label="Not Read" style={{ marginRight: '20px' }} />
-                <FormControlLabel value={Status.READING} control={<Radio />} label="Reading" style={{ marginRight: '20px' }} />
-                <FormControlLabel value={Status.READ} control={<Radio />} label="Read" />
+                <FormControlLabel value={Status.NOT_READ} control={<Radio color="secondary" />} label="Not Read" style={{ marginRight: '20px' }} />
+                <FormControlLabel value={Status.READING} control={<Radio color="secondary" />} label="Reading" style={{ marginRight: '20px' }} />
+                <FormControlLabel value={Status.READ} control={<Radio color="secondary" />} label="Read" />
             </RadioGroup>
         </FormControl>
     );
