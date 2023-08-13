@@ -17,6 +17,8 @@ import {Book} from "../models/books.ts";
 import {MeetingWithoutId} from "../models/meeting.ts";
 import DialogButtonStyles from "../components/DialogButtonStyles.tsx";
 import ButtonStyle from "../components/ButtonStyle.tsx";
+import AddButton from "../components/AddButton.tsx";
+import Typography from "@mui/material/Typography";
 
 type Props = {
     title: string;
@@ -69,6 +71,7 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
                 value={formData.title}
                 onChange={handleChange}
                 style={{ marginBottom: "10px", width: "300px" }}
+                color="secondary"
             />
             <TextField
                 id="meeting-date"
@@ -82,6 +85,7 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
                 }}
                 onChange={handleChange}
                 style={{ marginBottom: "10px", width: "300px" }}
+                color="secondary"
             />
             <TextField
                 id="meeting-location"
@@ -91,6 +95,7 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
                 value={formData.location}
                 onChange={handleChange}
                 style={{ marginBottom: "10px", width: "300px" }}
+                color="secondary"
             />
 
             <FormControl style={{ marginBottom: "10px", width: "300px" }}>
@@ -99,6 +104,7 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
                     onChange={(event) => onBookSelect(event.target.value as string)}
                     displayEmpty
                     inputProps={{ "aria-label": "Select Book" }}
+                    color="secondary"
                 >
                     <MenuItem value="" disabled>
                         Select a Book
@@ -110,7 +116,10 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
                     ))}
                 </Select>
             </FormControl>
-
+            <p></p>
+            <Typography>Your book is not in the List?</Typography>
+            <p></p>
+            <AddButton to="/addbook">Add Book</AddButton>
             <StyledButton>
                 <ButtonStyle onClick={handleCancel} startIcon={CloseIcon} type="button">
                     Cancel
