@@ -1,15 +1,4 @@
-import {
-    Button,
-    Card,
-    CardContent,
-    CardMedia,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    Rating,
-    Typography
-} from "@mui/material";
+import {Card, CardContent, CardMedia, Rating, Typography} from "@mui/material";
 import {ChangeEvent, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {BookEditData, Status} from "../models/books.ts";
@@ -27,6 +16,7 @@ import {showInfoToast, showSuccessToast, showWarningToast} from "../components/T
 import ButtonStyle from "../components/ButtonStyle.tsx";
 import StatusSelect, {getStatusDisplay} from "../components/StatusSelect.tsx";
 import {getGenreDisplay} from "../components/GenreSelect.tsx";
+import ConfirmationDialog from "../components/ConfirmationDialog.tsx";
 
 
 export default function DetailBookPage() {
@@ -34,10 +24,8 @@ export default function DetailBookPage() {
     const book = useStore((state) => state.getBookById(id || ""));
     const navigate = useNavigate();
     const { deleteBook, putBook } = useStore();
-
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
-
     const [isEditMode, setIsEditMode] = useState(false);
     const [editedData, setEditedData] = useState<BookEditData>({
         status: book?.status ?? Status.NOT_READ,
@@ -74,21 +62,19 @@ export default function DetailBookPage() {
         });
         showInfoToast('You canceled editing your book!');
     };
-
     const handleClickCancel = () => {
         setCancelDialogOpen(true);
     };
-
     const handleClickDelete = () => {
         setDeleteDialogOpen(true);
     };
-
-    const handleCancelClose = () => {
-        setCancelDialogOpen(false);
-    };
-
-    const handleDeleteClose = () => {
+    const handleDeleteConfirm = () => {
         setDeleteDialogOpen(false);
+        handleDelete();
+    };
+    const handleCancelConfirm = () => {
+        setCancelDialogOpen(false);
+        handleCancel();
     };
 
 
@@ -157,22 +143,13 @@ export default function DetailBookPage() {
                             Save
                         </ButtonStyle>
                     </StyledButton>
-                    <Dialog
+                    <ConfirmationDialog
                         open={cancelDialogOpen}
-                        keepMounted
-                        onClose={handleCancelClose}
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description" sx={{ color: 'black' }}>
-                                Are you sure you want to cancel editing your book?
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                            <Button onClick={handleCancelClose} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>No</Button>
-                            <Button onClick={() => { handleCancel(); }} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>Yes</Button>
-                        </DialogActions>
-                    </Dialog>
+                        onClose={() => setCancelDialogOpen(false)}
+                        onConfirm={handleCancelConfirm}
+                        message="Are you sure you want to cancel editing your book?"
+                    />
+
                 </>
             ) : (
                 <>
@@ -191,22 +168,12 @@ export default function DetailBookPage() {
                     </StyledButton>
                 </>
             )}
-                <Dialog
+                <ConfirmationDialog
                     open={deleteDialogOpen}
-                    keepMounted
-                    onClose={handleDeleteClose}
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description" sx={{ color: 'black' }}>
-                            Are you sure you want to delete your book?
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                        <Button onClick={handleDeleteClose} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>No</Button>
-                        <Button onClick={() => { handleDelete(); }} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>Yes</Button>
-                    </DialogActions>
-                </Dialog>
+                    onClose={() => setDeleteDialogOpen(false)}
+                    onConfirm={handleDeleteConfirm}
+                    message="Are you sure you want to delete your book?"
+                />
             </CardContent>
         </Card>
 

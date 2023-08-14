@@ -1,13 +1,4 @@
-import {
-    Button,
-    Card,
-    CardContent,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    Typography
-} from "@mui/material";
+import {Card, CardContent, Typography} from "@mui/material";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {styled} from "styled-components";
@@ -19,13 +10,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import {useStore} from "../hooks/useStore.ts";
 import {showWarningToast} from "../components/ToastHelpers.tsx";
 import ButtonStyle from "../components/ButtonStyle.tsx";
+import ConfirmationDialog from "../components/ConfirmationDialog.tsx";
 
 export default function DetailMeetingPage() {
     const navigate = useNavigate();
     const { id } = useParams();
     const meeting = useStore((state) => state.getMeetingById(id || ""));
     const { deleteMeeting } = useStore();
-    const [open, setOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     if (!meeting) {
         return <>No Meeting</>;
@@ -42,11 +34,11 @@ export default function DetailMeetingPage() {
     }
 
     const handleClickOpen = () => {
-        setOpen(true);
+        setIsDeleteDialogOpen(true);
     }
 
     const handleClose = () => {
-        setOpen(false);
+        setIsDeleteDialogOpen(false);
     }
 
     return (
@@ -79,22 +71,15 @@ export default function DetailMeetingPage() {
                         Delete
                     </ButtonStyle>
                 </StyledButton>
-                <Dialog
-                    open={open}
-                    keepMounted
+                <ConfirmationDialog
+                    open={isDeleteDialogOpen}
                     onClose={handleClose}
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description" sx={{ color: 'black' }}>
-                            Are you sure you want to delete your meeting?
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                        <Button onClick={handleClose} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>No</Button>
-                        <Button onClick={() => { handleDelete(); }} variant="outlined" sx={{ color: 'black', backgroundColor: '#d1adee' }}>Yes</Button>
-                    </DialogActions>
-                </Dialog>
+                    onConfirm={() => {
+                        handleDelete();
+                        handleClose();
+                    }}
+                    message="Are you sure you want to delete your meeting?"
+                />
             </CardContent>
         </Card>
     );

@@ -1,24 +1,15 @@
 import React, {useState} from "react";
-import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    FormControl,
-    MenuItem,
-    Select,
-    TextField
-} from "@mui/material";
+import {FormControl, MenuItem, Select, TextField} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import {useNavigate} from "react-router-dom";
 import {styled} from "styled-components";
 import {Book} from "../models/books.ts";
 import {MeetingWithoutId} from "../models/meeting.ts";
-import DialogButtonStyles from "../components/DialogButtonStyles.tsx";
 import ButtonStyle from "../components/ButtonStyle.tsx";
 import AddButton from "../components/AddButton.tsx";
 import Typography from "@mui/material/Typography";
+import ConfirmationDialog from "../components/ConfirmationDialog.tsx";
 
 type Props = {
     title: string;
@@ -32,7 +23,7 @@ type Props = {
 
 export default function InputFormMeetings({ title, initialFormData, onCancel, onSubmit, books, selectedBookId, onBookSelect  }: Props) {
     const [formData, setFormData] = useState<MeetingWithoutId>(initialFormData);
-    const [open, setOpen] = useState(false);
+    const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
     const navigate = useNavigate();
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -48,17 +39,17 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
     }
 
     const handleCancel = () => {
-        setOpen(true);
+        setIsCancelDialogOpen(true);
     };
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleCloseCancelDialog = () => {
+        setIsCancelDialogOpen(false);
     };
 
     const handleConfirmCancel = () => {
-        setOpen(false);
+        setIsCancelDialogOpen(false);
         onCancel();
-    }
+    };
 
     return (
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -116,10 +107,6 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
                     ))}
                 </Select>
             </FormControl>
-            <p></p>
-            <Typography>Your book is not in the List?</Typography>
-            <p></p>
-            <AddButton to="/addbook">Add Book</AddButton>
             <StyledButton>
                 <ButtonStyle onClick={handleCancel} startIcon={CloseIcon} type="button">
                     Cancel
@@ -128,18 +115,17 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
                     Save
                 </ButtonStyle>
             </StyledButton>
+            <p></p>
+            <Typography>Your book is not in the List?</Typography>
+            <p></p>
+            <AddButton to="/addbook">Add Book</AddButton>
 
-            <Dialog open={open} onClose={handleClose} aria-describedby="alert-dialog-description">
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description" sx={{ color: "black" }}>
-                        Are you sure you want to cancel adding/editing a meeting?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions style={{ display: "flex", justifyContent: "space-evenly" }}>
-                    <DialogButtonStyles onClick={handleClose}>No</DialogButtonStyles>
-                    <DialogButtonStyles onClick={handleConfirmCancel}>Yes</DialogButtonStyles>
-                </DialogActions>
-            </Dialog>
+            <ConfirmationDialog
+                open={isCancelDialogOpen}
+                onClose={handleCloseCancelDialog}
+                onConfirm={handleConfirmCancel}
+                message="Are you sure you want to cancel adding/editing a meeting?"
+            />
         </form>
     );
 }
