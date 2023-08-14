@@ -92,7 +92,7 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
             <FormControl style={{ marginBottom: "10px", width: "300px" }}>
                 <Select
                     value={selectedBookId}
-                    onChange={(event) => onBookSelect(event.target.value as string)}
+                    onChange={(event) => onBookSelect(event.target.value)}
                     displayEmpty
                     inputProps={{ "aria-label": "Select Book" }}
                     color="secondary"

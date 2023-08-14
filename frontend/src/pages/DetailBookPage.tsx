@@ -21,7 +21,7 @@ import ConfirmationDialog from "../components/ConfirmationDialog.tsx";
 
 export default function DetailBookPage() {
     const { id } = useParams();
-    const book = useStore((state) => state.getBookById(id || ""));
+    const book = useStore((state) => state.getBookById(id ?? ""));
     const navigate = useNavigate();
     const { deleteBook, putBook } = useStore();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -48,7 +48,7 @@ export default function DetailBookPage() {
     };
 
     const handleDelete = () => {
-        deleteBook(id || "");
+        deleteBook(id ?? "");
         navigate('/booklist');
         showWarningToast('You have deleted your book!');
     };
@@ -123,7 +123,7 @@ export default function DetailBookPage() {
                 <>
                     <Typography variant="body1">Status: </Typography>
                     <StatusSelect
-                        selectedStatus={editedData.status || Status.NOT_READ}
+                        selectedStatus={editedData.status ?? Status.NOT_READ}
                         onStatusChange={(event: ChangeEvent<HTMLInputElement>) => setEditedData({ ...editedData, status: event.target.value as Status })}
                     />
 

@@ -21,7 +21,7 @@ export default function ButtonStyle ({children, onClick, type, startIcon}: Props
         color: "white",
     };
 
-    const StartIconComponent = startIcon || null;
+    const StartIconComponent = startIcon ?? null;
 
     return (
         <Button
