@@ -8,7 +8,7 @@ type Props = {
 
 
 const genreOptions = [
-    { value: '', label: 'No Genre Selected' },
+    { value: Genre.NOT_SELECTED, label: 'No Genre selected' },
     { value: Genre.CLASSIC, label: "Classic" },
     { value: Genre.DRAMA, label: "Drama" },
     { value: Genre.ROMANCE, label: "Romance" },
@@ -23,6 +23,8 @@ const genreOptions = [
 
 export function getGenreDisplay(genre: string | Genre): string {
     switch (genre) {
+        case Genre.NOT_SELECTED:
+            return "No Genre selected";
         case Genre.CLASSIC:
             return "Classic";
         case Genre.DRAMA:
