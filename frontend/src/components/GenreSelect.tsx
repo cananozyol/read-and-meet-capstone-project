@@ -8,7 +8,7 @@ type Props = {
 
 
 const genreOptions = [
-    { value: Genre.NOT_SELECTED, label: "Not Selected" },
+    { value: '', label: 'No Genre Selected' },
     { value: Genre.CLASSIC, label: "Classic" },
     { value: Genre.DRAMA, label: "Drama" },
     { value: Genre.ROMANCE, label: "Romance" },
@@ -20,6 +20,33 @@ const genreOptions = [
     { value: Genre.NON_FICTION, label: "Non-Fiction" },
     { value: Genre.MYSTERY, label: "Mystery" },
 ];
+
+export function getGenreDisplay(genre: string | Genre): string {
+    switch (genre) {
+        case Genre.CLASSIC:
+            return "Classic";
+        case Genre.DRAMA:
+            return "Drama";
+        case Genre.ROMANCE:
+            return "Romance";
+        case Genre.FANTASY:
+            return "Fantasy";
+        case Genre.SCIENCE_FICTION:
+            return "Science Fiction";
+        case Genre.THRILLER:
+            return "Thriller";
+        case Genre.BIOGRAPHY:
+            return "Biography";
+        case Genre.HORROR:
+            return "Horror";
+        case Genre.NON_FICTION:
+            return "Non-Fiction";
+        case Genre.MYSTERY:
+            return "Mystery";
+        default:
+            return "";
+    }
+}
 
 export default function GenreSelect({ selectedGenre, onGenreChange }: Props) {
     return (
@@ -41,7 +68,7 @@ export default function GenreSelect({ selectedGenre, onGenreChange }: Props) {
                               style={{ paddingTop: '5px', paddingBottom: '5px' }}
                     >
                         <Typography variant="body1" style={{ fontSize: "13px" }}>
-                            {option.label}
+                            {getGenreDisplay(option.value)}
                         </Typography>
                     </MenuItem>
                 ))}

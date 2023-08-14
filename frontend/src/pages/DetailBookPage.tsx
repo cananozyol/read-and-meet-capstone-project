@@ -10,7 +10,7 @@ import {
     Rating,
     Typography
 } from "@mui/material";
-import {useState} from 'react';
+import {ChangeEvent, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {BookEditData, Status} from "../models/books.ts";
 import RatingHearts from "../components/RatingHearts.tsx";
@@ -25,7 +25,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useStore} from "../hooks/useStore.ts";
 import {showInfoToast, showSuccessToast, showWarningToast} from "../components/ToastHelpers.tsx";
 import ButtonStyle from "../components/ButtonStyle.tsx";
-import StatusSelect from "../components/StatusSelect.tsx";
+import StatusSelect, {getStatusDisplay} from "../components/StatusSelect.tsx";
+import {getGenreDisplay} from "../components/GenreSelect.tsx";
 
 
 export default function DetailBookPage() {
@@ -126,7 +127,7 @@ export default function DetailBookPage() {
                         by: {book.author}
                     </Typography>
                     <Typography variant="body1">
-                        Genre: {book.genre}
+                        Genre: {getGenreDisplay(book.genre)}
                     </Typography>
                 </CardContent>
             </div>
@@ -135,9 +136,12 @@ export default function DetailBookPage() {
             {isEditMode ? (
                 <>
                     <Typography variant="body1">Status: </Typography>
-                    <StatusSelect selectedStatus={editedData.status || Status.NOT_READ} onStatusChange={(event) => setEditedData({ ...editedData, status: event.target.value as Status })} />
+                    <StatusSelect
+                        selectedStatus={editedData.status || Status.NOT_READ}
+                        onStatusChange={(event: ChangeEvent<HTMLInputElement>) => setEditedData({ ...editedData, status: event.target.value as Status })}
+                    />
 
-                        <Typography variant="body1">Rating: </Typography>
+                    <Typography variant="body1">Rating: </Typography>
                         <Rating
                             name="model-rating"
                             value={editedData.rating}
@@ -173,7 +177,7 @@ export default function DetailBookPage() {
             ) : (
                 <>
 
-                    <Typography variant="body1">Status: {book.status}</Typography>
+                    <Typography variant="body1">Status: {getStatusDisplay(book.status)}</Typography>
                     <Typography variant="body1">Rating: <RatingHearts rating={book.rating} /></Typography>
 
 

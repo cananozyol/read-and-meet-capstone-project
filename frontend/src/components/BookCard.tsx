@@ -7,6 +7,8 @@ import {Book} from "../models/books.ts";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import RatingStars from "./RatingHearts.tsx";
+import {getGenreDisplay} from "./GenreSelect.tsx";
+import {getStatusDisplay} from "./StatusSelect.tsx";
 
 type Props = {
     book: Book;
@@ -30,23 +32,11 @@ export default function BookCard({ book }: Props) {
                             Author: {author}
                         </Typography>
                         <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
-                            Genre: {genre}
+                            Genre: {getGenreDisplay(genre)}
                         </Typography>
-                        {status === "NOT_READ" && (
-                            <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
-                                Status: Not Read
-                            </Typography>
-                        )}
-                        {status === "READING" && (
-                            <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
-                                Status: Reading
-                            </Typography>
-                        )}
-                        {status === "READ" && (
-                            <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
-                                Status: Read
-                            </Typography>
-                        )}
+                        <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+                            Status: {getStatusDisplay(status)}
+                        </Typography>
                         <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
                             Rating: <RatingStars rating={rating} />
                         </Typography>
