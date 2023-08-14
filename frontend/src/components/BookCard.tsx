@@ -39,7 +39,7 @@ export default function BookCard({ book }: Props) {
                         )}
                         {status === "READING" && (
                             <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
-                                Status: Currently reading
+                                Status: Reading
                             </Typography>
                         )}
                         {status === "READ" && (

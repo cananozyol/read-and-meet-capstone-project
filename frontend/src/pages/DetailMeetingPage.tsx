@@ -13,7 +13,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {styled} from "styled-components";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import {useStore} from "../hooks/useStore.ts";
@@ -64,7 +64,10 @@ export default function DetailMeetingPage() {
                     Location: {meeting.location}
                 </Typography>
                 <Typography variant="body2">
-                    Book: {meeting.book?.title} by {meeting.book?.author}
+                    Book:{" "}
+                    <StyledLink to={`/book/${meeting.book?.id}`}>
+                        {meeting.book?.title} by {meeting.book?.author}
+                    </StyledLink>
                 </Typography>
             </CardContent>
             <CardContent style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
@@ -103,4 +106,12 @@ const StyledButton = styled.div`
   justify-content: center;
   gap: 1.1em;
   padding-top: 2em;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: rebeccapurple;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
