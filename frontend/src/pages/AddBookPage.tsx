@@ -1,5 +1,5 @@
 import {ChangeEvent, FormEvent, useState} from "react";
-import {Dialog, DialogActions, DialogContent, DialogContentText, Rating, TextField, Typography} from "@mui/material";
+import {Rating, TextField, Typography} from "@mui/material";
 import {useStore} from "../hooks/useStore.ts";
 import {useNavigate} from "react-router-dom";
 import {Genre, Status} from "../models/books.ts";
@@ -10,16 +10,16 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {showInfoToast, showSuccessToast} from "../components/ToastHelpers.tsx";
 import ButtonStyles from "../components/ButtonStyle.tsx";
-import DialogButtonStyles from "../components/DialogButtonStyles.tsx";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import StatusSelect from "../components/StatusSelect.tsx";
+import ConfirmationDialog from "../components/ConfirmationDialog.tsx";
 
 export default function AddBookPage() {
 
     const navigate = useNavigate();
     const { postBook } = useStore();
-    const [open, setOpen] = useState(false);
+    const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 
     const [formData, setFormData] = useState({
         title: "",
@@ -42,23 +42,24 @@ export default function AddBookPage() {
         navigate("/booklist");
         showSuccessToast('You added your new book!');
     };
+
     const handleCancel = () => {
-        setOpen(true);
+        setIsCancelDialogOpen(true);
     };
-    const handleClose = () => {
-        setOpen(false);
+
+    const handleCloseCancelDialog = () => {
+        setIsCancelDialogOpen(false);
     };
+
     const handleConfirmCancel = () => {
-        setOpen(false);
+        setIsCancelDialogOpen(false);
         navigate('/booklist');
         showInfoToast('You canceled adding a new book!');
+
     }
     return (
         <FormContainer onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Typography variant="h4" component="h1" style={{ margin: "20px 0", fontFamily: "Roboto", fontWeight: "bold" }}>
-                Add Book
-            </Typography>
-
+            <h1>Add Book</h1>
             <TextField
                 id="book-title"
                 name="title"
@@ -68,6 +69,7 @@ export default function AddBookPage() {
                 required
                 placeholder="Enter the book title"
                 style={{ marginBottom: "10px", width: "300px" }}
+                color="secondary"
             />
 
             <TextField
@@ -79,6 +81,7 @@ export default function AddBookPage() {
                 required
                 placeholder="Enter the author's name"
                 style={{ marginBottom: "10px", width: "300px" }}
+                color="secondary"
             />
 
             <GenreSelect selectedGenre={formData.genre}
@@ -107,17 +110,12 @@ export default function AddBookPage() {
                 <ButtonStyles onClick={handleCancel} startIcon={CloseIcon}>Cancel</ButtonStyles>
                 <ButtonStyles type="submit" startIcon={CheckIcon}>Save</ButtonStyles>
             </StyledButton>
-                <Dialog open={open} onClose={handleClose} aria-describedby="alert-dialog-description">
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description" sx={{ color: "black" }}>
-                            Are you sure you want to cancel adding a book?
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                        <DialogButtonStyles onClick={handleClose}>No</DialogButtonStyles>
-                        <DialogButtonStyles onClick={handleConfirmCancel}>Yes</DialogButtonStyles>
-                    </DialogActions>
-                </Dialog>
+            <ConfirmationDialog
+                open={isCancelDialogOpen}
+                onClose={handleCloseCancelDialog}
+                onConfirm={handleConfirmCancel}
+                message="Are you sure you want to cancel adding a book?"
+            />
         </FormContainer>
     )
 }

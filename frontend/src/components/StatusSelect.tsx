@@ -7,6 +7,19 @@ type Props = {
     onStatusChange: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
+export function getStatusDisplay(status: Status) {
+    switch (status) {
+        case Status.NOT_READ:
+            return "Not Read";
+        case Status.READING:
+            return "Reading";
+        case Status.READ:
+            return "Read";
+        default:
+            return "";
+    }
+}
+
 export default function StatusSelect ({ selectedStatus, onStatusChange }: Props) {
 
     return (
@@ -18,9 +31,23 @@ export default function StatusSelect ({ selectedStatus, onStatusChange }: Props)
                 onChange={onStatusChange}
                 style={{ display: 'flex', flexDirection: 'row' }}
             >
-                <FormControlLabel value={Status.NOT_READ} control={<Radio />} label="Not Read" style={{ marginRight: '20px' }} />
-                <FormControlLabel value={Status.READING} control={<Radio />} label="Reading" style={{ marginRight: '20px' }} />
-                <FormControlLabel value={Status.READ} control={<Radio />} label="Read" />
+                <FormControlLabel
+                    value={Status.NOT_READ}
+                    control={<Radio color="secondary" />}
+                    label={getStatusDisplay(Status.NOT_READ)}
+                    style={{ marginRight: '20px' }}
+                />
+                <FormControlLabel
+                    value={Status.READING}
+                    control={<Radio color="secondary" />}
+                    label={getStatusDisplay(Status.READING)}
+                    style={{ marginRight: '20px' }}
+                />
+                <FormControlLabel
+                    value={Status.READ}
+                    control={<Radio color="secondary" />}
+                    label={getStatusDisplay(Status.READ)}
+                />
             </RadioGroup>
         </FormControl>
     );
