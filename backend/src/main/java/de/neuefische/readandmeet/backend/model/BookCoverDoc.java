@@ -12,4 +12,6 @@ public class BookCoverDoc {
         return coverId;
     }
 
+    public void setCoverId(int i) {
+    }
 }

@@ -12,4 +12,8 @@ public class OpenLibrarySearchResponse {
     public List<BookCoverDoc> getDocs() {
         return docs;
     }
+
+    public void setDocs(List<BookCoverDoc> docs) {
+        this.docs = docs;
+    }
 }
