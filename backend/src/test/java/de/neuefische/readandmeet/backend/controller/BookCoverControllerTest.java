@@ -47,11 +47,6 @@ class BookCoverControllerTest {
         registry.add("bookcover-api.url", () -> mockWebServer.url("/").toString());
     }
 
-    @AfterAll
-    static void afterAll() throws IOException {
-        mockWebServer.shutdown();
-    }
-
     @Test
     void expectCoverInfo_whenFetchFirstCoverInfo() throws Exception {
 
@@ -78,5 +73,10 @@ class BookCoverControllerTest {
                 .setHeader("Content-Type", "application/json")
                 .setBody(response));
 
+    }
+
+    @AfterAll
+    static void afterAll() throws IOException {
+        mockWebServer.shutdown();
     }
 }
