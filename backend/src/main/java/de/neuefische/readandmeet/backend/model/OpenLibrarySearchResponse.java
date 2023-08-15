@@ -7,14 +7,9 @@ import java.util.List;
 public class OpenLibrarySearchResponse {
 
     @JsonProperty("docs")
-    private List<SearchDoc> docs;
+    private List<BookCoverDoc> docs;
 
-    public List<SearchDoc> getDocs() {
+    public List<BookCoverDoc> getDocs() {
         return docs;
     }
-
-    public void setDocs(List<SearchDoc> docs) {
-        this.docs = docs;
-    }
-
 }

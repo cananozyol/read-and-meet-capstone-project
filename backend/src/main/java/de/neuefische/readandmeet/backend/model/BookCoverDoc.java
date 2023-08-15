@@ -2,7 +2,7 @@ package de.neuefische.readandmeet.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class SearchDoc {
+public class BookCoverDoc {
 
     @JsonProperty("cover_i")
     private Integer coverId;
@@ -11,7 +11,4 @@ public class SearchDoc {
         return coverId;
     }
 
-    public void setCoverId(Integer coverId) {
-        this.coverId = coverId;
-    }
 }
