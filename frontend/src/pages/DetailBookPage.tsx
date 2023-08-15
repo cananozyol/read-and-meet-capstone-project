@@ -1,10 +1,9 @@
 import {Card, CardContent, CardMedia, Rating, Typography} from "@mui/material";
 import {ChangeEvent, useEffect, useState} from 'react';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {BookEditData, Status} from "../models/books.ts";
 import RatingHearts from "../components/RatingHearts.tsx";
 import {styled} from "styled-components";
-import Tooltip from '@mui/material/Tooltip';
 import 'react-toastify/dist/ReactToastify.css'
 import CardActionArea from "@mui/material/CardActionArea";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
@@ -97,19 +96,15 @@ export default function DetailBookPage() {
                         justifyContent: "center",
                         alignItems: "center",
                     }}
-                    component={Link}
-                    to={`/book/${id}/cover`}
                 >
-                    <Tooltip title="Click to change cover" placement="bottom">
                     <CardMedia
                         component="img"
-                        height={228}
-                        width={170}
+                        height={270}
+                        width={180}
                         image={bookCoverUrl || "https://images.unsplash.com/photo-1534978184044-62700a717864?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80"}
                         alt="Book Cover"
                         style={{ margin: "8px" }}
                     />
-                </Tooltip>
                 </CardActionArea>
                 <CardContent
                     style={{
