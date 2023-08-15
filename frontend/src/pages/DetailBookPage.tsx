@@ -1,10 +1,11 @@
 import {Card, CardContent, CardMedia, Rating, Typography} from "@mui/material";
-import {ChangeEvent, useState} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import {ChangeEvent, useEffect, useState} from 'react';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import {BookEditData, Status} from "../models/books.ts";
 import RatingHearts from "../components/RatingHearts.tsx";
 import {styled} from "styled-components";
-import 'react-toastify/dist/ReactToastify.css';
+import Tooltip from '@mui/material/Tooltip';
+import 'react-toastify/dist/ReactToastify.css'
 import CardActionArea from "@mui/material/CardActionArea";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -18,7 +19,6 @@ import StatusSelect, {getStatusDisplay} from "../components/StatusSelect.tsx";
 import {getGenreDisplay} from "../components/GenreSelect.tsx";
 import ConfirmationDialog from "../components/ConfirmationDialog.tsx";
 
-
 export default function DetailBookPage() {
     const { id } = useParams();
     const book = useStore((state) => state.getBookById(id ?? ""));
@@ -31,6 +31,15 @@ export default function DetailBookPage() {
         status: book?.status ?? Status.NOT_READ,
         rating: book?.rating ?? 0,
     });
+
+    const fetchBookCover = useStore((state) => state.fetchBookCover);
+    const bookCoverUrl = useStore((state) => state.bookCoverUrl);
+
+    useEffect(() => {
+        if (book) {
+            fetchBookCover(book.title, book.author);
+        }
+    }, [book, fetchBookCover]);
 
     if (!book) {
         return <div>Book not found.</div>;
@@ -88,15 +97,19 @@ export default function DetailBookPage() {
                         justifyContent: "center",
                         alignItems: "center",
                     }}
+                    component={Link}
+                    to={`/book/${id}/cover`}
                 >
+                    <Tooltip title="Click to change cover" placement="bottom">
                     <CardMedia
                         component="img"
                         height={228}
                         width={170}
-                        image="https://images.unsplash.com/photo-1534978184044-62700a717864?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80"
+                        image={bookCoverUrl || "https://images.unsplash.com/photo-1534978184044-62700a717864?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80"}
                         alt="Book Cover"
-                        style={{ margin: "8px" }} // Set the desired margin
+                        style={{ margin: "8px" }}
                     />
+                </Tooltip>
                 </CardActionArea>
                 <CardContent
                     style={{

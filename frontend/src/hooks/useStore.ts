@@ -16,6 +16,8 @@ type State = {
     getMeetingById: (id: string) => Meeting | undefined;
     deleteMeeting: (id: string) => void;
     putMeeting: (requestBody: Meeting) => void;
+    fetchBookCover: (title: string, author: string) => void;
+    bookCoverUrl: string;
 };
 
 export const useStore = create<State>((set, get) => ({
@@ -111,6 +113,25 @@ export const useStore = create<State>((set, get) => ({
                 }));
             })
             .catch(console.error);
+    },
+
+    bookCoverUrl: "",
+
+    fetchBookCover: (title: string, author: string): Promise<string> => {
+        const formattedTitle = title.trim().replace(/ /g, '+');
+        const formattedAuthor = author.trim().replace(/ /g, '+');
+        const apiUrl = `/api/bookcover?title=${formattedTitle}&author=${formattedAuthor}`;
+
+        return axios.get(apiUrl)
+            .then((response) => {
+                const coverUrl = response.data.coverUrl;
+                set({ bookCoverUrl: coverUrl });
+                return coverUrl;
+            })
+            .catch(error => {
+                console.error('Error fetching book cover:', error);
+                throw error;
+            });
     },
 
 }));
