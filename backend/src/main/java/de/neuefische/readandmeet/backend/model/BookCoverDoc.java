@@ -12,6 +12,7 @@ public class BookCoverDoc {
         return coverId;
     }
 
-    public void setCoverId(int i) {
+    public void setCoverId(int coverId) {
+        this.coverId = coverId;
     }
 }

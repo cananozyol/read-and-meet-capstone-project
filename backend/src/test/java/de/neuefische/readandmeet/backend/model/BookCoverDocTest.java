@@ -5,10 +5,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BookCoverDocTest {
+class BookCoverDocTest {
 
     @Test
-    public void testGetCoverId() {
+    void testGetCoverId() {
 
         // Given
         BookCoverDoc bookCoverDoc = new BookCoverDoc();
