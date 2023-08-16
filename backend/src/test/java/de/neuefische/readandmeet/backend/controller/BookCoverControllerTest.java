@@ -1,7 +1,8 @@
 package de.neuefische.readandmeet.backend.controller;
 
-import de.neuefische.readandmeet.backend.model.BookCoverInfo;
-import de.neuefische.readandmeet.backend.service.BookCoverService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.neuefische.readandmeet.backend.model.BookCoverDoc;
+import de.neuefische.readandmeet.backend.model.OpenLibrarySearchResponse;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,9 +18,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.io.IOException;
-
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @SpringBootTest
@@ -29,9 +28,6 @@ class BookCoverControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private BookCoverService bookCoverService;
 
     private static MockWebServer mockWebServer;
 
@@ -49,9 +45,20 @@ class BookCoverControllerTest {
 
     @Test
     void expectCoverInfo_whenFetchFirstCoverInfo() throws Exception {
+        List<BookCoverDoc> bookCoverDocs = new ArrayList<>();
+        BookCoverDoc coverDoc = new BookCoverDoc();
+        coverDoc.setCoverId(1234567);
+        bookCoverDocs.add(coverDoc);
 
-        when(bookCoverService.fetchFirstCoverInfo(anyString(), anyString()))
-                .thenReturn(new BookCoverInfo(1234567, "https://covers.openlibrary.org/b/id/1234567-M.jpg"));
+        OpenLibrarySearchResponse searchResponse = new OpenLibrarySearchResponse();
+        searchResponse.setDocs(bookCoverDocs);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String responseJson = objectMapper.writeValueAsString(searchResponse);
+
+        mockWebServer.enqueue(new MockResponse()
+                .setHeader("Content-Type", "application/json")
+                .setBody(responseJson));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bookcover")
                         .param("title", "Test Title")
@@ -59,20 +66,6 @@ class BookCoverControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.coverId").value(1234567))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.coverUrl").value("https://covers.openlibrary.org/b/id/1234567-M.jpg"));
-
-
-        String response = """
-                        {
-                              "coverId": 1234567,
-                              "coverUrl": "https://covers.openlibrary.org/b/id/1234567-M.jpg"
-                          }
-                """;
-
-
-        mockWebServer.enqueue(new MockResponse()
-                .setHeader("Content-Type", "application/json")
-                .setBody(response));
-
     }
 
     @AfterAll

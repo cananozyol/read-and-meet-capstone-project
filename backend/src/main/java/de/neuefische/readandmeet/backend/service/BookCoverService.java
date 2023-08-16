@@ -3,6 +3,7 @@ package de.neuefische.readandmeet.backend.service;
 import de.neuefische.readandmeet.backend.model.BookCoverDoc;
 import de.neuefische.readandmeet.backend.model.BookCoverInfo;
 import de.neuefische.readandmeet.backend.model.OpenLibrarySearchResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,8 +17,10 @@ public class BookCoverService {
 
     private final WebClient webClient;
 
-    public BookCoverService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("https://openlibrary.org").build();
+    public BookCoverService(
+            @Value("${bookcover-api.url}") String url
+    ) {
+        this.webClient = WebClient.create(url);
     }
 
     public BookCoverInfo fetchFirstCoverInfo(String title, String author) {
