@@ -3,7 +3,11 @@ package de.neuefische.readandmeet.backend.service;
 import de.neuefische.readandmeet.backend.exceptions.NoSuchMeetingException;
 import de.neuefische.readandmeet.backend.model.*;
 import de.neuefische.readandmeet.backend.repository.MeetingRepo;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,9 +23,20 @@ class MeetingServiceTest {
 
     MeetingRepo meetingRepo = mock(MeetingRepo.class);
     UuIdService uuIdService = mock(UuIdService.class);
+    Authentication authentication = mock(Authentication.class);
+    SecurityContext securityContext = mock(SecurityContext.class);
     MeetingService meetingService = new MeetingService(meetingRepo, uuIdService);
 
     Book book = new Book("b001", "The Great Gatsby", "F. Scott Fitzgerald", Genre.CLASSIC, Status.NOT_READ, 0);
+
+    String username = "Henry";
+
+    @BeforeEach
+    void setUp() {
+        when(authentication.getName()).thenReturn(username);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+    }
 
     @Test
     void expectListOfAllMeetings() {

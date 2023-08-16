@@ -4,12 +4,15 @@ import de.neuefische.readandmeet.backend.model.Book;
 import de.neuefische.readandmeet.backend.model.Genre;
 import de.neuefische.readandmeet.backend.model.Status;
 import de.neuefische.readandmeet.backend.repository.BookRepo;
+import de.neuefische.readandmeet.backend.security.MongoUser;
+import de.neuefische.readandmeet.backend.security.MongoUserRepository;
 import de.neuefische.readandmeet.backend.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 
 @SpringBootTest
@@ -33,6 +37,9 @@ class BookControllerTest {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private MongoUserRepository userRepository;
 
     @Test
     @DirtiesContext
@@ -70,8 +77,12 @@ class BookControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser(username = "booklover", password = "booklover123")
     void expectBookCreated_whenPOSTNewBook() throws Exception {
         //GIVEN
+        MongoUser user = new MongoUser("123", "booklover", "booklover123");
+        userRepository.save(user);
+
         String bookWithoutId = """
                             {
                                 "title": "The Great Gatsby",
@@ -83,7 +94,7 @@ class BookControllerTest {
                            """;
 
         //WHEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/books").content(bookWithoutId).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/books").content(bookWithoutId).contentType(MediaType.APPLICATION_JSON).with(csrf()))
 
                 //THEN
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -95,10 +106,15 @@ class BookControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].rating").value(0))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
+
     @Test
     @DirtiesContext
+    @WithMockUser(username = "booklover", password = "booklover123")
     void expectBookUpdated_whenPUTBook() throws Exception {
         //GIVEN
+        MongoUser user = new MongoUser("123", "booklover", "booklover123");
+        userRepository.save(user);
+
         List<Book> initialBooks = new ArrayList<>();
         initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.NOT_READ, 0));
         bookRepo.insert(initialBooks);
@@ -117,7 +133,7 @@ class BookControllerTest {
         //WHEN
         mockMvc.perform(MockMvcRequestBuilders.put("/api/books/" + bookId)
                         .content(updatedBook)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON).with(csrf()))
 
                 //THEN
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -126,15 +142,19 @@ class BookControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser(username = "booklover", password = "booklover123")
     void expectBookDeleted_whenDELETEBook() throws Exception {
         //GIVEN
+        MongoUser user = new MongoUser("123", "booklover", "booklover123");
+        userRepository.save(user);
+
         List<Book> initialBooks = new ArrayList<>();
         initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4));
         bookRepo.insert(initialBooks);
         String bookId = bookService.list().get(0).getId();
 
         //WHEN
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/books/" + bookId))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/books/" + bookId).with(csrf()))
 
                 //THEN
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -145,8 +165,12 @@ class BookControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser(username = "booklover", password = "booklover123")
     void expectBookById_whenGETBookById() throws Exception {
         //GIVEN
+        MongoUser user = new MongoUser("123", "booklover", "booklover123");
+        userRepository.save(user);
+
         String bookWithoutId = """
                 {
                     "title": "Pride and Prejudice",
@@ -157,7 +181,7 @@ class BookControllerTest {
                 }
                 """;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/books").content(bookWithoutId).contentType(MediaType.APPLICATION_JSON));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/books").content(bookWithoutId).contentType(MediaType.APPLICATION_JSON).with(csrf()));
 
         String bookId = bookService.list().get(0).getId();
 
@@ -181,6 +205,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser
     void expectNotFoundStatus_whenGetBookByIdWithNonexistentId() throws Exception {
         //GIVEN
         String nonExistentId = "non_existent_id";

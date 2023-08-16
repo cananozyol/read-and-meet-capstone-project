@@ -3,7 +3,11 @@ package de.neuefische.readandmeet.backend.service;
 import de.neuefische.readandmeet.backend.exceptions.NoSuchBookException;
 import de.neuefische.readandmeet.backend.model.*;
 import de.neuefische.readandmeet.backend.repository.BookRepo;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +23,21 @@ class BookServiceTest {
 
     UuIdService uuIdService = mock(UuIdService.class);
 
+    Authentication authentication = mock(Authentication.class);
+
+    SecurityContext securityContext = mock(SecurityContext.class);
+
     BookService bookService = new BookService(bookRepo, uuIdService);
+
+    String username = "Henry";
+
+    @BeforeEach
+    void setUp() {
+        when(authentication.getName()).thenReturn(username);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+    }
+
 
     @Test
     void listShouldReturnListOfAllBooks() {
