@@ -21,34 +21,31 @@ export default function App() {
     const books = useStore((state) => state.books);
 
 
-
-
     return (
         <>
-        <main>
-            <Header />
-            <ToastContainer />
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/meetinglist" element={<MeetingList meetings={meetings} />} />
-                <Route path="/addmeeting" element={<AddMeetingPage />} />
-                <Route path="/meeting/:id" element={<DetailMeetingPage />} />
-                <Route path="/:id/editmeeting" element={<EditMeetingPage />} />
-                <Route path="/booklist" element={<BookList books={books}/>} />
-                <Route path="/addbook" element={<AddBookPage />} />
-                <Route path="/book/:id" element={<DetailBookPage />} />
-            </Routes>
+            <main>
+                <Header />
+                <ToastContainer />
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/meetinglist" element={<MeetingList meetings={meetings} />} />
+                    <Route path="/addmeeting" element={<AddMeetingPage />} />
+                    <Route path="/meeting/:id" element={<DetailMeetingPage />} />
+                    <Route path="/:id/editmeeting" element={<EditMeetingPage />} />
+                    <Route path="/booklist" element={<BookList books={books}/>} />
+                    <Route path="/addbook" element={<AddBookPage />} />
+                    <Route path="/book/:id" element={<DetailBookPage />} />
+                </Routes>
 
-        </main>
+            </main>
             <Paper className="navigation-paper">
                 <BottomNavigation sx={{ bgcolor: "#d1adee", height: "70px" }} showLabels>
                     <BottomNavigationAction label="Meetings" icon={<Groups />} style={{ color: 'black' }} component={Link} to="/meetinglist" />
                     <BottomNavigationAction label="Home" icon={<Home />} style={{ color: 'black' }} component={Link} to="/" />
                     <BottomNavigationAction label="Books" icon={<MenuBook />} style={{ color: 'black' }} component={Link} to="/booklist" />
-            </BottomNavigation>
+                </BottomNavigation>
             </Paper>
 
         </>
     );
 }
-
