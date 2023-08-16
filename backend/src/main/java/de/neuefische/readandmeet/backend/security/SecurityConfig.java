@@ -32,14 +32,15 @@ public class SecurityConfig {
                                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(httpRequests ->
                         httpRequests
-                                .requestMatchers(HttpMethod.GET, "/api/meetings").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/books").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/meetings").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/api/books").authenticated()
                                 .requestMatchers("/api/meetings").authenticated()
                                 .requestMatchers("/api/meetings/**").authenticated()
                                 .requestMatchers("/api/books").authenticated()
                                 .requestMatchers("/api/books/**").authenticated()
                                 .requestMatchers("/api/bookcover").authenticated()
-                                .requestMatchers("/api/users/**").permitAll()
+                                .requestMatchers("/api/users/login").permitAll()
+                                .requestMatchers("/api/users/register").permitAll()
                                 .anyRequest().permitAll())
                 .build();
     }

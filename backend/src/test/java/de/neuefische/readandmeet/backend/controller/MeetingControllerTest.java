@@ -47,8 +47,12 @@ class MeetingControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser(username = "booklover", password = "booklover123")
     void expectMeetingList_whenGETMeetingList() throws Exception {
         //GIVEN
+        MongoUser user = new MongoUser("123", "booklover", "booklover123");
+        userRepository.save(user);
+
         Meeting meeting = new Meeting("123", "Silent Bonds Book Club", null, "online", new Book("b004", "Silver Silence", "Nalini Singh", Genre.FANTASY, Status.NOT_READ, 0));
         meetingRepo.insert(meeting);
 
@@ -80,11 +84,9 @@ class MeetingControllerTest {
 
     @Test
     @DirtiesContext
-    @WithMockUser(username = "booklover", password = "booklover123")
+    @WithMockUser
     void expectUpdatedMeetingList_whenPOSTNewMeeting() throws Exception {
         // GIVEN
-        MongoUser user = new MongoUser("123", "booklover", "booklover123");
-        userRepository.save(user);
         String meetingWithoutId = """
                                 {
                                     "id": "456",
@@ -152,12 +154,9 @@ class MeetingControllerTest {
 
     @Test
     @DirtiesContext
-    @WithMockUser(username = "booklover", password = "booklover123")
+    @WithMockUser
     void expectEmptyList_whenDELETEMeetingById () throws Exception {
         //GIVEN
-        MongoUser user = new MongoUser("123", "booklover", "booklover123");
-        userRepository.save(user);
-
         List<Meeting> meetings = new ArrayList<>();
         meetings.add(new Meeting("123", "Silent Bonds Book Club", null, "online", new Book("b004", "Silver Silence", "Nalini Singh", Genre.FANTASY, Status.NOT_READ, 0)));
         meetingRepo.insert(meetings);
@@ -172,12 +171,9 @@ class MeetingControllerTest {
 
     @Test
     @DirtiesContext
-    @WithMockUser(username = "booklover", password = "booklover123")
+    @WithMockUser
     void expectUpdatedMeeting_whenPUTById() throws Exception {
         //GIVEN
-        MongoUser user = new MongoUser("123", "booklover", "booklover123");
-        userRepository.save(user);
-
         List<Meeting> meetings = new ArrayList<>();
         meetings.add(new Meeting("13", "Hogwarts Book Club", null, "Hogwarts", new Book("b001", "Harry Potter and the Sorcerer's Stone", "J.K. Rowling", Genre.FANTASY, Status.NOT_READ, 0)));
         meetingRepo.insert(meetings);

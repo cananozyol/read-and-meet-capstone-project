@@ -43,8 +43,12 @@ class BookControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser(username = "booklover", password = "booklover123")
     void expectBookList_whenGETBookList() throws Exception {
         //GIVEN
+        MongoUser user = new MongoUser("123", "booklover", "booklover123");
+        userRepository.save(user);
+
         List<Book> expectedBooks = new ArrayList<>();
         expectedBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE,  Status.READ,4));
         expectedBooks.add(new Book("2", "Resonance Surge", "Nalini Singh", Genre.FANTASY, Status.READ,4));
@@ -77,12 +81,9 @@ class BookControllerTest {
 
     @Test
     @DirtiesContext
-    @WithMockUser(username = "booklover", password = "booklover123")
+    @WithMockUser
     void expectBookCreated_whenPOSTNewBook() throws Exception {
         //GIVEN
-        MongoUser user = new MongoUser("123", "booklover", "booklover123");
-        userRepository.save(user);
-
         String bookWithoutId = """
                             {
                                 "title": "The Great Gatsby",
@@ -109,12 +110,9 @@ class BookControllerTest {
 
     @Test
     @DirtiesContext
-    @WithMockUser(username = "booklover", password = "booklover123")
+    @WithMockUser
     void expectBookUpdated_whenPUTBook() throws Exception {
         //GIVEN
-        MongoUser user = new MongoUser("123", "booklover", "booklover123");
-        userRepository.save(user);
-
         List<Book> initialBooks = new ArrayList<>();
         initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.NOT_READ, 0));
         bookRepo.insert(initialBooks);
@@ -142,12 +140,9 @@ class BookControllerTest {
 
     @Test
     @DirtiesContext
-    @WithMockUser(username = "booklover", password = "booklover123")
+    @WithMockUser
     void expectBookDeleted_whenDELETEBook() throws Exception {
         //GIVEN
-        MongoUser user = new MongoUser("123", "booklover", "booklover123");
-        userRepository.save(user);
-
         List<Book> initialBooks = new ArrayList<>();
         initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4));
         bookRepo.insert(initialBooks);
@@ -165,12 +160,9 @@ class BookControllerTest {
 
     @Test
     @DirtiesContext
-    @WithMockUser(username = "booklover", password = "booklover123")
+    @WithMockUser
     void expectBookById_whenGETBookById() throws Exception {
         //GIVEN
-        MongoUser user = new MongoUser("123", "booklover", "booklover123");
-        userRepository.save(user);
-
         String bookWithoutId = """
                 {
                     "title": "Pride and Prejudice",

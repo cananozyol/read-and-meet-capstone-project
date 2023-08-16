@@ -3,6 +3,7 @@ package de.neuefische.readandmeet.backend.security;
 import de.neuefische.readandmeet.backend.exceptions.UsernameAlreadyExistsException;
 import de.neuefische.readandmeet.backend.service.UuIdService;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
@@ -62,4 +63,42 @@ class MongoUserServiceTest {
         assertEquals(cause, exception.getCause());
     }
 
+    @Test
+    void testUpdateUser() {
+        //GIVEN
+        String userId = "123";
+        String username = "booklover";
+        String password = "booklover123";
+
+        MongoUserWithoutPassword inputUser = new MongoUserWithoutPassword(userId, username);
+        MongoUser existingUser = new MongoUser(userId, "oldUsername", password);
+        MongoUser updatedUser = new MongoUser(userId, username, password);
+
+        //WHEN
+        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(updatedUser)).thenReturn(updatedUser);
+        MongoUserWithoutPassword resultUser = userService.updateUser(inputUser);
+
+        //THEN
+        assertEquals(userId, resultUser.id());
+        assertEquals(username, resultUser.username());
+        verify(userRepository).findById(userId);
+        verify(userRepository).save(updatedUser);
+    }
+
+    @Test
+    void testUpdateUserNotFound() {
+        //GIVEN
+        String userId = "123";
+        String username = "booklover";
+
+        //WHEN
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        MongoUserWithoutPassword inputUser = new MongoUserWithoutPassword(userId, username);
+
+        //THEN
+        assertThrows(UsernameNotFoundException.class, () -> userService.updateUser(inputUser));
+        verify(userRepository).findById(userId);
+        verify(userRepository, never()).save(any());
+    }
 }
