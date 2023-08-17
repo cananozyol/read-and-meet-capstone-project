@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import axios from 'axios';
 import {Book, BookEditData, BookWithoutId} from '../models/books.ts';
 import {Meeting, MeetingWithoutId} from '../models/meeting.ts';
+import {NavigateFunction} from "react-router-dom";
 
 type State = {
     books: Book[];
@@ -18,7 +19,12 @@ type State = {
     putMeeting: (requestBody: Meeting) => void;
     fetchBookCover: (title: string, author: string) => void;
     bookCoverUrl: string;
-};
+    username: string;
+    me: () => void;
+    login: (username: string, password: string, navigate: NavigateFunction) => void;
+    register: (username: string, password: string, repeatedPassword: string, navigate: NavigateFunction) => void;
+
+}
 
 export const useStore = create<State>((set, get) => ({
     books: [],
@@ -132,6 +138,48 @@ export const useStore = create<State>((set, get) => ({
                 console.error('Error fetching book cover:', error);
                 throw error;
             });
+    },
+
+    username: "",
+
+    me: () => {
+        axios.get("/api/users/me")
+            .then(response => set({username: response.data}))
+    },
+
+    login: (username: string, password: string, navigate: NavigateFunction) => {
+        axios.post("/api/users/login", null, {
+            auth: {
+                username: username,
+                password: password
+            }
+        })
+            .then(response => {
+                set({username: response.data})
+                navigate("/")
+            })
+            .catch((error) => {
+                console.error(error);
+                throw new Error("Login failed");
+            });
+    },
+
+    register: (username: string, password: string, repeatedPassword: string, navigate: NavigateFunction) => {
+        const newUserData = {
+            "username": `${username}`,
+            "password": `${password}`
+        }
+
+        if (password === repeatedPassword) {
+
+            axios.post("/api/users/register", newUserData)
+                .then(() => navigate("/login"))
+                .catch((error) => {
+                    console.error(error);
+                    throw new Error("Registration failed");
+                })
+
+        }
     },
 
 }));
