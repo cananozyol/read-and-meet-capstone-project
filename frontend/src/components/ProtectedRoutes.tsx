@@ -6,9 +6,7 @@ type Props = {
 
 export default function ProtectedRoutes({user}: Props) {
 
-    if (user === undefined) return "loading ...";
-
-    const isLoggedIn = user !== "anonymousUser";
+    const isLoggedIn = user !== undefined && user !== "";
 
     return <>{isLoggedIn ? <Outlet/> : <Navigate to="/login"/>}</>;
 }

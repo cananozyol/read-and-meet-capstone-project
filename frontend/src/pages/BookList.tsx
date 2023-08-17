@@ -12,7 +12,10 @@ type Props = {
 export default function BookList(props: Props) {
     const { books, fetchBooks } = useStore();
 
-    useEffect(fetchBooks, [fetchBooks]);
+    useEffect(() => {
+        fetchBooks();
+    }, [fetchBooks]);
+
 
     return (
         <>

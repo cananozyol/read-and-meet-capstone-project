@@ -34,8 +34,8 @@ export default function App() {
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage/>} />
-                    <Route path="/" element={<HomePage />} />
                     <Route element={<ProtectedRoutes user={username}/>}>
+                        <Route path="/" element={<HomePage />} />
                         <Route path="/meetinglist" element={<MeetingList meetings={meetings} />} />
                         <Route path="/addmeeting" element={<AddMeetingPage />} />
                         <Route path="/meeting/:id" element={<DetailMeetingPage />} />
@@ -51,7 +51,7 @@ export default function App() {
             <Paper className="navigation-paper">
                 <BottomNavigation sx={{ bgcolor: "#d1adee", height: "70px" }} showLabels>
                     <BottomNavigationAction label="Meetings" icon={<Groups />} style={{ color: 'black' }} component={Link} to="/meetinglist" />
-                    <BottomNavigationAction label="Home" icon={<Home />} style={{ color: 'black' }} component={Link} to="/home" />
+                    <BottomNavigationAction label="Home" icon={<Home />} style={{ color: 'black' }} component={Link} to="/" />
                     <BottomNavigationAction label="Books" icon={<MenuBook />} style={{ color: 'black' }} component={Link} to="/booklist" />
                 </BottomNavigation>
             </Paper>

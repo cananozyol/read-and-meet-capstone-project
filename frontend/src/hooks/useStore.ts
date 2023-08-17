@@ -23,7 +23,7 @@ type State = {
     me: () => void;
     login: (username: string, password: string, navigate: NavigateFunction) => void;
     register: (username: string, password: string, repeatedPassword: string, navigate: NavigateFunction) => void;
-
+    logout: (navigate: NavigateFunction) => void;
 }
 
 export const useStore = create<State>((set, get) => ({
@@ -180,6 +180,13 @@ export const useStore = create<State>((set, get) => ({
                 })
 
         }
+    },
+
+    logout: (navigate: NavigateFunction) => {
+        axios.post("/api/users/logout")
+            .catch(console.error)
+            .then(() => set({ username: "" }))
+            .then(() => navigate("/login"))
     },
 
 }));
