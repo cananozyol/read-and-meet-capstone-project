@@ -49,7 +49,7 @@ export default function RegisterPage() {
                                  type="password"
                                  />
                 <p></p>
-                <button type={"button"} onClick={() => navigate("/login")}>Login</button>
+                <button type={"button"} onClick={() => navigate("/")}>Login</button>
                 <p></p>
                 <button type={"submit"}>Register</button>
             </form>

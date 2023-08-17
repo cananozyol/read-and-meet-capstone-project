@@ -12,7 +12,7 @@ export default function LogoutButton() {
         axios.post("/api/users/logout")
             .catch(console.error)
             .then(() => me())
-            .then(() => navigate("/"));
+            .then(() => navigate("/login"))
     }
 
     return (
