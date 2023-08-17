@@ -2,10 +2,13 @@ import {useEffect} from "react";
 import {useStore} from "../hooks/useStore.ts";
 import MeetingCard from "../components/MeetingCard.tsx";
 import BookCard from "../components/BookCard.tsx";
+import LogoutButton from "../components/LogoutButton.tsx";
+import {useNavigate} from "react-router-dom";
 
 export default function HomePage() {
     const { meetings, fetchMeetings } = useStore();
     const { books, fetchBooks } = useStore();
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchMeetings();
@@ -32,6 +35,12 @@ export default function HomePage() {
                     <BookCard book={currentBook} />
                 </div>
             )}
+            <p></p>
+            <button type={"button"} onClick={() => navigate("/register")}>Register</button>
+            <p></p>
+            <button type={"button"} onClick={() => navigate("/login")}>Login</button>
+            <p></p>
+            <LogoutButton/>
         </div>
     );
 }
