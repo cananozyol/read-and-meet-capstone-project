@@ -5,7 +5,10 @@ import de.neuefische.readandmeet.backend.model.Book;
 import de.neuefische.readandmeet.backend.model.BookEditData;
 import de.neuefische.readandmeet.backend.model.BookWithoutId;
 import de.neuefische.readandmeet.backend.repository.BookRepo;
+import de.neuefische.readandmeet.backend.security.MongoUserService;
+import de.neuefische.readandmeet.backend.security.MongoUserWithoutPassword;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +19,7 @@ public class BookService {
 
     private final BookRepo bookRepo;
     private final UuIdService uuIdService;
+    private final MongoUserService mongoUserService;
 
     public List<Book> list() {
         return bookRepo.findAll();
@@ -23,7 +27,9 @@ public class BookService {
 
     public Book addBook(BookWithoutId bookWithoutId) {
         String id = uuIdService.getRandomId();
-        Book book = new Book(id, bookWithoutId.getTitle(), bookWithoutId.getAuthor(), bookWithoutId.getGenre(), bookWithoutId.getStatus(), bookWithoutId.getRating());
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        MongoUserWithoutPassword user = mongoUserService.findByUsername(username);
+        Book book = new Book(id, bookWithoutId.getTitle(), bookWithoutId.getAuthor(), bookWithoutId.getGenre(), bookWithoutId.getStatus(), bookWithoutId.getRating(), user.id());
         return bookRepo.insert(book);
     }
 

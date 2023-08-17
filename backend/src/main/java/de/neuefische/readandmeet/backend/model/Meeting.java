@@ -18,4 +18,5 @@ public class Meeting {
     private LocalDate date;
     private String location;
     private Book book;
+    String userId;
 }
