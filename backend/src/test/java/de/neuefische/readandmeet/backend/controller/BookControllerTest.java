@@ -50,8 +50,8 @@ class BookControllerTest {
         userRepository.save(user);
 
         List<Book> expectedBooks = new ArrayList<>();
-        expectedBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE,  Status.READ,4));
-        expectedBooks.add(new Book("2", "Resonance Surge", "Nalini Singh", Genre.FANTASY, Status.READ,4));
+        expectedBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE,  Status.READ,4, "123"));
+        expectedBooks.add(new Book("2", "Resonance Surge", "Nalini Singh", Genre.FANTASY, Status.READ,4, "123"));
 
         bookRepo.insert(expectedBooks);
 
@@ -114,7 +114,7 @@ class BookControllerTest {
     void expectBookUpdated_whenPUTBook() throws Exception {
         //GIVEN
         List<Book> initialBooks = new ArrayList<>();
-        initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.NOT_READ, 0));
+        initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.NOT_READ, 0, "123"));
         bookRepo.insert(initialBooks);
         String bookId = bookService.list().get(0).getId();
 
@@ -144,7 +144,7 @@ class BookControllerTest {
     void expectBookDeleted_whenDELETEBook() throws Exception {
         //GIVEN
         List<Book> initialBooks = new ArrayList<>();
-        initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4));
+        initialBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4, "123"));
         bookRepo.insert(initialBooks);
         String bookId = bookService.list().get(0).getId();
 

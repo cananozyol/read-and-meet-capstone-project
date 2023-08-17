@@ -3,6 +3,8 @@ package de.neuefische.readandmeet.backend.service;
 import de.neuefische.readandmeet.backend.exceptions.NoSuchMeetingException;
 import de.neuefische.readandmeet.backend.model.*;
 import de.neuefische.readandmeet.backend.repository.MeetingRepo;
+import de.neuefische.readandmeet.backend.security.MongoUserService;
+import de.neuefische.readandmeet.backend.security.MongoUserWithoutPassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
@@ -23,11 +25,12 @@ class MeetingServiceTest {
 
     MeetingRepo meetingRepo = mock(MeetingRepo.class);
     UuIdService uuIdService = mock(UuIdService.class);
+    MongoUserService mongoUserService = mock(MongoUserService.class);
     Authentication authentication = mock(Authentication.class);
     SecurityContext securityContext = mock(SecurityContext.class);
-    MeetingService meetingService = new MeetingService(meetingRepo, uuIdService);
+    MeetingService meetingService = new MeetingService(meetingRepo, uuIdService, mongoUserService);
 
-    Book book = new Book("b001", "The Great Gatsby", "F. Scott Fitzgerald", Genre.CLASSIC, Status.NOT_READ, 0);
+    Book book = new Book("b001", "The Great Gatsby", "F. Scott Fitzgerald", Genre.CLASSIC, Status.NOT_READ, 0, "123");
 
     String username = "Henry";
 
@@ -41,7 +44,7 @@ class MeetingServiceTest {
     @Test
     void expectListOfAllMeetings() {
         //GIVEN
-        Meeting meeting = new Meeting("123", "book", LocalDate.now(), "online", book);
+        Meeting meeting = new Meeting("123", "book", LocalDate.now(), "online", book, "123");
         List<Meeting> expected = new ArrayList<>(List.of(meeting));
 
         //WHEN
@@ -70,11 +73,15 @@ class MeetingServiceTest {
     @Test
     void expectMeeting_whenAddingMeeting() {
         //GIVEN
-        MeetingWithoutId meetingWithoutId = new MeetingWithoutId("book", LocalDate.now(), "online", book);
-        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", book);
+        MeetingWithoutId meetingWithoutId = new MeetingWithoutId("book", LocalDate.now(), "online", book, "123");
+        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", book, "123");
+        MongoUserWithoutPassword mockUser = new MongoUserWithoutPassword("123", "user");
 
         //WHEN
+        when(authentication.getName()).thenReturn("user");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
         when(uuIdService.getRandomId()).thenReturn("123");
+        when(mongoUserService.findByUsername("user")).thenReturn(mockUser);
         when(meetingRepo.insert(expected)).thenReturn(expected);
         Meeting actual = meetingService.add(meetingWithoutId);
 
@@ -90,7 +97,7 @@ class MeetingServiceTest {
     void expectMeeting_whenMeetingGetById() {
         //GIVEN
         String id = "123";
-        Meeting expected = new Meeting(id, "book", LocalDate.now(), "online", book);
+        Meeting expected = new Meeting(id, "book", LocalDate.now(), "online", book, "123");
 
         //WHEN
         when(meetingRepo.findById(id)).thenReturn(Optional.of(expected));
@@ -105,7 +112,7 @@ class MeetingServiceTest {
     void expectDeletingMethod_whenDeleteMethodIsCalled() {
         //GIVEN
         String id = "123";
-        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", book);
+        Meeting expected = new Meeting("123", "book", LocalDate.now(), "online", book, "123");
 
         //WHEN
         when(meetingRepo.findById(id)).thenReturn(Optional.of(expected));
@@ -122,11 +129,16 @@ class MeetingServiceTest {
     void expectEditedMeeting_whenEditingMeeting () {
         //GIVEN
         String id = "123";
-        Meeting existingMeeting = new Meeting("123", "book", LocalDate.now(), "online", book);
-        MeetingWithoutId updatedMeeting = new MeetingWithoutId("books", LocalDate.now(), "home", book);
-        Meeting expected = new Meeting("123", "books", LocalDate.now(), "home", book);
+        Meeting existingMeeting = new Meeting("123", "book", LocalDate.now(), "online", book, "123");
+        MeetingWithoutId updatedMeeting = new MeetingWithoutId("books", LocalDate.now(), "home", book, "123");
+        Meeting expected = new Meeting("123", "books", LocalDate.now(), "home", book, "123");
+        SecurityContextHolder.setContext(securityContext);
+        MongoUserWithoutPassword mockUser = new MongoUserWithoutPassword("123", "user");
 
         //WHEN
+        when(authentication.getName()).thenReturn("user");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(mongoUserService.findByUsername("user")).thenReturn(mockUser);
         when(meetingRepo.findById(id)).thenReturn(Optional.of(existingMeeting));
         when(meetingRepo.save(expected)).thenReturn(expected);
         Meeting actual = meetingService.editMeetingById(updatedMeeting, id);

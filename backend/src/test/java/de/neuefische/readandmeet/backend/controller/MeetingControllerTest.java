@@ -53,7 +53,7 @@ class MeetingControllerTest {
         MongoUser user = new MongoUser("123", "booklover", "booklover123");
         userRepository.save(user);
 
-        Meeting meeting = new Meeting("123", "Silent Bonds Book Club", null, "online", new Book("b004", "Silver Silence", "Nalini Singh", Genre.FANTASY, Status.NOT_READ, 0));
+        Meeting meeting = new Meeting("123", "Silent Bonds Book Club", null, "online", new Book("b004", "Silver Silence", "Nalini Singh", Genre.FANTASY, Status.NOT_READ, 0, "123"), "123");
         meetingRepo.insert(meeting);
 
         String expected = """
@@ -124,7 +124,7 @@ class MeetingControllerTest {
     void expectMeeting_whenGETById() throws Exception {
         //GIVEN
         List<Meeting> meetings = new ArrayList<>();
-        meetings.add(new Meeting("123", "Silent Bonds Book Club", null, "online", new Book("b004", "Silver Silence", "Nalini Singh", Genre.FANTASY, Status.NOT_READ, 0)));
+        meetings.add(new Meeting("123", "Silent Bonds Book Club", null, "online", new Book("b004", "Silver Silence", "Nalini Singh", Genre.FANTASY, Status.NOT_READ, 0, "123"), "123"));
         meetingRepo.insert(meetings);
         String id = meetingService.list().get(0).getId();
 
@@ -158,7 +158,7 @@ class MeetingControllerTest {
     void expectEmptyList_whenDELETEMeetingById () throws Exception {
         //GIVEN
         List<Meeting> meetings = new ArrayList<>();
-        meetings.add(new Meeting("123", "Silent Bonds Book Club", null, "online", new Book("b004", "Silver Silence", "Nalini Singh", Genre.FANTASY, Status.NOT_READ, 0)));
+        meetings.add(new Meeting("123", "Silent Bonds Book Club", null, "online", new Book("b004", "Silver Silence", "Nalini Singh", Genre.FANTASY, Status.NOT_READ, 0, "123"), "123"));
         meetingRepo.insert(meetings);
         String id = meetingService.list().get(0).getId();
 
@@ -175,7 +175,7 @@ class MeetingControllerTest {
     void expectUpdatedMeeting_whenPUTById() throws Exception {
         //GIVEN
         List<Meeting> meetings = new ArrayList<>();
-        meetings.add(new Meeting("13", "Hogwarts Book Club", null, "Hogwarts", new Book("b001", "Harry Potter and the Sorcerer's Stone", "J.K. Rowling", Genre.FANTASY, Status.NOT_READ, 0)));
+        meetings.add(new Meeting("13", "Hogwarts Book Club", null, "Hogwarts", new Book("b001", "Harry Potter and the Sorcerer's Stone", "J.K. Rowling", Genre.FANTASY, Status.NOT_READ, 0, "123"), "123"));
         meetingRepo.insert(meetings);
         String id = meetingService.list().get(0).getId();
 
