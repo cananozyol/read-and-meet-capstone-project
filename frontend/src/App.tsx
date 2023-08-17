@@ -27,7 +27,7 @@ export default function App() {
 
     useEffect(() => {
         me();
-    }, []);
+    }, [me]);
 
 
     return (

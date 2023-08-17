@@ -2,6 +2,7 @@ package de.neuefische.readandmeet.backend.security;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record MongoUserWithoutId(
@@ -11,6 +12,7 @@ public record MongoUserWithoutId(
 
         @NotBlank
         @Size(min = 3, max = 25, message = "Invalid password")
+        @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Password must contain at least one lowercase letter, one uppercase letter, and one digit")
         String password
 ) {
 }
