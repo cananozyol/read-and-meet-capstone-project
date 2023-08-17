@@ -8,6 +8,7 @@ export type Meeting = {
         title?: string;
         author?: string;
     }
+    userId: string;
 }
 
 
@@ -20,4 +21,5 @@ export type MeetingWithoutId = {
         title?: string;
         author?: string;
     }
+    userId: string;
 }

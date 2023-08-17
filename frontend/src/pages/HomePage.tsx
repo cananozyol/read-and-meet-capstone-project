@@ -2,12 +2,14 @@ import {useEffect} from "react";
 import {useStore} from "../hooks/useStore.ts";
 import MeetingCard from "../components/MeetingCard.tsx";
 import BookCard from "../components/BookCard.tsx";
-import LogoutButton from "../components/LogoutButton.tsx";
 import {useNavigate} from "react-router-dom";
+import {isAfter, parseISO} from "date-fns";
+import {Status} from "../models/books.ts";
 
 export default function HomePage() {
     const { meetings, fetchMeetings } = useStore();
     const { books, fetchBooks } = useStore();
+    const { userId } = useStore();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -15,32 +17,36 @@ export default function HomePage() {
         fetchBooks();
     }, [fetchMeetings, fetchBooks]);
 
-    const upcomingMeeting = meetings.length > 0 ? meetings[0] : null;
-    const currentBook = books.length > 0 ? books[0] : null;
+    const upcomingUserMeetings = meetings
+        .filter((meeting) => meeting.userId === userId)
+        .sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime());
+
+    const readingBook = books.find((book) => book.userId === userId && book.status === Status.READING);
+
+    const currentMeeting = upcomingUserMeetings.find((meeting) => isAfter(new Date(), parseISO(meeting.date)));
+
 
     return (
         <div>
-            <h3>Here's what's happening for you:</h3>
+            <h3>Things to Look Forward To 💜</h3>
             <p></p>
-            {upcomingMeeting && (
+            {currentMeeting && (
                 <div>
                     <p><u><strong><em>Your Upcoming Meeting</em></strong></u></p>
-                    <MeetingCard meeting={upcomingMeeting} />
+                    <MeetingCard meeting={currentMeeting} />
                 </div>
             )}
 
-            {currentBook && (
+            {readingBook && (
                 <div>
-                    <p><u><strong><em>The Book You're Currently Reading</em></strong></u></p>
-                    <BookCard book={currentBook} />
+                    <p><u><strong><em>A Book You're Currently Reading</em></strong></u></p>
+                    <BookCard book={readingBook} />
                 </div>
             )}
             <p></p>
             <button type={"button"} onClick={() => navigate("/register")}>Register</button>
             <p></p>
             <button type={"button"} onClick={() => navigate("/login")}>Login</button>
-            <p></p>
-            <LogoutButton/>
         </div>
     );
 }

@@ -9,7 +9,7 @@ import {showInfoToast, showSuccessToast} from "../components/ToastHelpers.tsx";
 
 export default function EditMeetingPage() {
     const { id } = useParams();
-    const { putMeeting, getMeetingById, fetchBooks } = useStore();
+    const { putMeeting, getMeetingById, fetchBooks, userId } = useStore();
     const meeting = getMeetingById(id ?? "");
     const previousSelectedBookId = meeting?.book?.id;
     const navigate = useNavigate();
@@ -51,6 +51,7 @@ export default function EditMeetingPage() {
                 title: meeting.title || "",
                 date: meeting.date || "",
                 location: meeting.location || "",
+                userId: userId,
             }}
             onCancel={handleCancel}
             onSubmit={handleSubmit}

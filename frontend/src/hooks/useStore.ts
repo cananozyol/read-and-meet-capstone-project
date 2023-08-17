@@ -24,11 +24,15 @@ type State = {
     login: (username: string, password: string, navigate: NavigateFunction) => void;
     register: (username: string, password: string, repeatedPassword: string, navigate: NavigateFunction) => void;
     logout: (navigate: NavigateFunction) => void;
+    userId: string;
 }
 
 export const useStore = create<State>((set, get) => ({
     books: [],
     meetings: [],
+    bookCoverUrl: "",
+    username: "",
+    userId: "",
 
     fetchBooks: () => {
         axios
@@ -41,9 +45,10 @@ export const useStore = create<State>((set, get) => ({
     },
 
     postBook: (requestBody: BookWithoutId) => {
-        const { fetchBooks } = get();
+        const { fetchBooks, userId } = get();
+        const newBook = { ...requestBody, userId };
         axios
-            .post("/api/books", requestBody)
+            .post("/api/books", newBook)
             .then(fetchBooks)
             .catch(console.error);
     },
@@ -85,9 +90,10 @@ export const useStore = create<State>((set, get) => ({
     },
 
     postMeeting: (requestBody: MeetingWithoutId) => {
-        const { fetchMeetings } = get();
+        const { fetchMeetings, userId } = get();
+        const newMeeting = { ...requestBody, userId };
         axios
-            .post("/api/meetings", requestBody)
+            .post("/api/meetings", newMeeting)
             .then(fetchMeetings)
             .catch(console.error);
     },
@@ -121,8 +127,6 @@ export const useStore = create<State>((set, get) => ({
             .catch(console.error);
     },
 
-    bookCoverUrl: "",
-
     fetchBookCover: (title: string, author: string): Promise<string> => {
         const formattedTitle = title.trim().replace(/ /g, '+');
         const formattedAuthor = author.trim().replace(/ /g, '+');
@@ -140,11 +144,11 @@ export const useStore = create<State>((set, get) => ({
             });
     },
 
-    username: "",
-
     me: () => {
         axios.get("/api/users/me")
-            .then(response => set({username: response.data}))
+            .then(response => {
+                set({ username: response.data.username, userId: response.data.id });
+            });
     },
 
     login: (username: string, password: string, navigate: NavigateFunction) => {
@@ -155,7 +159,7 @@ export const useStore = create<State>((set, get) => ({
             }
         })
             .then(response => {
-                set({username: response.data})
+                set({ username: response.data, userId: response.data.id })
                 navigate("/")
             })
             .catch((error) => {
@@ -171,14 +175,15 @@ export const useStore = create<State>((set, get) => ({
         }
 
         if (password === repeatedPassword) {
-
             axios.post("/api/users/register", newUserData)
-                .then(() => navigate("/login"))
+                .then(response => {
+                    set({ username: response.data.username, userId: response.data.id });
+                    navigate("/login");
+                })
                 .catch((error) => {
                     console.error(error);
                     throw new Error("Registration failed");
-                })
-
+                });
         }
     },
 

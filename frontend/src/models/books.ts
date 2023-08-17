@@ -5,6 +5,7 @@ export type Book = {
     genre: Genre;
     status: Status;
     rating: number;
+    userId: string;
 }
 
 export enum Genre {
@@ -33,6 +34,7 @@ export type BookWithoutId = {
     genre: Genre;
     status: Status;
     rating: number;
+    userId: string;
 }
 
 export type BookEditData = {

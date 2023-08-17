@@ -18,7 +18,7 @@ import ConfirmationDialog from "../components/ConfirmationDialog.tsx";
 export default function AddBookPage() {
 
     const navigate = useNavigate();
-    const { postBook } = useStore();
+    const { postBook, userId } = useStore();
     const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -27,6 +27,7 @@ export default function AddBookPage() {
         genre: Genre.NOT_SELECTED,
         status: Status.NOT_READ,
         rating: 0,
+        userId: userId,
     });
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;

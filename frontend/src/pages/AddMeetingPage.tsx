@@ -9,7 +9,7 @@ import {showInfoToast, showSuccessToast} from "../components/ToastHelpers.tsx";
 export default function AddMeetingPage() {
     const postMeeting = useStore((state) => state.postMeeting);
     const navigate = useNavigate();
-    const { books, fetchBooks } = useStore();
+    const { books, fetchBooks, userId } = useStore();
     const [selectedBookId, setSelectedBookId] = useState<string | undefined>("");
 
     useEffect(() => {fetchBooks();
@@ -31,7 +31,7 @@ export default function AddMeetingPage() {
     return (
         <InputFormMeetings
             title="Add Meeting"
-            initialFormData={{ title: "", date: "", location: "" }}
+            initialFormData={{ title: "", date: "", location: "", userId: userId }}
             onCancel={handleCancel}
             onSubmit={handleSubmit}
             books={books}
