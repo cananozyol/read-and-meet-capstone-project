@@ -1,4 +1,4 @@
-import {ChangeEvent, FormEvent, useState} from "react";
+import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {Rating, TextField, Typography} from "@mui/material";
 import {useStore} from "../hooks/useStore.ts";
 import {useNavigate} from "react-router-dom";
@@ -18,7 +18,7 @@ import ConfirmationDialog from "../components/ConfirmationDialog.tsx";
 export default function AddBookPage() {
 
     const navigate = useNavigate();
-    const { postBook, userId } = useStore();
+    const { postBook, me, user } = useStore();
     const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -27,8 +27,20 @@ export default function AddBookPage() {
         genre: Genre.NOT_SELECTED,
         status: Status.NOT_READ,
         rating: 0,
-        userId: userId,
+        userId: "",
     });
+
+    useEffect(() => {
+        me();
+    }, [me]);
+
+    useEffect(() => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            userId: user.id
+        }));
+    }, [user.id]);
+
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));

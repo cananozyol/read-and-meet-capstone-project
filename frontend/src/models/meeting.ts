@@ -21,5 +21,4 @@ export type MeetingWithoutId = {
         title?: string;
         author?: string;
     }
-    userId: string;
 }

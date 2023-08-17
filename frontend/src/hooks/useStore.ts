@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Book, BookEditData, BookWithoutId} from '../models/books.ts';
 import {Meeting, MeetingWithoutId} from '../models/meeting.ts';
 import {NavigateFunction} from "react-router-dom";
+import {User} from "../models/users.ts";
 
 type State = {
     books: Book[];
@@ -24,7 +25,7 @@ type State = {
     login: (username: string, password: string, navigate: NavigateFunction) => void;
     register: (username: string, password: string, repeatedPassword: string, navigate: NavigateFunction) => void;
     logout: (navigate: NavigateFunction) => void;
-    userId: string;
+    user: User;
 }
 
 export const useStore = create<State>((set, get) => ({
@@ -32,7 +33,11 @@ export const useStore = create<State>((set, get) => ({
     meetings: [],
     bookCoverUrl: "",
     username: "",
-    userId: "",
+    user: {
+        id: "",
+        username: "",
+        password: "",
+    },
 
     fetchBooks: () => {
         axios
@@ -45,10 +50,9 @@ export const useStore = create<State>((set, get) => ({
     },
 
     postBook: (requestBody: BookWithoutId) => {
-        const { fetchBooks, userId } = get();
-        const newBook = { ...requestBody, userId };
+        const { fetchBooks } = get();
         axios
-            .post("/api/books", newBook)
+            .post("/api/books", requestBody)
             .then(fetchBooks)
             .catch(console.error);
     },
@@ -90,10 +94,9 @@ export const useStore = create<State>((set, get) => ({
     },
 
     postMeeting: (requestBody: MeetingWithoutId) => {
-        const { fetchMeetings, userId } = get();
-        const newMeeting = { ...requestBody, userId };
+        const { fetchMeetings } = get();
         axios
-            .post("/api/meetings", newMeeting)
+            .post("/api/meetings", requestBody)
             .then(fetchMeetings)
             .catch(console.error);
     },
@@ -147,8 +150,10 @@ export const useStore = create<State>((set, get) => ({
     me: () => {
         axios.get("/api/users/me")
             .then(response => {
-                set({ username: response.data.username, userId: response.data.id });
-            });
+                const userId = response.data.id;
+                set({user: response.data});
+                console.log("Logged in with userId:", userId);
+            })
     },
 
     login: (username: string, password: string, navigate: NavigateFunction) => {
@@ -159,7 +164,7 @@ export const useStore = create<State>((set, get) => ({
             }
         })
             .then(response => {
-                set({ username: response.data, userId: response.data.id })
+                set({username: response.data})
                 navigate("/")
             })
             .catch((error) => {
@@ -175,15 +180,14 @@ export const useStore = create<State>((set, get) => ({
         }
 
         if (password === repeatedPassword) {
+
             axios.post("/api/users/register", newUserData)
-                .then(response => {
-                    set({ username: response.data.username, userId: response.data.id });
-                    navigate("/login");
-                })
+                .then(() => navigate("/login"))
                 .catch((error) => {
                     console.error(error);
                     throw new Error("Registration failed");
-                });
+                })
+
         }
     },
 
@@ -195,4 +199,3 @@ export const useStore = create<State>((set, get) => ({
     },
 
 }));
-

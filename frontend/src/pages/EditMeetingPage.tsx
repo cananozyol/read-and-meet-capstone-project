@@ -9,7 +9,7 @@ import {showInfoToast, showSuccessToast} from "../components/ToastHelpers.tsx";
 
 export default function EditMeetingPage() {
     const { id } = useParams();
-    const { putMeeting, getMeetingById, fetchBooks, userId } = useStore();
+    const { putMeeting, getMeetingById, fetchBooks, user } = useStore();
     const meeting = getMeetingById(id ?? "");
     const previousSelectedBookId = meeting?.book?.id;
     const navigate = useNavigate();
@@ -34,7 +34,7 @@ export default function EditMeetingPage() {
         const selectedBook = books.find((book) => book.id === selectedBookId);
         const meetingWithBook = { ...formData, book: selectedBook };
 
-        putMeeting({ ...meetingWithBook, id: id as string });
+        putMeeting({ ...meetingWithBook, id: id as string, userId: user.id });
         navigate(`/${id}`);
         showSuccessToast('Changes have been saved successfully!');
     }
@@ -51,7 +51,6 @@ export default function EditMeetingPage() {
                 title: meeting.title || "",
                 date: meeting.date || "",
                 location: meeting.location || "",
-                userId: userId,
             }}
             onCancel={handleCancel}
             onSubmit={handleSubmit}

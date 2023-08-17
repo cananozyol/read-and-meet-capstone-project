@@ -10,6 +10,7 @@ import ButtonStyle from "../components/ButtonStyle.tsx";
 import AddButton from "../components/AddButton.tsx";
 import Typography from "@mui/material/Typography";
 import ConfirmationDialog from "../components/ConfirmationDialog.tsx";
+import {useStore} from "../hooks/useStore.ts";
 
 type Props = {
     title: string;
@@ -22,9 +23,11 @@ type Props = {
 };
 
 export default function InputFormMeetings({ title, initialFormData, onCancel, onSubmit, books, selectedBookId, onBookSelect  }: Props) {
+    const {  user } = useStore();
     const [formData, setFormData] = useState<MeetingWithoutId>(initialFormData);
     const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
     const navigate = useNavigate();
+    const filteredBooks = books.filter((book) => book.userId === user.id);
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         const name = event.target.name;
@@ -100,7 +103,7 @@ export default function InputFormMeetings({ title, initialFormData, onCancel, on
                     <MenuItem value="" disabled>
                         Select a Book
                     </MenuItem>
-                    {books.map((book) => (
+                    {filteredBooks.map((book) => (
                         <MenuItem key={book.id} value={book.id}>
                             {book.title}
                         </MenuItem>

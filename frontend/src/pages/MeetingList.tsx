@@ -7,26 +7,27 @@ import AddButton from "../components/AddButton.tsx";
 
 export default function MeetingList() {
 
-    const { meetings, fetchMeetings, userId } = useStore();
+    const { meetings, fetchMeetings, user } = useStore();
 
     useEffect(() => {
         fetchMeetings();
     }, [fetchMeetings]);
 
-    const userMeetings = meetings.filter((meeting) => meeting.userId === userId);
+    const filteredMeetings = meetings.filter((meeting) => meeting.userId === user.id);
+
 
     return (
         <div className="div-meetingList">
             <div className="meeting-summary-and-button">
                 <div>
-                    You have <b>{userMeetings.length}</b> meetings
+                    You have <b>{filteredMeetings.length}</b> meetings
                 </div>
                 <div className="add-button-container">
                     <AddButton to="/addmeeting">Add Meeting</AddButton>
                 </div>
             </div>
             <Grid container spacing={2}>
-                {userMeetings.map((meeting) => (
+                {filteredMeetings.map((meeting) => (
                     <Grid key={meeting.id} item xs={6} sm={6} md={6} lg={6}>
                         <MeetingCard meeting={meeting} />
                     </Grid>
