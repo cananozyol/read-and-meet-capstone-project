@@ -80,7 +80,7 @@ class MongoUserControllerTest {
         String testUserWithoutId = """
                     {
                         "username": "booklover",
-                        "password": "booklover123"
+                        "password": "Booklover123"
                     }
                 """;
 
