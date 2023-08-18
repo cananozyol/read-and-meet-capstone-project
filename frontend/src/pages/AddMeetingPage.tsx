@@ -12,7 +12,7 @@ export default function AddMeetingPage() {
     const { books, fetchBooks, me } = useStore();
     const [selectedBookId, setSelectedBookId] = useState<string | undefined>("");
 
-    useEffect(() => {fetchBooks(), me();
+    useEffect(() => {fetchBooks(); me();
     }, [fetchBooks, me]);
 
     function handleSubmit(formData: MeetingWithoutId) {
