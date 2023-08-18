@@ -17,4 +17,5 @@ public class Book {
     private Genre genre;
     private Status status;
     private int rating;
+    String userId;
 }

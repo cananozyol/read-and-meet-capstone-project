@@ -3,7 +3,13 @@ package de.neuefische.readandmeet.backend.service;
 import de.neuefische.readandmeet.backend.exceptions.NoSuchBookException;
 import de.neuefische.readandmeet.backend.model.*;
 import de.neuefische.readandmeet.backend.repository.BookRepo;
+import de.neuefische.readandmeet.backend.security.MongoUserService;
+import de.neuefische.readandmeet.backend.security.MongoUserWithoutPassword;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +24,30 @@ class BookServiceTest {
     BookRepo bookRepo = mock(BookRepo.class);
 
     UuIdService uuIdService = mock(UuIdService.class);
+    MongoUserService mongoUserService = mock(MongoUserService.class);
 
-    BookService bookService = new BookService(bookRepo, uuIdService);
+    Authentication authentication = mock(Authentication.class);
+
+    SecurityContext securityContext = mock(SecurityContext.class);
+
+    BookService bookService = new BookService(bookRepo, uuIdService, mongoUserService);
+
+    String username = "Henry";
+
+    @BeforeEach
+    void setUp() {
+        when(authentication.getName()).thenReturn(username);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+    }
+
 
     @Test
     void listShouldReturnListOfAllBooks() {
         //GIVEN
         List<Book> expectedBooks = new ArrayList<>();
-        expectedBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4));
-        expectedBooks.add(new Book("2", "Resonance Surge", "Nalini Singh", Genre.FANTASY, Status.READING, 4));
+        expectedBooks.add(new Book("1", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4, "123"));
+        expectedBooks.add(new Book("2", "Resonance Surge", "Nalini Singh", Genre.FANTASY, Status.READING, 4, "123"));
 
         //WHEN
         when(bookRepo.findAll()).thenReturn(expectedBooks);
@@ -41,10 +62,14 @@ class BookServiceTest {
     void addBookShouldReturnAddedBook() {
         //GIVEN
         BookWithoutId bookWithoutId = new BookWithoutId("Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4);
-        Book expectedBook = new Book("b001", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4);
+        Book expectedBook = new Book("b001", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4, "123");
+        MongoUserWithoutPassword mockUser = new MongoUserWithoutPassword("123", "user");
 
         //WHEN
+        when(authentication.getName()).thenReturn("user");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
         when(uuIdService.getRandomId()).thenReturn("b001");
+        when(mongoUserService.findByUsername("user")).thenReturn(mockUser);
         when(bookRepo.insert(expectedBook)).thenReturn(expectedBook);
         Book actualBook = bookService.addBook(bookWithoutId);
 
@@ -58,9 +83,9 @@ class BookServiceTest {
     void updateBookShouldReturnUpdatedBook() {
         //GIVEN
         String bookId = "b001";
-        Book existingBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READING, 4);
+        Book existingBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READING, 4, "123");
         BookEditData updatedBook = new BookEditData(Status.READ, 5);
-        Book expectedBook = new Book("b001", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE,  Status.READ, 5);
+        Book expectedBook = new Book("b001", "Pride and Prejudice", "Jane Austen", Genre.ROMANCE,  Status.READ, 5, "123");
 
         //WHEN
         when(bookRepo.findById(bookId)).thenReturn(Optional.of(existingBook));
@@ -77,7 +102,7 @@ class BookServiceTest {
     void getBookByIdShouldReturnBookWithMatchingId() {
         //GIVEN
         String bookId = "b001";
-        Book expectedBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4);
+        Book expectedBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4, "123");
 
         //WHEN
         when(bookRepo.findById(bookId)).thenReturn(Optional.of(expectedBook));
@@ -92,7 +117,7 @@ class BookServiceTest {
     void deleteBookShouldDeleteBookWithMatchingId() {
         //GIVEN
         String bookId = "1";
-        Book existingBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4);
+        Book existingBook = new Book(bookId, "Pride and Prejudice", "Jane Austen", Genre.ROMANCE, Status.READ, 4, "123");
 
         //WHEN
         when(bookRepo.findById(bookId)).thenReturn(Optional.of(existingBook));

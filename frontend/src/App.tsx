@@ -14,11 +14,20 @@ import DetailBookPage from "./pages/DetailBookPage.tsx";
 import {useStore} from "./hooks/useStore.ts";
 import {BottomNavigation, BottomNavigationAction, Paper} from "@mui/material";
 import {Groups, Home, MenuBook} from "@mui/icons-material";
+import LoginPage from "./pages/LoginPage.tsx";
+import RegisterPage from "./pages/RegisterPage.tsx";
+import ProtectedRoutes from "./components/ProtectedRoutes.tsx";
+import ProfilePage from "./pages/ProfilePage.tsx";
+import {useEffect} from "react";
 
 
 export default function App() {
-    const meetings = useStore((state) => state.meetings);
-    const books = useStore((state) => state.books);
+    const username = useStore((state) => state.username);
+    const me = useStore((state) => state.me);
+
+    useEffect(() => {
+        me();
+    }, [me]);
 
 
     return (
@@ -27,14 +36,19 @@ export default function App() {
                 <Header />
                 <ToastContainer />
                 <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/meetinglist" element={<MeetingList meetings={meetings} />} />
-                    <Route path="/addmeeting" element={<AddMeetingPage />} />
-                    <Route path="/meeting/:id" element={<DetailMeetingPage />} />
-                    <Route path="/:id/editmeeting" element={<EditMeetingPage />} />
-                    <Route path="/booklist" element={<BookList books={books}/>} />
-                    <Route path="/addbook" element={<AddBookPage />} />
-                    <Route path="/book/:id" element={<DetailBookPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage/>} />
+                    <Route element={<ProtectedRoutes user={username}/>}>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/meetinglist" element={<MeetingList/>} />
+                        <Route path="/addmeeting" element={<AddMeetingPage />} />
+                        <Route path="/meeting/:id" element={<DetailMeetingPage />} />
+                        <Route path="/:id/editmeeting" element={<EditMeetingPage />} />
+                        <Route path="/booklist" element={<BookList/>} />
+                        <Route path="/addbook" element={<AddBookPage />} />
+                        <Route path="/book/:id" element={<DetailBookPage />} />
+                        <Route path="/profile" element={<ProfilePage />} />
+                    </Route>
                 </Routes>
 
             </main>

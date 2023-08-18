@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +21,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 
 @SpringBootTest
@@ -44,6 +47,7 @@ class BookCoverControllerTest {
     }
 
     @Test
+    @WithMockUser
     void expectCoverInfo_whenFetchFirstCoverInfo() throws Exception {
         List<BookCoverDoc> bookCoverDocs = new ArrayList<>();
         BookCoverDoc coverDoc = new BookCoverDoc();
@@ -62,7 +66,7 @@ class BookCoverControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/bookcover")
                         .param("title", "Test Title")
-                        .param("author", "Test Author"))
+                        .param("author", "Test Author").with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.coverId").value(1234567))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.coverUrl").value("https://covers.openlibrary.org/b/id/1234567-M.jpg"));

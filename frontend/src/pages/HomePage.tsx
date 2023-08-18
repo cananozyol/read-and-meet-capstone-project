@@ -2,18 +2,22 @@ import {useEffect} from "react";
 import {useStore} from "../hooks/useStore.ts";
 import MeetingCard from "../components/MeetingCard.tsx";
 import BookCard from "../components/BookCard.tsx";
+import {Status} from "../models/books.ts";
+import {isAfter, parseISO} from "date-fns";
 
 export default function HomePage() {
-    const { meetings, fetchMeetings } = useStore();
-    const { books, fetchBooks } = useStore();
+    const { meetings, fetchMeetings, books, fetchBooks, user } = useStore();
 
     useEffect(() => {
         fetchMeetings();
         fetchBooks();
     }, [fetchMeetings, fetchBooks]);
 
-    const upcomingMeeting = meetings.length > 0 ? meetings[0] : null;
-    const currentBook = books.length > 0 ? books[0] : null;
+    const readingBook = books.find((book) => book.userId === user.id && book.status === Status.READING);
+    const upcomingMeeting = meetings
+        .filter((meeting) => isAfter(parseISO(meeting.date), Date.now()) && meeting.userId === user.id)
+        .sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime())[0];
+
 
     return (
         <div>
@@ -26,10 +30,10 @@ export default function HomePage() {
                 </div>
             )}
 
-            {currentBook && (
+            {readingBook && (
                 <div>
-                    <p><u><strong><em>The Book You're Currently Reading</em></strong></u></p>
-                    <BookCard book={currentBook} />
+                    <p><u><strong><em>A Book You're Currently Reading</em></strong></u></p>
+                    <BookCard book={readingBook} />
                 </div>
             )}
         </div>

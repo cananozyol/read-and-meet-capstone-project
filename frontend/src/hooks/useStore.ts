@@ -2,6 +2,9 @@ import {create} from 'zustand';
 import axios from 'axios';
 import {Book, BookEditData, BookWithoutId} from '../models/books.ts';
 import {Meeting, MeetingWithoutId} from '../models/meeting.ts';
+import {NavigateFunction} from "react-router-dom";
+import {User} from "../models/users.ts";
+import {showErrorToast, showSuccessToast} from "../components/ToastHelpers.tsx";
 
 type State = {
     books: Book[];
@@ -18,11 +21,25 @@ type State = {
     putMeeting: (requestBody: Meeting) => void;
     fetchBookCover: (title: string, author: string) => void;
     bookCoverUrl: string;
-};
+    username: string;
+    me: () => void;
+    login: (username: string, password: string, navigate: NavigateFunction) => void;
+    register: (username: string, password: string, repeatedPassword: string, navigate: NavigateFunction) => void;
+    logout: (navigate: NavigateFunction) => void;
+    user: User;
+}
 
 export const useStore = create<State>((set, get) => ({
     books: [],
     meetings: [],
+    bookCoverUrl: "",
+    username: "",
+    user: {
+        id: "",
+        username: "",
+        password: "",
+    },
+
 
     fetchBooks: () => {
         axios
@@ -115,8 +132,6 @@ export const useStore = create<State>((set, get) => ({
             .catch(console.error);
     },
 
-    bookCoverUrl: "",
-
     fetchBookCover: (title: string, author: string): Promise<string> => {
         const formattedTitle = title.trim().replace(/ /g, '+');
         const formattedAuthor = author.trim().replace(/ /g, '+');
@@ -134,5 +149,73 @@ export const useStore = create<State>((set, get) => ({
             });
     },
 
-}));
+    me: () => {
+        axios.get("/api/users/me")
+            .then(response => {
+                const userId = response.data.id;
+                set({user: response.data});
+                console.log("Logged in with userId:", userId);
+            })
+    },
 
+    login: (username: string, password: string, navigate: NavigateFunction) => {
+        const { me } = get();
+        axios.post("/api/users/login", null, {
+            auth: {
+                username: username,
+                password: password
+            }
+        })
+            .then(response => {
+                set({username: response.data});
+                navigate("/");
+                me();
+                showSuccessToast("Login successful");
+            })
+            .catch((error) => {
+                console.error(error);
+                showErrorToast("Login failed");
+                throw new Error("Login failed");
+            });
+    },
+
+    register: (username: string, password: string, repeatedPassword: string, navigate: NavigateFunction) => {
+        const newUserData = {
+            "username": `${username}`,
+            "password": `${password}`
+        }
+
+        if (password === repeatedPassword) {
+            axios.post("/api/users/register", newUserData)
+                .then(() => {
+                    navigate("/login");
+                    showSuccessToast("Registration successful");
+                })
+                .catch((error) => {
+                    console.error(error);
+                    if (error.response?.data?.errors) {
+                        showErrorToast(error.response.data.errors[0].defaultMessage);
+                    } else {
+                        showErrorToast(error.response?.data?.message || "Registration failed");
+                    }
+                });
+        } else {
+            showErrorToast("Passwords do not match");
+        }
+    },
+
+
+    logout: (navigate: NavigateFunction) => {
+        axios.post("/api/users/logout")
+            .then(() => {
+                set({ username: "" });
+                showSuccessToast("Logout successful");
+                navigate("/login");
+            })
+            .catch((error) => {
+                console.error(error);
+                showErrorToast("Logout failed");
+            });
+    },
+
+}));

@@ -8,6 +8,7 @@ export type Meeting = {
         title?: string;
         author?: string;
     }
+    userId: string;
 }
 
 
