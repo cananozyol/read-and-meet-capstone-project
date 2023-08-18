@@ -9,11 +9,11 @@ import {showInfoToast, showSuccessToast} from "../components/ToastHelpers.tsx";
 export default function AddMeetingPage() {
     const postMeeting = useStore((state) => state.postMeeting);
     const navigate = useNavigate();
-    const { books, fetchBooks } = useStore();
+    const { books, fetchBooks, me } = useStore();
     const [selectedBookId, setSelectedBookId] = useState<string | undefined>("");
 
-    useEffect(() => {fetchBooks();
-    }, [fetchBooks]);
+    useEffect(() => {fetchBooks(), me();
+    }, [fetchBooks, me]);
 
     function handleSubmit(formData: MeetingWithoutId) {
         const selectedBook = books.find((book) => book.id === selectedBookId);
