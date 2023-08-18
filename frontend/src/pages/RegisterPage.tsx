@@ -7,7 +7,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ButtonStyle from "../components/ButtonStyle.tsx";
 
-
 export default function RegisterPage() {
 
     const [username, setUsername] = useState("");
@@ -29,7 +28,7 @@ export default function RegisterPage() {
         } else if (event.target.value.length < 3) {
             setErrorUsername("Username must be at least 3 characters long!")
         } else if (event.target.value.length > 25) {
-            setErrorUsername("Username must be under 25 characters long!")
+            setErrorUsername("Username must be under 13 characters long!")
         } else {
             setErrorUsername("")
         }
@@ -50,10 +49,6 @@ export default function RegisterPage() {
 
     function handleRegistration(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (errorUsername || errorPassword) {
-            return;
-        }
-
         register(username, password, repeatedPassword, navigate);
     }
 
@@ -136,7 +131,6 @@ export default function RegisterPage() {
                 {password !== repeatedPassword && (
                     <p style={{ color: "red" }}>Passwords do not match</p>
                 )}
-            </FormContainer>
 
             <StyledButton>
             <ButtonStyle type="submit">Sign Up</ButtonStyle>
@@ -148,6 +142,7 @@ export default function RegisterPage() {
                     </Link>
                 </p>
             </StyledButton>
+            </FormContainer>
         </>
     )
 }
@@ -164,6 +159,7 @@ export const StyledButton = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 30px;
   margin-bottom: 30px;
 `;
 export const HorizontalLine = styled.div`
@@ -173,3 +169,4 @@ export const HorizontalLine = styled.div`
   margin-top: 30px;
   margin-bottom: 10px;
 `;
+

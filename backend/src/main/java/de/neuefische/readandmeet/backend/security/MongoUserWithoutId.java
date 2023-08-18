@@ -11,7 +11,7 @@ public record MongoUserWithoutId(
         String username,
 
         @NotBlank
-        @Size(min = 3, max = 25, message = "Invalid password")
+        @Size(min = 3, max = 13, message = "Invalid password")
         @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Password must contain at least one lowercase letter, one uppercase letter, and one digit")
         String password
 ) {
