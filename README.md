@@ -10,13 +10,12 @@
 ## Used Technologies, Frameworks, and Libraries:
 
 - **Backend:** Java, Spring Boot with Spring WebFlux, Security
-- **Testing:** JUnit, AssertJ, Mockito, MockMvc, Flapdoodle
+- **Testing:** JUnit, AssertJ, Mockito, MockMvc
 - **Database:** MongoDB
-- **Frontend:** React with Vite, Axios, react-router-dom, Zustand, react-toastify
+- **Frontend:** React, react-router-dom, axios, Zustand, react-toastify
 - **Wireframes and Design:** Miro
 - **Deployment:** GitHub Actions for CI/CD, Docker
 
-***
 
 ## SonarCloud
 
